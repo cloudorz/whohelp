@@ -24,6 +24,16 @@
 		617E3A65141B584F00441135 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A63141B584F00441135 /* InfoPlist.strings */; };
 		617E3A67141B584F00441135 /* WhoHelpTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A66141B584F00441135 /* WhoHelpTests.h */; };
 		617E3A69141B584F00441135 /* WhoHelpTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A68141B584F00441135 /* WhoHelpTests.m */; };
+		617E3A73141B587A00441135 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A72141B587900441135 /* CoreLocation.framework */; };
+		617E3A75141B588300441135 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A74141B588300441135 /* MapKit.framework */; };
+		617E3A79141B69D300441135 /* HelpListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A77141B69D300441135 /* HelpListViewController.m */; };
+		617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A78141B69D300441135 /* HelpListViewController.xib */; };
+		617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A7D141B820300441135 /* HelpDetailViewController.m */; };
+		617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A7E141B820300441135 /* HelpDetailViewController.xib */; };
+		617E3A83141B87A500441135 /* ibountyicon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A82141B87A500441135 /* ibountyicon57.png */; };
+		617E3A85141B88EB00441135 /* icontab.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A84141B88EB00441135 /* icontab.jpg */; };
+		617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A87141B8D7400441135 /* HelpSettingViewController.m */; };
+		617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A88141B8D7400441135 /* HelpSettingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,20 +52,33 @@
 		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		617E3A3C141B584F00441135 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		617E3A3E141B584F00441135 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		617E3A42141B584F00441135 /* WhoHelp-Info.plist */ = {isa = PBXFileReference; path = "WhoHelp-Info.plist"; sourceTree = "<group>"; };
+		617E3A42141B584F00441135 /* WhoHelp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WhoHelp-Info.plist"; sourceTree = "<group>"; };
 		617E3A44141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		617E3A46141B584F00441135 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */ = {isa = PBXFileReference; path = "WhoHelp-Prefix.pch"; sourceTree = "<group>"; };
-		617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */ = {isa = PBXFileReference; path = WhoHelpAppDelegate.h; sourceTree = "<group>"; };
+		617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhoHelp-Prefix.pch"; sourceTree = "<group>"; };
+		617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhoHelpAppDelegate.h; sourceTree = "<group>"; };
 		617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpAppDelegate.m; sourceTree = "<group>"; };
 		617E3A4D141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		617E3A50141B584F00441135 /* WhoHelp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WhoHelp.xcdatamodel; sourceTree = "<group>"; };
 		617E3A57141B584F00441135 /* WhoHelpTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhoHelpTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A58141B584F00441135 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */ = {isa = PBXFileReference; path = "WhoHelpTests-Info.plist"; sourceTree = "<group>"; };
+		617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WhoHelpTests-Info.plist"; sourceTree = "<group>"; };
 		617E3A64141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		617E3A66141B584F00441135 /* WhoHelpTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhoHelpTests.h; sourceTree = "<group>"; };
 		617E3A68141B584F00441135 /* WhoHelpTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpTests.m; sourceTree = "<group>"; };
+		617E3A72141B587900441135 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		617E3A74141B588300441135 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		617E3A76141B69D300441135 /* HelpListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpListViewController.h; sourceTree = "<group>"; };
+		617E3A77141B69D300441135 /* HelpListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpListViewController.m; sourceTree = "<group>"; };
+		617E3A78141B69D300441135 /* HelpListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpListViewController.xib; sourceTree = "<group>"; };
+		617E3A7C141B820300441135 /* HelpDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpDetailViewController.h; sourceTree = "<group>"; };
+		617E3A7D141B820300441135 /* HelpDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpDetailViewController.m; sourceTree = "<group>"; };
+		617E3A7E141B820300441135 /* HelpDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpDetailViewController.xib; sourceTree = "<group>"; };
+		617E3A82141B87A500441135 /* ibountyicon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ibountyicon57.png; path = "../../../Downloads/Folx/Head-First-iPhone-iPad-Development-Code/Chapter_8/app/ibountyicon57.png"; sourceTree = "<group>"; };
+		617E3A84141B88EB00441135 /* icontab.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = icontab.jpg; path = ../../../Desktop/icontab.jpg; sourceTree = "<group>"; };
+		617E3A86141B8D7400441135 /* HelpSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSettingViewController.h; sourceTree = "<group>"; };
+		617E3A87141B8D7400441135 /* HelpSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSettingViewController.m; sourceTree = "<group>"; };
+		617E3A88141B8D7400441135 /* HelpSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSettingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +86,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				617E3A75141B588300441135 /* MapKit.framework in Frameworks */,
+				617E3A73141B587A00441135 /* CoreLocation.framework in Frameworks */,
 				617E3A39141B584F00441135 /* UIKit.framework in Frameworks */,
 				617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */,
 				617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */,
@@ -89,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				617E3A40141B584F00441135 /* WhoHelp */,
-				617E3A60141B584F00441135 /* WhoHelpTests */,
 				617E3A37141B584F00441135 /* Frameworks */,
 				617E3A35141B584F00441135 /* Products */,
 			);
@@ -107,6 +131,8 @@
 		617E3A37141B584F00441135 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				617E3A74141B588300441135 /* MapKit.framework */,
+				617E3A72141B587900441135 /* CoreLocation.framework */,
 				617E3A38141B584F00441135 /* UIKit.framework */,
 				617E3A3A141B584F00441135 /* Foundation.framework */,
 				617E3A3C141B584F00441135 /* CoreGraphics.framework */,
@@ -121,9 +147,19 @@
 			children = (
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
-				617E3A4C141B584F00441135 /* MainWindow.xib */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
+				617E3A76141B69D300441135 /* HelpListViewController.h */,
+				617E3A77141B69D300441135 /* HelpListViewController.m */,
+				617E3A78141B69D300441135 /* HelpListViewController.xib */,
+				617E3A86141B8D7400441135 /* HelpSettingViewController.h */,
+				617E3A87141B8D7400441135 /* HelpSettingViewController.m */,
+				617E3A88141B8D7400441135 /* HelpSettingViewController.xib */,
+				617E3A7C141B820300441135 /* HelpDetailViewController.h */,
+				617E3A7D141B820300441135 /* HelpDetailViewController.m */,
+				617E3A7E141B820300441135 /* HelpDetailViewController.xib */,
+				617E3A4C141B584F00441135 /* MainWindow.xib */,
 				617E3A41141B584F00441135 /* Supporting Files */,
+				617E3A60141B584F00441135 /* WhoHelpTests */,
 			);
 			path = WhoHelp;
 			sourceTree = "<group>";
@@ -131,6 +167,8 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				617E3A84141B88EB00441135 /* icontab.jpg */,
+				617E3A82141B87A500441135 /* ibountyicon57.png */,
 				617E3A42141B584F00441135 /* WhoHelp-Info.plist */,
 				617E3A43141B584F00441135 /* InfoPlist.strings */,
 				617E3A46141B584F00441135 /* main.m */,
@@ -147,7 +185,7 @@
 				617E3A61141B584F00441135 /* Supporting Files */,
 			);
 			path = WhoHelpTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		617E3A61141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -208,6 +246,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 			);
 			mainGroup = 617E3A29141B584E00441135;
 			productRefGroup = 617E3A35141B584F00441135 /* Products */;
@@ -227,6 +266,11 @@
 			files = (
 				617E3A45141B584F00441135 /* InfoPlist.strings in Resources */,
 				617E3A4E141B584F00441135 /* MainWindow.xib in Resources */,
+				617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */,
+				617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */,
+				617E3A83141B87A500441135 /* ibountyicon57.png in Resources */,
+				617E3A85141B88EB00441135 /* icontab.jpg in Resources */,
+				617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +309,9 @@
 				617E3A47141B584F00441135 /* main.m in Sources */,
 				617E3A4B141B584F00441135 /* WhoHelpAppDelegate.m in Sources */,
 				617E3A51141B584F00441135 /* WhoHelp.xcdatamodeld in Sources */,
+				617E3A79141B69D300441135 /* HelpListViewController.m in Sources */,
+				617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */,
+				617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
