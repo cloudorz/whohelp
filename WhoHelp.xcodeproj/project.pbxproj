@@ -1,0 +1,460 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		617E3A39141B584F00441135 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A38141B584F00441135 /* UIKit.framework */; };
+		617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
+		617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
+		617E3A3F141B584F00441135 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3E141B584F00441135 /* CoreData.framework */; };
+		617E3A45141B584F00441135 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A43141B584F00441135 /* InfoPlist.strings */; };
+		617E3A47141B584F00441135 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A46141B584F00441135 /* main.m */; };
+		617E3A4B141B584F00441135 /* WhoHelpAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */; };
+		617E3A4E141B584F00441135 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A4C141B584F00441135 /* MainWindow.xib */; };
+		617E3A51141B584F00441135 /* WhoHelp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */; };
+		617E3A59141B584F00441135 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A58141B584F00441135 /* SenTestingKit.framework */; };
+		617E3A5A141B584F00441135 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A38141B584F00441135 /* UIKit.framework */; };
+		617E3A5B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
+		617E3A5C141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
+		617E3A5D141B584F00441135 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3E141B584F00441135 /* CoreData.framework */; };
+		617E3A65141B584F00441135 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A63141B584F00441135 /* InfoPlist.strings */; };
+		617E3A67141B584F00441135 /* WhoHelpTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A66141B584F00441135 /* WhoHelpTests.h */; };
+		617E3A69141B584F00441135 /* WhoHelpTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A68141B584F00441135 /* WhoHelpTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		617E3A5E141B584F00441135 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 617E3A2B141B584E00441135 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 617E3A33141B584F00441135;
+			remoteInfo = WhoHelp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		617E3A34141B584F00441135 /* WhoHelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhoHelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		617E3A38141B584F00441135 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		617E3A3C141B584F00441135 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		617E3A3E141B584F00441135 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		617E3A42141B584F00441135 /* WhoHelp-Info.plist */ = {isa = PBXFileReference; path = "WhoHelp-Info.plist"; sourceTree = "<group>"; };
+		617E3A44141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		617E3A46141B584F00441135 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */ = {isa = PBXFileReference; path = "WhoHelp-Prefix.pch"; sourceTree = "<group>"; };
+		617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */ = {isa = PBXFileReference; path = WhoHelpAppDelegate.h; sourceTree = "<group>"; };
+		617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpAppDelegate.m; sourceTree = "<group>"; };
+		617E3A4D141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		617E3A50141B584F00441135 /* WhoHelp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WhoHelp.xcdatamodel; sourceTree = "<group>"; };
+		617E3A57141B584F00441135 /* WhoHelpTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhoHelpTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		617E3A58141B584F00441135 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */ = {isa = PBXFileReference; path = "WhoHelpTests-Info.plist"; sourceTree = "<group>"; };
+		617E3A64141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		617E3A66141B584F00441135 /* WhoHelpTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhoHelpTests.h; sourceTree = "<group>"; };
+		617E3A68141B584F00441135 /* WhoHelpTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		617E3A31141B584F00441135 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A39141B584F00441135 /* UIKit.framework in Frameworks */,
+				617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */,
+				617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */,
+				617E3A3F141B584F00441135 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		617E3A53141B584F00441135 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A59141B584F00441135 /* SenTestingKit.framework in Frameworks */,
+				617E3A5A141B584F00441135 /* UIKit.framework in Frameworks */,
+				617E3A5B141B584F00441135 /* Foundation.framework in Frameworks */,
+				617E3A5C141B584F00441135 /* CoreGraphics.framework in Frameworks */,
+				617E3A5D141B584F00441135 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		617E3A29141B584E00441135 = {
+			isa = PBXGroup;
+			children = (
+				617E3A40141B584F00441135 /* WhoHelp */,
+				617E3A60141B584F00441135 /* WhoHelpTests */,
+				617E3A37141B584F00441135 /* Frameworks */,
+				617E3A35141B584F00441135 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		617E3A35141B584F00441135 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A34141B584F00441135 /* WhoHelp.app */,
+				617E3A57141B584F00441135 /* WhoHelpTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		617E3A37141B584F00441135 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A38141B584F00441135 /* UIKit.framework */,
+				617E3A3A141B584F00441135 /* Foundation.framework */,
+				617E3A3C141B584F00441135 /* CoreGraphics.framework */,
+				617E3A3E141B584F00441135 /* CoreData.framework */,
+				617E3A58141B584F00441135 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		617E3A40141B584F00441135 /* WhoHelp */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
+				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
+				617E3A4C141B584F00441135 /* MainWindow.xib */,
+				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
+				617E3A41141B584F00441135 /* Supporting Files */,
+			);
+			path = WhoHelp;
+			sourceTree = "<group>";
+		};
+		617E3A41141B584F00441135 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A42141B584F00441135 /* WhoHelp-Info.plist */,
+				617E3A43141B584F00441135 /* InfoPlist.strings */,
+				617E3A46141B584F00441135 /* main.m */,
+				617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		617E3A60141B584F00441135 /* WhoHelpTests */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A66141B584F00441135 /* WhoHelpTests.h */,
+				617E3A68141B584F00441135 /* WhoHelpTests.m */,
+				617E3A61141B584F00441135 /* Supporting Files */,
+			);
+			path = WhoHelpTests;
+			sourceTree = "<group>";
+		};
+		617E3A61141B584F00441135 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */,
+				617E3A63141B584F00441135 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		617E3A33141B584F00441135 /* WhoHelp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 617E3A6C141B584F00441135 /* Build configuration list for PBXNativeTarget "WhoHelp" */;
+			buildPhases = (
+				617E3A30141B584F00441135 /* Sources */,
+				617E3A31141B584F00441135 /* Frameworks */,
+				617E3A32141B584F00441135 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WhoHelp;
+			productName = WhoHelp;
+			productReference = 617E3A34141B584F00441135 /* WhoHelp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		617E3A56141B584F00441135 /* WhoHelpTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 617E3A6F141B584F00441135 /* Build configuration list for PBXNativeTarget "WhoHelpTests" */;
+			buildPhases = (
+				617E3A52141B584F00441135 /* Sources */,
+				617E3A53141B584F00441135 /* Frameworks */,
+				617E3A54141B584F00441135 /* Resources */,
+				617E3A55141B584F00441135 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				617E3A5F141B584F00441135 /* PBXTargetDependency */,
+			);
+			name = WhoHelpTests;
+			productName = WhoHelpTests;
+			productReference = 617E3A57141B584F00441135 /* WhoHelpTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		617E3A2B141B584E00441135 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 617E3A2E141B584E00441135 /* Build configuration list for PBXProject "WhoHelp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 617E3A29141B584E00441135;
+			productRefGroup = 617E3A35141B584F00441135 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				617E3A33141B584F00441135 /* WhoHelp */,
+				617E3A56141B584F00441135 /* WhoHelpTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		617E3A32141B584F00441135 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A45141B584F00441135 /* InfoPlist.strings in Resources */,
+				617E3A4E141B584F00441135 /* MainWindow.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		617E3A54141B584F00441135 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A65141B584F00441135 /* InfoPlist.strings in Resources */,
+				617E3A67141B584F00441135 /* WhoHelpTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		617E3A55141B584F00441135 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		617E3A30141B584F00441135 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A47141B584F00441135 /* main.m in Sources */,
+				617E3A4B141B584F00441135 /* WhoHelpAppDelegate.m in Sources */,
+				617E3A51141B584F00441135 /* WhoHelp.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		617E3A52141B584F00441135 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				617E3A69141B584F00441135 /* WhoHelpTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		617E3A5F141B584F00441135 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 617E3A33141B584F00441135 /* WhoHelp */;
+			targetProxy = 617E3A5E141B584F00441135 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		617E3A43141B584F00441135 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				617E3A44141B584F00441135 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		617E3A4C141B584F00441135 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				617E3A4D141B584F00441135 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		617E3A63141B584F00441135 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				617E3A64141B584F00441135 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		617E3A6A141B584F00441135 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		617E3A6B141B584F00441135 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		617E3A6D141B584F00441135 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		617E3A6E141B584F00441135 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		617E3A70141B584F00441135 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/WhoHelp.app/WhoHelp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				INFOPLIST_FILE = "WhoHelpTests/WhoHelpTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		617E3A71141B584F00441135 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/WhoHelp.app/WhoHelp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				INFOPLIST_FILE = "WhoHelpTests/WhoHelpTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		617E3A2E141B584E00441135 /* Build configuration list for PBXProject "WhoHelp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				617E3A6A141B584F00441135 /* Debug */,
+				617E3A6B141B584F00441135 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		617E3A6C141B584F00441135 /* Build configuration list for PBXNativeTarget "WhoHelp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				617E3A6D141B584F00441135 /* Debug */,
+				617E3A6E141B584F00441135 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		617E3A6F141B584F00441135 /* Build configuration list for PBXNativeTarget "WhoHelpTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				617E3A70141B584F00441135 /* Debug */,
+				617E3A71141B584F00441135 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				617E3A50141B584F00441135 /* WhoHelp.xcdatamodel */,
+			);
+			currentVersion = 617E3A50141B584F00441135 /* WhoHelp.xcdatamodel */;
+			path = WhoHelp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 617E3A2B141B584E00441135 /* Project object */;
+}
