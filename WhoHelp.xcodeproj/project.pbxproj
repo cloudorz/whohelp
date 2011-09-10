@@ -30,10 +30,20 @@
 		617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A78141B69D300441135 /* HelpListViewController.xib */; };
 		617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A7D141B820300441135 /* HelpDetailViewController.m */; };
 		617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A7E141B820300441135 /* HelpDetailViewController.xib */; };
-		617E3A83141B87A500441135 /* ibountyicon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A82141B87A500441135 /* ibountyicon57.png */; };
-		617E3A85141B88EB00441135 /* icontab.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A84141B88EB00441135 /* icontab.jpg */; };
 		617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A87141B8D7400441135 /* HelpSettingViewController.m */; };
 		617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A88141B8D7400441135 /* HelpSettingViewController.xib */; };
+		617E3A91141B956200441135 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8B141B956200441135 /* back@2x.png */; };
+		617E3A92141B956200441135 /* call@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8C141B956200441135 /* call@2x.png */; };
+		617E3A93141B956200441135 /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8D141B956200441135 /* home@2x.png */; };
+		617E3A94141B956200441135 /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8E141B956200441135 /* mail@2x.png */; };
+		617E3A95141B956200441135 /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8F141B956200441135 /* settings@2x.png */; };
+		617E3A96141B956200441135 /* type@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A90141B956200441135 /* type@2x.png */; };
+		617E3A9D141B9B1600441135 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A97141B9B1500441135 /* back.png */; };
+		617E3A9E141B9B1600441135 /* call.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A98141B9B1500441135 /* call.png */; };
+		617E3A9F141B9B1600441135 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A99141B9B1500441135 /* home.png */; };
+		617E3AA0141B9B1600441135 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9A141B9B1500441135 /* mail.png */; };
+		617E3AA1141B9B1600441135 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9B141B9B1600441135 /* settings.png */; };
+		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,11 +84,21 @@
 		617E3A7C141B820300441135 /* HelpDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpDetailViewController.h; sourceTree = "<group>"; };
 		617E3A7D141B820300441135 /* HelpDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpDetailViewController.m; sourceTree = "<group>"; };
 		617E3A7E141B820300441135 /* HelpDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpDetailViewController.xib; sourceTree = "<group>"; };
-		617E3A82141B87A500441135 /* ibountyicon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ibountyicon57.png; path = "../../../Downloads/Folx/Head-First-iPhone-iPad-Development-Code/Chapter_8/app/ibountyicon57.png"; sourceTree = "<group>"; };
-		617E3A84141B88EB00441135 /* icontab.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = icontab.jpg; path = ../../../Desktop/icontab.jpg; sourceTree = "<group>"; };
 		617E3A86141B8D7400441135 /* HelpSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSettingViewController.h; sourceTree = "<group>"; };
 		617E3A87141B8D7400441135 /* HelpSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSettingViewController.m; sourceTree = "<group>"; };
 		617E3A88141B8D7400441135 /* HelpSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSettingViewController.xib; sourceTree = "<group>"; };
+		617E3A8B141B956200441135 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		617E3A8C141B956200441135 /* call@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "call@2x.png"; sourceTree = "<group>"; };
+		617E3A8D141B956200441135 /* home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home@2x.png"; sourceTree = "<group>"; };
+		617E3A8E141B956200441135 /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
+		617E3A8F141B956200441135 /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
+		617E3A90141B956200441135 /* type@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "type@2x.png"; sourceTree = "<group>"; };
+		617E3A97141B9B1500441135 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
+		617E3A98141B9B1500441135 /* call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = call.png; sourceTree = "<group>"; };
+		617E3A99141B9B1500441135 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
+		617E3A9A141B9B1500441135 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
+		617E3A9B141B9B1600441135 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		617E3A9C141B9B1600441135 /* type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = type.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,8 +187,18 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				617E3A84141B88EB00441135 /* icontab.jpg */,
-				617E3A82141B87A500441135 /* ibountyicon57.png */,
+				617E3A97141B9B1500441135 /* back.png */,
+				617E3A98141B9B1500441135 /* call.png */,
+				617E3A99141B9B1500441135 /* home.png */,
+				617E3A9A141B9B1500441135 /* mail.png */,
+				617E3A9B141B9B1600441135 /* settings.png */,
+				617E3A9C141B9B1600441135 /* type.png */,
+				617E3A8B141B956200441135 /* back@2x.png */,
+				617E3A8C141B956200441135 /* call@2x.png */,
+				617E3A8D141B956200441135 /* home@2x.png */,
+				617E3A8E141B956200441135 /* mail@2x.png */,
+				617E3A8F141B956200441135 /* settings@2x.png */,
+				617E3A90141B956200441135 /* type@2x.png */,
 				617E3A42141B584F00441135 /* WhoHelp-Info.plist */,
 				617E3A43141B584F00441135 /* InfoPlist.strings */,
 				617E3A46141B584F00441135 /* main.m */,
@@ -268,9 +298,19 @@
 				617E3A4E141B584F00441135 /* MainWindow.xib in Resources */,
 				617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */,
 				617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */,
-				617E3A83141B87A500441135 /* ibountyicon57.png in Resources */,
-				617E3A85141B88EB00441135 /* icontab.jpg in Resources */,
 				617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */,
+				617E3A91141B956200441135 /* back@2x.png in Resources */,
+				617E3A92141B956200441135 /* call@2x.png in Resources */,
+				617E3A93141B956200441135 /* home@2x.png in Resources */,
+				617E3A94141B956200441135 /* mail@2x.png in Resources */,
+				617E3A95141B956200441135 /* settings@2x.png in Resources */,
+				617E3A96141B956200441135 /* type@2x.png in Resources */,
+				617E3A9D141B9B1600441135 /* back.png in Resources */,
+				617E3A9E141B9B1600441135 /* call.png in Resources */,
+				617E3A9F141B9B1600441135 /* home.png in Resources */,
+				617E3AA0141B9B1600441135 /* mail.png in Resources */,
+				617E3AA1141B9B1600441135 /* settings.png in Resources */,
+				617E3AA2141B9B1600441135 /* type.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
