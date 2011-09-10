@@ -14,6 +14,7 @@
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
+@synthesize tabBarController=tabBarController_;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -64,6 +65,7 @@
     [__managedObjectContext release];
     [__managedObjectModel release];
     [__persistentStoreCoordinator release];
+    [tabBarController_ release];
     [super dealloc];
 }
 
