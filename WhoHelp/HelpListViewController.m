@@ -7,8 +7,60 @@
 //
 
 #import "HelpListViewController.h"
+#import "WhoHelpAppDelegate.h"
+#import "Profile.h"
+#import "Loud.h"
+#import "HelpDetailViewController.h"
 
 @implementation HelpListViewController
+
+@synthesize profiles=profiles_;
+
+- (NSFetchedResultsController *)resultsController
+{
+    // If we already init the resutls controller, just return it.
+    if (resultsController_ != nil){
+        return resultsController_;
+    }
+    
+    // This must be the request for our results controller. We don't have one yet
+    // so we need to build it.
+    
+    // Get the moc object
+    WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+    
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"captured == YES"];
+    //[request setPredicate:predicate];
+    
+    // create the fetch results controller 
+    resultsController_ = [[NSFetchedResultsController alloc] 
+                          initWithFetchRequest:request 
+                          managedObjectContext:managedObjectContext 
+                          sectionNameKeyPath:nil 
+                          cacheName:@"loud_list.cache"];
+    resultsController_.delegate = self;
+    
+    NSError *error;
+    BOOL sucess = [resultsController_ performFetch:&error];
+    if (!sucess){
+        // Handle the error
+        // TODO error maybe
+    }
+    [request release];
+    return resultsController_;
+}
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -50,6 +102,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -79,14 +132,14 @@
 {
 
     // Return the number of sections.
-    return 1;
+    return [[self.resultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 
     // Return the number of rows in the section.
-    return 0;
+    return [[[self.resultsController sections] objectAtIndex:section] numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -99,6 +152,9 @@
     }
     
     // Configure the cell...
+    Loud *loud = [self.resultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = loud.content;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
 }
@@ -147,13 +203,22 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+    
+     HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
      // ...
+    detailViewController.loud = [self.resultsController objectAtIndexPath:indexPath];
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
-     */
+     
+}
+
+#pragma mark - dealloc 
+- (void)dealloc
+{
+    [profiles_ release];
+    [resultsController_ release];
+    [super dealloc];
 }
 
 @end

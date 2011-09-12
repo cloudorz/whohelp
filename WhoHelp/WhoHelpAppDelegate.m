@@ -7,6 +7,9 @@
 //
 
 #import "WhoHelpAppDelegate.h"
+@interface WhoHelpAppDelegate (Private)
+- (void) createEditableCopyOfDatabaseIfNeeded;
+@end
 
 @implementation WhoHelpAppDelegate
 
@@ -19,6 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [self createEditableCopyOfDatabaseIfNeeded];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -147,6 +151,7 @@
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WhoHelp.sqlite"];
     
     NSError *error = nil;
+//    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
     {
@@ -165,15 +170,18 @@
          
          If you encounter schema incompatibility errors during development, you can reduce their frequency by:
          * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
          
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
+        */
+        //[[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+         
+         /// Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
          [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
          
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
+         /*Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        // FIXME production let me go
         abort();
     }    
     
@@ -188,6 +196,28 @@
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+#pragma mark - copy the sqlite file
+- (void)createEditableCopyOfDatabaseIfNeeded
+{
+    // First test for existence - we don't want to wipe out a user's DB
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *documentsDir = [self applicationDocumentsDirectory];
+    NSURL *writableDBPath = [documentsDir URLByAppendingPathComponent:@"WhoHelp.sqlite"];
+    
+    BOOL dbExists = [fileManager fileExistsAtPath:[writableDBPath path]];
+    if (!dbExists) {
+        // The writable DB doesn't exist so we'll copy our default one there.
+        NSURL *defaultDBPath = [[NSBundle mainBundle] URLForResource:@"WhoHelp" withExtension:@"sqlite"];
+        if (defaultDBPath != nil){
+            NSError *error;
+            BOOL success = [fileManager copyItemAtURL:defaultDBPath toURL:writableDBPath error:&error];
+            if (!success) {
+                NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+            }        
+        }
+    } 
 }
 
 @end

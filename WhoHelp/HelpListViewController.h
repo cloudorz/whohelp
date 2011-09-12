@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HelpListViewController : UITableViewController
+@interface HelpListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+{
+@private
+    NSFetchedResultsController *resultsController_;
+    NSMutableArray *profiles_;
+}
+
+@property (nonatomic, readonly) NSFetchedResultsController *resultsController;
+@property (nonatomic, retain) NSMutableArray *profiles;
 
 @end
