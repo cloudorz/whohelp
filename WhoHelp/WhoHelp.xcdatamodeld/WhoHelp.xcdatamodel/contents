@@ -7,7 +7,7 @@
         <attribute name="lat" attributeType="Double" defaultValueString="0"/>
         <attribute name="lid" attributeType="Integer 32" defaultValueString="0"/>
         <attribute name="lon" attributeType="Double" defaultValueString="0"/>
-        <attribute name="userAvatar" attributeType="Binary"/>
+        <attribute name="userAvatar" optional="YES" attributeType="Binary"/>
         <attribute name="userName" attributeType="String"/>
         <attribute name="userPhone" attributeType="Integer 64" defaultValueString="0"/>
     </entity>
