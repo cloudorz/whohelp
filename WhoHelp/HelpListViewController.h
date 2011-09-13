@@ -7,19 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGORefreshTableHeaderView.h"
 
-@interface HelpListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
 {
 @private
-    NSFetchedResultsController *resultsController_;
+    NSMutableArray *louds_;
     NSMutableArray *profiles_;
     NSManagedObjectContext *managedObjectContext_;
     NSArray *newLouds_;
+    NSArray *discardLouds_;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
 }
 
-@property (nonatomic, readonly) NSFetchedResultsController *resultsController;
+@property (nonatomic, retain) NSMutableArray *louds;
 @property (nonatomic, retain) NSMutableArray *profiles;
 @property (nonatomic, retain) NSArray *newLouds;
+@property (nonatomic, retain) NSArray *discardLouds;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+
+- (void)reloadTableViewDataSource;
+- (void)doneLoadingTableViewData;
 
 @end

@@ -16,6 +16,8 @@
 @synthesize timeLabel=timeLabel_;
 @synthesize avatarImage=avatarImage_;
 @synthesize contentTextView=contentTextView_;
+@synthesize reverseGeocoder=reverseGeocoder_;
+@synthesize loadingIndicator=loadingIndicator_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,6 +42,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+
 }
 
 - (void)viewDidUnload
@@ -59,7 +62,8 @@
     }
     self.nameLabel.text = self.loud.userName;
     self.contentTextView.text = self.loud.content;
-    self.locationLabel.text = [self addressFromLocationLon:self.loud.lon locationLat:self.loud.lat];
+    // get the geocoder address 
+    [self parsePosition];
     self.timeLabel.text = [self descriptionForTime:self.loud.created];
     
 }
@@ -71,16 +75,86 @@
 }
 
 #pragma mark - get the address from lat and lon
-- (NSString *)addressFromLocationLon:(NSNumber *)lon locationLat:(NSNumber *)lat
+- (void)parsePosition
 {
-    // use the location get the address description TODO
-    return @"test address";
+    // use the location get the address description
+    // start loading
+    [self.loadingIndicator startAnimating];
+    // Reverse geocode
+    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:CLLocationCoordinate2DMake([self.loud.lon doubleValue], [self.loud.lat doubleValue])];
+    self.reverseGeocoder.delegate = self;
+    [self.reverseGeocoder start];
 }
 
 - (NSString *)descriptionForTime:(NSDate *)date
 {
     // convert the time formate to human reading. TODOs
     return [date description];
+}
+
+#pragma mark - the tab bar operation
+
+- (void)tabBar: (UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+
+    switch (item.tag) {
+        case 1:
+        {
+            NSLog(@"Let me back.");
+            [self.navigationController popViewControllerAnimated:YES];
+            break;
+        }
+        case 2:
+        {
+            // Go to case 3 handle.
+        }
+        case 3:
+        {
+            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%d", item.tag == 2 ? @"tel" : @"sms", self.loud.userPhone]];
+            UIDevice *device = [UIDevice currentDevice];
+            if ([[device model] isEqualToString:@"iPhone"] ) {
+                [[UIApplication sharedApplication] openURL:callURL];
+            } else {
+                UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:@"警告" message:@"你的设备不支持这项功能" delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
+                [Notpermitted show];
+                [Notpermitted release];
+            }
+            break;
+        }   
+        default:
+            NSLog(@"Nothing to do");
+            break;
+    }
+}
+
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
+}
+
+#pragma mark - reverser mehtod
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
+{
+    NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
+    [self.reverseGeocoder cancel];
+    // stop loading status
+    [self.loadingIndicator stopAnimating];
+}
+
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
+{
+    NSLog(@"Got it");
+    //NSDictionary *p = placemark.addressDictionary;
+    NSLog(@"street address: %@", placemark.thoroughfare);
+    NSLog(@"street-level: %@", placemark.subThoroughfare);
+    NSLog(@"city-level: %@", placemark.subLocality);
+    NSLog(@"city address: %@", placemark.locality);
+    self.locationLabel.text = [NSString stringWithFormat:@"%@ %@", 
+                               placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
+                               placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
+    // stop loading status
+    [self.loadingIndicator stopAnimating];
+    [self.reverseGeocoder cancel];
 }
 
 #pragma mark - dealloc
@@ -92,6 +166,8 @@
     [timeLabel_ release];
     [contentTextView_ release];
     [avatarImage_ release];
+    [reverseGeocoder_ release];
+    [loadingIndicator_ release];
     [super dealloc];
 }
 

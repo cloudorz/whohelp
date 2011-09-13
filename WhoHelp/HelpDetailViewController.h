@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 #import "Loud.h"
 
-@interface HelpDetailViewController : UIViewController
+@interface HelpDetailViewController : UIViewController <MKReverseGeocoderDelegate>
 {
 @private
     Loud *loud_;
@@ -18,6 +19,8 @@
     UILabel *timeLabel_;
     UIImageView *avatarImage_;
     UITextView *contentTextView_;
+    MKReverseGeocoder *reverseGeocoder_;
+    UIActivityIndicatorView *loadingIndicator_;
 }
 
 @property (nonatomic, retain) Loud *loud;
@@ -26,8 +29,11 @@
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 @property (nonatomic, retain) IBOutlet UITextView *contentTextView;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
 
-- (NSString *)addressFromLocationLon:(NSNumber *)lon locationLat:(NSNumber *)lat;
+- (void)parsePosition;
 - (NSString *)descriptionForTime:(NSDate *)date;
+- (BOOL)hidesBottomBarWhenPushed;
 
 @end

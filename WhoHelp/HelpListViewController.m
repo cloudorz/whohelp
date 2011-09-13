@@ -17,27 +17,37 @@
 @interface HelpListViewController (Private)
 - (void)fetchLoudList;
 - (void)addLouds;
-- (NSDictionary *)getLoudByLid:(NSNumber *)lid;
+- (void)deleteLouds;
+- (void)syncLoudList;
+- (NSManagedObject *)getLoudByLid:(NSNumber *)lid;
+- (NSData *)fetchImage: (NSString *)partURI;
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
+- (void)errorNotification:(NSString *)message;
+- (void)warningNotification:(NSString *)message;
 @end
+
+#warning  TODO distance compute
+#warning  TDOD position compute
 
 @implementation HelpListViewController
 
 @synthesize profiles=profiles_;
 @synthesize newLouds=newLouds_;
+@synthesize discardLouds=discardLouds_;
+@synthesize louds=louds_;
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
-    return managedObjectContext;
+    if (managedObjectContext_ == nil){
+        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        managedObjectContext_ = appDelegate.managedObjectContext;
+    }
+  
+    return managedObjectContext_;
 }
 
-- (NSFetchedResultsController *)resultsController
+- (void)updateLouds
 {
-    // If we already init the resutls controller, just return it.
-    if (resultsController_ != nil){
-        return resultsController_;
-    }
     
     // This must be the request for our results controller. We don't have one yet
     // so we need to build it.
@@ -54,29 +64,19 @@
     
     //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"captured == YES"];
     //[request setPredicate:predicate];
-    
-    // create the fetch results controller 
-    resultsController_ = [[NSFetchedResultsController alloc] 
-                          initWithFetchRequest:request 
-                          managedObjectContext:self.managedObjectContext 
-                          sectionNameKeyPath:nil 
-                          cacheName:@"loud_list.cache"];
-    resultsController_.delegate = self;
-    
-    NSError *error;
-    BOOL sucess = [resultsController_ performFetch:&error];
-    if (!sucess){
-        // Handle the error
-        // TODO error maybe
-        NSLog(@"fetch the loud list error: %@, %@", error, [error userInfo]);
-    }
-    [request release];
-    return resultsController_;
-}
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView reloadData];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+    
+    if (mutableFetchResults == nil) {
+        // Handle the error.
+        NSLog(@"update the louds error: %@, %@", error, [error userInfo]);
+    } else {
+        self.louds = mutableFetchResults;
+        [self.tableView reloadData];
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -101,7 +101,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self fetchLoudList];
+    
+    // Get the data
+    [self updateLouds];
+    
+ 	if (_refreshHeaderView == nil) {
+		
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		[view release];
+		
+	}
+	
+	//  update the last update date
+	[_refreshHeaderView refreshLastUpdatedDate];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -113,6 +128,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    _refreshHeaderView=nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -150,14 +166,14 @@
 {
 
     // Return the number of sections.
-    return [[self.resultsController sections] count];
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 
     // Return the number of rows in the section.
-    return [[[self.resultsController sections] objectAtIndex:section] numberOfObjects];
+    return [self.louds count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -170,51 +186,12 @@
     }
     
     // Configure the cell...
-    Loud *loud = [self.resultsController objectAtIndexPath:indexPath];
+    Loud *loud = [self.louds objectAtIndex:indexPath.row];
     cell.textLabel.text = loud.content;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -224,7 +201,7 @@
     
      HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
      // ...
-    detailViewController.loud = [self.resultsController objectAtIndexPath:indexPath];
+    detailViewController.loud = [self.louds objectAtIndex:indexPath.row];
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
@@ -234,6 +211,7 @@
 #pragma mark - RESTful request
 - (void)fetchLoudList
 {
+    NSLog(@"%@", @"fetching louds....");
     NSURL *url = [NSURL URLWithString:@"http://rest.whohelp.me/l/list?tk=q1w21&ak=12345678"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
@@ -242,6 +220,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    NSLog(@"processing louds...");
     //NSString *responseString = [request responseString];
     NSData *responseData = [request responseData];
     
@@ -255,15 +234,19 @@
         // set the newLouds 
  
         if ([request responseStatusCode] != 200){
+            // Maybe a system error here FIXME
             NSLog(@"remote error: %@, %@", [request responseStatusCode], [request responseStatusMessage]);
+            [self warningNotification:@"非正常返回."];
         } else{
             if ([result isKindOfClass:[NSMutableDictionary class]] &&
                 [result objectForKey:@"status"] == @"fail"){
                 NSLog(@"%@", @"The operation failed.");
+                [self warningNotification:@"操作失败."];
                 
             } else {
                 self.newLouds = result;
                 [self addLouds]; // save data to database
+                [self updateLouds]; // update the MO data
             }
         }
 
@@ -271,19 +254,42 @@
     } else {
         // error handle TODO
         NSLog(@"louds json parser error: %@, %@", error, [error userInfo]);
+        [self warningNotification:@"未知错误."];
+        abort();
     }
 }
 
-- (void)syncLoudList
-{
-    // TODO instead of the fetch method.
-}
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
-    // error handle TODO
+    // notify the user
+    [self warningNotification:@"网络服务请求失败."];
     NSLog(@"error: %@, %@", error, [error userInfo]);
+}
+
+- (void)syncLoudList
+{
+#warning TODO instead of the fetch method.
+    // TODO instead of the fetch method.
+}
+
+#pragma mark - handling errors
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
+{
+    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [Notpermitted show];
+    [Notpermitted release];
+}
+
+- (void)warningNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"warning" forMessage:message];
+}
+
+- (void)errorNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
 #pragma mark - CRUD Loud and Profile
@@ -293,6 +299,8 @@
     if (self.newLouds == nil){
         return;
     }
+    
+    NSLog(@"%@", @"update the louds list...");
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
@@ -325,7 +333,8 @@
     
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        // Handle the error. TODO
+        // Handle the error. 
+        [self warningNotification:@"数据存储失败."];
         NSLog(@"save data error: %@, %@", error, [error userInfo]);
     }
     
@@ -333,7 +342,28 @@
 }
 
 
-- (NSDictionary *)getLoudByLid:(NSNumber *)lid
+- (void) deleteLouds
+{
+    
+    if (self.discardLouds == nil){
+        return;
+    }
+    
+    for (int i=0, count=[self.discardLouds count]; i < count; i++) {
+        NSManagedObject *loudToDelete = [self getLoudByLid:[self.discardLouds objectAtIndex:i]];
+        [self.managedObjectContext deleteObject:loudToDelete];
+    }
+    // Commit the change.
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        // Handle the error.
+        [self warningNotification:@"数据存储失败."];
+        NSLog(@"save data error: %@, %@", error, [error userInfo]);
+    }    
+   
+}
+
+- (NSManagedObject *)getLoudByLid:(NSNumber *)lid
 {
     // Create request
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -358,7 +388,7 @@
         }
 
     } else {
-        // Handle the error
+        // Handle the error FIXME
         NSLog(@"get by lid error: %@, %@", error, [error userInfo]);
     }
 
@@ -366,14 +396,71 @@
     
 }
 
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //  should be calling your tableviews data source model to reload
+    [self fetchLoudList];
+    // some more actions here TODO
+    _reloading = YES;
+    
+}
+
+- (void)doneLoadingTableViewData{
+    
+    //  model should call this when its done loading
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    [self reloadTableViewDataSource];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+    
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    return _reloading; // should return if data source model is reloading
+    
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+    
+    return [NSDate date]; // should return date data source was last changed
+    
+}
 
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
     [profiles_ release];
-    [resultsController_ release];
+    [louds_ release];
     [managedObjectContext_ release];
+    [_refreshHeaderView release];
     [super dealloc];
 }
 
