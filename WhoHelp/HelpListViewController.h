@@ -13,9 +13,13 @@
 @private
     NSFetchedResultsController *resultsController_;
     NSMutableArray *profiles_;
+    NSManagedObjectContext *managedObjectContext_;
+    NSArray *newLouds_;
 }
 
 @property (nonatomic, readonly) NSFetchedResultsController *resultsController;
 @property (nonatomic, retain) NSMutableArray *profiles;
+@property (nonatomic, retain) NSArray *newLouds;
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 
 @end

@@ -11,10 +11,26 @@
 #import "Profile.h"
 #import "Loud.h"
 #import "HelpDetailViewController.h"
+#import "ASIHTTPRequest.h"
+#import "SBJson.h"
+
+@interface HelpListViewController (Private)
+- (void)fetchLoudList;
+- (void)addLouds;
+- (NSDictionary *)getLoudByLid:(NSNumber *)lid;
+@end
 
 @implementation HelpListViewController
 
 @synthesize profiles=profiles_;
+@synthesize newLouds=newLouds_;
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+    return managedObjectContext;
+}
 
 - (NSFetchedResultsController *)resultsController
 {
@@ -26,15 +42,11 @@
     // This must be the request for our results controller. We don't have one yet
     // so we need to build it.
     
-    // Get the moc object
-    WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
-    
     // Create request
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     
     // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:self.managedObjectContext];
     [request setEntity:entity];
     
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO];
@@ -46,7 +58,7 @@
     // create the fetch results controller 
     resultsController_ = [[NSFetchedResultsController alloc] 
                           initWithFetchRequest:request 
-                          managedObjectContext:managedObjectContext 
+                          managedObjectContext:self.managedObjectContext 
                           sectionNameKeyPath:nil 
                           cacheName:@"loud_list.cache"];
     resultsController_.delegate = self;
@@ -56,11 +68,16 @@
     if (!sucess){
         // Handle the error
         // TODO error maybe
+        NSLog(@"fetch the loud list error: %@, %@", error, [error userInfo]);
     }
     [request release];
     return resultsController_;
 }
 
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView reloadData];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -84,6 +101,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self fetchLoudList];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -213,11 +231,149 @@
      
 }
 
+#pragma mark - RESTful request
+- (void)fetchLoudList
+{
+    NSURL *url = [NSURL URLWithString:@"http://rest.whohelp.me/l/list?tk=q1w21&ak=12345678"];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setDelegate:self];
+    [request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    //NSString *responseString = [request responseString];
+    NSData *responseData = [request responseData];
+    
+    // create the json parser 
+    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+    NSError *error = nil;
+    id result = [jsonParser objectWithData:responseData];
+    [jsonParser release];
+    
+    if (error == nil){
+        // set the newLouds 
+ 
+        if ([request responseStatusCode] != 200){
+            NSLog(@"remote error: %@, %@", [request responseStatusCode], [request responseStatusMessage]);
+        } else{
+            if ([result isKindOfClass:[NSMutableDictionary class]] &&
+                [result objectForKey:@"status"] == @"fail"){
+                NSLog(@"%@", @"The operation failed.");
+                
+            } else {
+                self.newLouds = result;
+                [self addLouds]; // save data to database
+            }
+        }
+
+        
+    } else {
+        // error handle TODO
+        NSLog(@"louds json parser error: %@, %@", error, [error userInfo]);
+    }
+}
+
+- (void)syncLoudList
+{
+    // TODO instead of the fetch method.
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    // error handle TODO
+    NSLog(@"error: %@, %@", error, [error userInfo]);
+}
+
+#pragma mark - CRUD Loud and Profile
+
+- (void)addLouds
+{
+    if (self.newLouds == nil){
+        return;
+    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    //[dateFormatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN_POSIX"] autorelease]];
+    
+    for (int i=0, count=[self.newLouds count]; i < count; i++) {
+
+        
+        NSMutableDictionary *newLoud = [self.newLouds objectAtIndex:i];
+        if ([self getLoudByLid:[newLoud valueForKey:@"id"]] == nil){
+            Loud *loud = (Loud *)[NSEntityDescription insertNewObjectForEntityForName:@"Loud" inManagedObjectContext:self.managedObjectContext];
+            loud.content = [newLoud valueForKey:@"content"];
+            loud.lid = [newLoud valueForKey:@"id"];
+            loud.grade = [newLoud valueForKey:@"grade"];
+            loud.lat = [newLoud valueForKey:@"lat"];
+            loud.lon = [newLoud valueForKey:@"lon"];
+             
+            NSTimeInterval plus8 = 8*60*60;
+            loud.created = [[dateFormatter dateFromString:[newLoud objectForKey:@"created"]] dateByAddingTimeInterval:plus8];
+            
+            NSMutableDictionary *loudUser = [newLoud valueForKey:@"user"];
+            loud.userName = [loudUser valueForKey:@"name"];
+            loud.userAvatar = nil;//[loud_user objectForKey:@"avatar"]; // TODO get the image
+            loud.userPhone = [loudUser valueForKey:@"phone"];
+            
+
+        }
+        
+    }
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        // Handle the error. TODO
+        NSLog(@"save data error: %@, %@", error, [error userInfo]);
+    }
+    
+    [dateFormatter release];
+}
+
+
+- (NSDictionary *)getLoudByLid:(NSNumber *)lid
+{
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"lid == %@", lid]];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+
+    if (error == nil) {
+        if ([mutableFetchResults count] > 0) {
+            return [mutableFetchResults objectAtIndex:0];
+        }
+
+    } else {
+        // Handle the error
+        NSLog(@"get by lid error: %@, %@", error, [error userInfo]);
+    }
+
+    return nil;
+    
+}
+
+
+
 #pragma mark - dealloc 
 - (void)dealloc
 {
     [profiles_ release];
     [resultsController_ release];
+    [managedObjectContext_ release];
     [super dealloc];
 }
 
