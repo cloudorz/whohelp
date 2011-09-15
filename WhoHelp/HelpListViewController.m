@@ -330,6 +330,22 @@
     // TODO instead of the fetch method.
 }
 
+#pragma mark - get the images
+- (NSData *)fetchImage: (NSString *)partURI
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"http://static.whohelp.me/%@", partURI]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error) {
+        //NSString *response = [request responseString];
+        return [request responseData];
+    }else{
+        NSLog(@"fetch images error");
+        return nil;
+    }
+}
+
 #pragma mark - handling errors
 - (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
 {
@@ -374,12 +390,10 @@
             loud.lat = [newLoud valueForKey:@"lat"];
             loud.lon = [newLoud valueForKey:@"lon"];
              
-            //NSTimeInterval plus8 = 8*60*60;
-            //loud.created = [[dateFormatter dateFromString:[newLoud objectForKey:@"created"]] dateByAddingTimeInterval:plus8];
             loud.created = [dateFormatter dateFromString:[newLoud objectForKey:@"created"]];
             NSMutableDictionary *loudUser = [newLoud valueForKey:@"user"];
             loud.userName = [loudUser valueForKey:@"name"];
-            loud.userAvatar = nil;//[loud_user objectForKey:@"avatar"]; // TODO get the image
+            loud.userAvatar = [self fetchImage:[loudUser objectForKey:@"avatar"]];
             loud.userPhone = [loudUser valueForKey:@"phone"];
             
 

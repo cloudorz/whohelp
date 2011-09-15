@@ -93,19 +93,24 @@
     NSInteger timePassed = abs([date timeIntervalSinceNow]);
     
     NSString *dateString = nil;
-    if (timePassed < 60*60){
-        dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
+    if (timePassed < 60){
+        dateString = [NSString stringWithFormat:@"%d秒前", timePassed];
     }else{
-        NSDateFormatter *dateFormat = [NSDateFormatter alloc];
-        [dateFormat setLocale:[NSLocale currentLocale]];
-        NSString *dateFormatString = nil;
-        if (timePassed < 24*60*60){
-             dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+        if (timePassed < 60*60){
+            dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
         }else{
-             dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
+            NSDateFormatter *dateFormat = [NSDateFormatter alloc];
+            [dateFormat setLocale:[NSLocale currentLocale]];
+            NSString *dateFormatString = nil;
+            
+            if (timePassed < 24*60*60){
+                dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+            }else{
+                dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
             }
-        [dateFormat setDateFormat:dateFormatString];
-        dateString = [dateFormat stringFromDate:date];
+            [dateFormat setDateFormat:dateFormatString];
+            dateString = [dateFormat stringFromDate:date];
+        }
     }
     return dateString;
 }
