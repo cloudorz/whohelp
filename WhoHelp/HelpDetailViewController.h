@@ -21,6 +21,7 @@
     UITextView *contentTextView_;
     MKReverseGeocoder *reverseGeocoder_;
     UIActivityIndicatorView *loadingIndicator_;
+    double distance_;
 }
 
 @property (nonatomic, retain) Loud *loud;
@@ -31,6 +32,7 @@
 @property (nonatomic, retain) IBOutlet UITextView *contentTextView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
+@property double distance;
 
 - (void)parsePosition;
 - (NSString *)descriptionForTime:(NSDate *)date;

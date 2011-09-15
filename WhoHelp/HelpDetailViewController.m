@@ -18,6 +18,7 @@
 @synthesize contentTextView=contentTextView_;
 @synthesize reverseGeocoder=reverseGeocoder_;
 @synthesize loadingIndicator=loadingIndicator_;
+@synthesize distance=distance_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,16 +82,34 @@
     // start loading
     [self.loadingIndicator startAnimating];
     // Reverse geocode
-    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:CLLocationCoordinate2DMake([self.loud.lon doubleValue], [self.loud.lat doubleValue])];
+    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:CLLocationCoordinate2DMake([self.loud.lat doubleValue], [self.loud.lon doubleValue])];
     self.reverseGeocoder.delegate = self;
     [self.reverseGeocoder start];
 }
 
 - (NSString *)descriptionForTime:(NSDate *)date
 {
-    // convert the time formate to human reading. TODOs
-    return [date description];
+    // convert the time formate to human reading. 
+    NSInteger timePassed = abs([date timeIntervalSinceNow]);
+    
+    NSString *dateString = nil;
+    if (timePassed < 60*60){
+        dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
+    }else{
+        NSDateFormatter *dateFormat = [NSDateFormatter alloc];
+        [dateFormat setLocale:[NSLocale currentLocale]];
+        NSString *dateFormatString = nil;
+        if (timePassed < 24*60*60){
+             dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+        }else{
+             dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
+            }
+        [dateFormat setDateFormat:dateFormatString];
+        dateString = [dateFormat stringFromDate:date];
+    }
+    return dateString;
 }
+
 
 #pragma mark - the tab bar operation
 
@@ -132,6 +151,18 @@
     return TRUE; 
 }
 
+- (void)setLocationlabelTextFromPlacemark:(MKPlacemark *)placemark
+{
+    if (nil == placemark){
+        self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
+    }else{
+        self.locationLabel.text = [NSString stringWithFormat:@"%@ %@(%.0f米)", 
+                                   placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
+                                   placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare,
+                                   self.distance];
+    }
+}
+
 #pragma mark - reverser mehtod
 - (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
 {
@@ -139,22 +170,22 @@
     [self.reverseGeocoder cancel];
     // stop loading status
     [self.loadingIndicator stopAnimating];
+    [self setLocationlabelTextFromPlacemark:nil];
 }
 
 - (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
 {
-    NSLog(@"Got it");
-    //NSDictionary *p = placemark.addressDictionary;
-    NSLog(@"street address: %@", placemark.thoroughfare);
-    NSLog(@"street-level: %@", placemark.subThoroughfare);
-    NSLog(@"city-level: %@", placemark.subLocality);
-    NSLog(@"city address: %@", placemark.locality);
-    self.locationLabel.text = [NSString stringWithFormat:@"%@ %@", 
-                               placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
-                               placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
+//    NSLog(@"Got it");
+//    //NSDictionary *p = placemark.addressDictionary;
+//    NSLog(@"street address: %@", placemark.thoroughfare);
+//    NSLog(@"street-level: %@", placemark.subThoroughfare);
+//    NSLog(@"city-level: %@", placemark.subLocality);
+//    NSLog(@"city address: %@", placemark.locality);
+
     // stop loading status
     [self.loadingIndicator stopAnimating];
     [self.reverseGeocoder cancel];
+    [self setLocationlabelTextFromPlacemark:placemark];
 }
 
 #pragma mark - dealloc

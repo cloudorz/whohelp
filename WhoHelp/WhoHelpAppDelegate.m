@@ -220,4 +220,11 @@
     } 
 }
 
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    NSLog(@"%d", viewController.tabBarItem.tag);
+    if (12 == viewController.tabBarItem.tag) {
+        return NO;
+    }
+    return YES;
+}
 @end

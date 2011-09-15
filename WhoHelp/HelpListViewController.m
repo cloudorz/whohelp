@@ -14,6 +14,34 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
+// fix the get location bug
+@implementation CLLocationManager (TemporaryHack)
+
+- (void)hackLocationFix
+{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:42 longitude:-50];
+    [[self delegate] locationManager:self didUpdateToLocation:location fromLocation:nil];
+}
+
+- (void)startUpdatingLocation
+{
+    [self performSelector:@selector(hackLocationFix) withObject:nil afterDelay:0.1];
+}
+
+- (void)hackHeadingFix
+{
+    NSString *heading = [NSString stringWithString:@"Somewhere that direction-ish!"];
+    [[self delegate] locationManager:self didUpdateHeading:(id)heading];
+}
+
+- (void)startUpdatingHeading
+{
+    [self performSelector:@selector(hackHeadingFix) withObject:nil afterDelay:0.1];
+}
+
+@end
+
+
 @interface HelpListViewController (Private)
 - (void)fetchLoudList;
 - (void)addLouds;
@@ -26,8 +54,6 @@
 - (void)warningNotification:(NSString *)message;
 @end
 
-#warning  TODO distance compute
-#warning  TDOD position compute
 
 @implementation HelpListViewController
 
@@ -35,6 +61,28 @@
 @synthesize newLouds=newLouds_;
 @synthesize discardLouds=discardLouds_;
 @synthesize louds=louds_;
+@synthesize locationIsWork=locationIsWork_;
+
+- (CLLocationManager *) locationManager
+{
+    if (locationManager_ == nil){
+        locationManager_ = [[CLLocationManager alloc] init];
+        locationManager_.desiredAccuracy = kCLLocationAccuracyBest;
+        locationManager_.delegate = self;
+    }
+    return locationManager_;
+}
+
+- (CLLocation *)curLocation
+{
+    if (self.locationIsWork){
+        //return self.locationManager.location;
+        // FIXME now is simulator
+        return [[[CLLocation alloc] initWithLatitude:30.293461 longitude:120.160904] autorelease];
+    }
+    // default location the center of Hangzhou
+    return [[[CLLocation alloc] initWithLatitude:30.293461 longitude:120.160904] autorelease];
+}
 
 - (NSManagedObjectContext *)managedObjectContext
 {
@@ -136,6 +184,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.locationIsWork = NO;
+    [self.locationManager startUpdatingLocation];
     
 }
 
@@ -147,6 +197,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    NSLog(@"%@", @"Shutting down core  location.");
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -201,7 +253,9 @@
     
      HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
      // ...
-    detailViewController.loud = [self.louds objectAtIndex:indexPath.row];
+    Loud *loud= [self.louds objectAtIndex:indexPath.row];
+    detailViewController.loud = loud;
+    detailViewController.distance = [self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[loud.lat doubleValue] longitude:[loud.lon doubleValue]] autorelease]];
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
@@ -212,7 +266,9 @@
 - (void)fetchLoudList
 {
     NSLog(@"%@", @"fetching louds....");
-    NSURL *url = [NSURL URLWithString:@"http://rest.whohelp.me/l/list?tk=q1w21&ak=12345678"];
+    CLLocationCoordinate2D curloc = self.curLocation.coordinate;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"http://rest.whohelp.me/l/list?tk=q1w21&ak=12345678&lat=%f&lon=%f",
+                                       curloc.latitude, curloc.longitude]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -235,7 +291,7 @@
  
         if ([request responseStatusCode] != 200){
             // Maybe a system error here FIXME
-            NSLog(@"remote error: %@, %@", [request responseStatusCode], [request responseStatusMessage]);
+           // NSLog(@"remote error: %@, %@", [request responseStatusCode], [request responseStatusMessage]);
             [self warningNotification:@"非正常返回."];
         } else{
             if ([result isKindOfClass:[NSMutableDictionary class]] &&
@@ -252,7 +308,7 @@
 
         
     } else {
-        // error handle TODO
+        // error handle
         NSLog(@"louds json parser error: %@, %@", error, [error userInfo]);
         [self warningNotification:@"未知错误."];
         abort();
@@ -277,14 +333,14 @@
 #pragma mark - handling errors
 - (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
 {
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
     [Notpermitted show];
     [Notpermitted release];
 }
 
 - (void)warningNotification:(NSString *)message
 {
-    [self helpNotificationForTitle:@"warning" forMessage:message];
+    [self helpNotificationForTitle:@"警告" forMessage:message];
 }
 
 - (void)errorNotification:(NSString *)message
@@ -318,9 +374,9 @@
             loud.lat = [newLoud valueForKey:@"lat"];
             loud.lon = [newLoud valueForKey:@"lon"];
              
-            NSTimeInterval plus8 = 8*60*60;
-            loud.created = [[dateFormatter dateFromString:[newLoud objectForKey:@"created"]] dateByAddingTimeInterval:plus8];
-            
+            //NSTimeInterval plus8 = 8*60*60;
+            //loud.created = [[dateFormatter dateFromString:[newLoud objectForKey:@"created"]] dateByAddingTimeInterval:plus8];
+            loud.created = [dateFormatter dateFromString:[newLoud objectForKey:@"created"]];
             NSMutableDictionary *loudUser = [newLoud valueForKey:@"user"];
             loud.userName = [loudUser valueForKey:@"name"];
             loud.userAvatar = nil;//[loud_user objectForKey:@"avatar"]; // TODO get the image
@@ -453,6 +509,62 @@
     
 }
 
+#pragma mark - locationmananger delegate methods
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    NSLog(@"%@", @"Core location claims to have a position.");
+    self.locationIsWork = YES;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"Core locaiton can't get the fix error: %@, %@", error, [error localizedDescription]);
+    self.locationIsWork = NO;
+
+    if ([error domain] == kCLErrorDomain) {
+        
+        // We handle CoreLocation-related errors here
+        switch ([error code]) {
+                // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
+                // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
+            case kCLErrorDenied:
+                NSLog(@"Core location denied");
+                break;
+            case kCLErrorLocationUnknown:
+                NSLog(@"Core location unkown");
+                break;
+                
+            default:
+                break;
+        }   
+    } else {
+        // We handle all non-CoreLocation errors here
+    }   
+
+}
+#pragma mark - date formate to human readable
+- (NSString *)descriptionForTime:(NSDate *)date
+{
+    // convert the time formate to human reading. 
+    NSInteger timePassed = abs([date timeIntervalSinceNow]);
+    
+    NSString *dateString = nil;
+    if (timePassed < 60*60){
+        dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
+    }else{
+        NSDateFormatter *dateFormat = [NSDateFormatter alloc];
+        [dateFormat setLocale:[NSLocale currentLocale]];
+        NSString *dateFormatString = nil;
+        if (timePassed < 24*60*60){
+            dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+        }else{
+            dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
+        }
+        [dateFormat setDateFormat:dateFormatString];
+        dateString = [dateFormat stringFromDate:date];
+    }
+    return dateString;
+}
 
 #pragma mark - dealloc 
 - (void)dealloc
@@ -460,7 +572,10 @@
     [profiles_ release];
     [louds_ release];
     [managedObjectContext_ release];
+    [newLouds_ release];
+    [discardLouds_ release];
     [_refreshHeaderView release];
+    [locationManager_ release];
     [super dealloc];
 }
 

@@ -179,8 +179,8 @@
 					</object>
 					<object class="IBUIImageView" id="388529597">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{10, 20}, {52, 47}}</string>
+						<int key="NSvFlags">308</int>
+						<string key="NSFrame">{{19, 29}, {52, 47}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="136630376"/>
@@ -194,7 +194,7 @@
 						<string key="NSFrame">{{80, 238}, {171, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="438876050"/>
+						<reference key="NSNextKeyView" ref="646678228"/>
 						<string key="NSReuseIdentifierKey">_NS:311</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -253,7 +253,7 @@
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
 					</object>
-					<object class="IBUIActivityIndicatorView" id="438876050">
+					<object class="IBUIActivityIndicatorView" id="646678228">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{106, 239}, {20, 20}}</string>
@@ -262,6 +262,7 @@
 						<reference key="NSNextKeyView" ref="1033527447"/>
 						<string key="NSReuseIdentifierKey">_NS:824</string>
 						<bool key="IBUIOpaque">NO</bool>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIAnimating">YES</bool>
 						<int key="IBUIStyle">2</int>
@@ -347,7 +348,7 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">loadingIndicator</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="438876050"/>
+						<reference key="destination" ref="646678228"/>
 					</object>
 					<int key="connectionID">57</int>
 				</object>
@@ -368,13 +369,13 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="780779237"/>
 							<reference ref="136630376"/>
-							<reference ref="388529597"/>
 							<reference ref="786005778"/>
 							<reference ref="2751033"/>
 							<reference ref="621799092"/>
 							<reference ref="1033527447"/>
 							<reference ref="223540635"/>
-							<reference ref="438876050"/>
+							<reference ref="646678228"/>
+							<reference ref="388529597"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -452,7 +453,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">56</int>
-						<reference key="object" ref="438876050"/>
+						<reference key="object" ref="646678228"/>
 						<reference key="parent" ref="191373211"/>
 						<string key="objectName">Gray Activity Indicator</string>
 					</object>
