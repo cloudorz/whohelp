@@ -43,6 +43,10 @@
 		615E6A76141F418F00400B60 /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A6E141F418F00400B60 /* whiteArrow@2x.png */; };
 		615E6A7A141F41B800400B60 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A78141F41B800400B60 /* EGORefreshTableHeaderView.m */; };
 		615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 615E6A7F141F478900400B60 /* QuartzCore.framework */; };
+		615E6A841420785200400B60 /* HelpSendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A821420785100400B60 /* HelpSendViewController.m */; };
+		615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A831420785200400B60 /* HelpSendViewController.xib */; };
+		615E6A881420924F00400B60 /* HelpTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A871420924E00400B60 /* HelpTabBarViewController.m */; };
+		615E6A8B1421B83400400B60 /* DownloadImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A8A1421B83300400B60 /* DownloadImage.m */; };
 		617E3A39141B584F00441135 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A38141B584F00441135 /* UIKit.framework */; };
 		617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
 		617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
@@ -158,6 +162,13 @@
 		615E6A78141F41B800400B60 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		615E6A79141F41B800400B60 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		615E6A7F141F478900400B60 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		615E6A811420785100400B60 /* HelpSendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSendViewController.h; sourceTree = "<group>"; };
+		615E6A821420785100400B60 /* HelpSendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSendViewController.m; sourceTree = "<group>"; };
+		615E6A831420785200400B60 /* HelpSendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSendViewController.xib; sourceTree = "<group>"; };
+		615E6A861420924E00400B60 /* HelpTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpTabBarViewController.h; sourceTree = "<group>"; };
+		615E6A871420924E00400B60 /* HelpTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpTabBarViewController.m; sourceTree = "<group>"; };
+		615E6A891421B83100400B60 /* DownloadImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadImage.h; sourceTree = "<group>"; };
+		615E6A8A1421B83300400B60 /* DownloadImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadImage.m; sourceTree = "<group>"; };
 		617E3A34141B584F00441135 /* WhoHelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhoHelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A38141B584F00441135 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -343,9 +354,13 @@
 				614E3EDC141DE4CC00418314 /* RESTful */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
-				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
 				615E6A79141F41B800400B60 /* EGORefreshTableHeaderView.h */,
 				615E6A78141F41B800400B60 /* EGORefreshTableHeaderView.m */,
+				615E6A891421B83100400B60 /* DownloadImage.h */,
+				615E6A8A1421B83300400B60 /* DownloadImage.m */,
+				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
+				615E6A861420924E00400B60 /* HelpTabBarViewController.h */,
+				615E6A871420924E00400B60 /* HelpTabBarViewController.m */,
 				617E3A76141B69D300441135 /* HelpListViewController.h */,
 				617E3A77141B69D300441135 /* HelpListViewController.m */,
 				617E3A78141B69D300441135 /* HelpListViewController.xib */,
@@ -355,6 +370,9 @@
 				617E3A7C141B820300441135 /* HelpDetailViewController.h */,
 				617E3A7D141B820300441135 /* HelpDetailViewController.m */,
 				617E3A7E141B820300441135 /* HelpDetailViewController.xib */,
+				615E6A811420785100400B60 /* HelpSendViewController.h */,
+				615E6A821420785100400B60 /* HelpSendViewController.m */,
+				615E6A831420785200400B60 /* HelpSendViewController.xib */,
 				617E3A4C141B584F00441135 /* MainWindow.xib */,
 				617E3A41141B584F00441135 /* Supporting Files */,
 				617E3A60141B584F00441135 /* WhoHelpTests */,
@@ -509,6 +527,7 @@
 				615E6A74141F418F00400B60 /* grayArrow@2x.png in Resources */,
 				615E6A75141F418F00400B60 /* whiteArrow.png in Resources */,
 				615E6A76141F418F00400B60 /* whiteArrow@2x.png in Resources */,
+				615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +593,9 @@
 				614E3F03141E026300418314 /* SBJsonUTF8Stream.m in Sources */,
 				614E3F04141E026300418314 /* SBJsonWriter.m in Sources */,
 				615E6A7A141F41B800400B60 /* EGORefreshTableHeaderView.m in Sources */,
+				615E6A841420785200400B60 /* HelpSendViewController.m in Sources */,
+				615E6A881420924F00400B60 /* HelpTabBarViewController.m in Sources */,
+				615E6A8B1421B83400400B60 /* DownloadImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
