@@ -16,8 +16,6 @@
 @synthesize timeLabel=timeLabel_;
 @synthesize avatarImage=avatarImage_;
 @synthesize contentTextView=contentTextView_;
-@synthesize reverseGeocoder=reverseGeocoder_;
-@synthesize loadingIndicator=loadingIndicator_;
 @synthesize distance=distance_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,7 +62,11 @@
     self.nameLabel.text = self.loud.userName;
     self.contentTextView.text = self.loud.content;
     // get the geocoder address 
-    [self parsePosition];
+    if (nil == self.loud.address){
+        self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
+    }else{
+        self.locationLabel.text = [NSString stringWithFormat:@"%@(%.0f米)", self.loud.address, self.distance];
+    }
     self.timeLabel.text = [self descriptionForTime:self.loud.created];
     
 }
@@ -75,17 +77,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - get the address from lat and lon
-- (void)parsePosition
-{
-    // use the location get the address description
-    // start loading
-    [self.loadingIndicator startAnimating];
-    // Reverse geocode
-    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:CLLocationCoordinate2DMake([self.loud.lat doubleValue], [self.loud.lon doubleValue])];
-    self.reverseGeocoder.delegate = self;
-    [self.reverseGeocoder start];
-}
 
 - (NSString *)descriptionForTime:(NSDate *)date
 {
@@ -156,42 +147,6 @@
     return TRUE; 
 }
 
-- (void)setLocationlabelTextFromPlacemark:(MKPlacemark *)placemark
-{
-    if (nil == placemark){
-        self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
-    }else{
-        self.locationLabel.text = [NSString stringWithFormat:@"%@ %@(%.0f米)", 
-                                   placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
-                                   placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare,
-                                   self.distance];
-    }
-}
-
-#pragma mark - reverser mehtod
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
-{
-    NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
-    [self.reverseGeocoder cancel];
-    // stop loading status
-    [self.loadingIndicator stopAnimating];
-    [self setLocationlabelTextFromPlacemark:nil];
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
-{
-//    NSLog(@"Got it");
-//    //NSDictionary *p = placemark.addressDictionary;
-//    NSLog(@"street address: %@", placemark.thoroughfare);
-//    NSLog(@"street-level: %@", placemark.subThoroughfare);
-//    NSLog(@"city-level: %@", placemark.subLocality);
-//    NSLog(@"city address: %@", placemark.locality);
-
-    // stop loading status
-    [self.loadingIndicator stopAnimating];
-    [self.reverseGeocoder cancel];
-    [self setLocationlabelTextFromPlacemark:placemark];
-}
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -202,8 +157,6 @@
     [timeLabel_ release];
     [contentTextView_ release];
     [avatarImage_ release];
-    [reverseGeocoder_ release];
-    [loadingIndicator_ release];
     [super dealloc];
 }
 

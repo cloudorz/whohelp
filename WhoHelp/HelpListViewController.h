@@ -18,6 +18,7 @@
     NSManagedObjectContext *managedObjectContext_;
     
     NSArray *newLouds_;
+    NSArray *delLouds_;
     NSArray *discardLouds_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -30,6 +31,7 @@
 @property (nonatomic, retain) NSMutableArray *louds;
 @property (nonatomic, retain) NSMutableArray *profiles;
 @property (nonatomic, retain) NSArray *newLouds;
+@property (nonatomic, retain) NSArray *delLouds;
 @property (nonatomic, retain) NSArray *discardLouds;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) CLLocationManager *locationManager;

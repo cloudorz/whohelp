@@ -25,6 +25,8 @@
 @synthesize locationIsWork=locationIsWork_;
 @synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
+@synthesize reverseGeocoder=reverseGeocoder_;
+@synthesize address=address_;
 
 - (CLLocationManager *) locationManager
 {
@@ -98,6 +100,7 @@
     [super viewWillAppear:animated];
     self.locationIsWork = NO;
     [self.locationManager startUpdatingLocation];
+    [self parsePosition];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -105,6 +108,7 @@
     [super viewWillDisappear:animated];
     NSLog(@"%@", @"Shutting down core  location.");
     [self.locationManager stopUpdatingLocation];
+    [self.reverseGeocoder cancel];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -143,6 +147,7 @@
     [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
     [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
+    [preLoud setObject:self.address forKey:@"address"];
     
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:preLoud];
@@ -166,32 +171,38 @@
     
     // create the json parser 
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    NSError *error = nil;
     id result = [jsonParser objectWithData:responseData];
     [jsonParser release];
     
-    if (error == nil){
-        NSLog(@"fuck: %@", [result  objectForKey:@"status"]);
-    } else {
-        // error handle
-        NSLog(@"json parser error: %@, %@", error, [error userInfo]);
-        [self warningNotification:@"未知错误."];
-        abort();
+
+    if ([request responseStatusCode] == 200){
+        if ([result objectForKey:@"status"] == @"fail"){
+            [self warningNotification:@"发送求助失败"];
+        } else{
+            [self dismissModalViewControllerAnimated:YES];
+        }
+        
+    } else{
+        [self warningNotification:@"请求服务出错"];
     }
+
     // send ok cancel
     [self.loadingIndicator stopAnimating];
-    [self dismissModalViewControllerAnimated:YES];
+    self.sendBarItem.enabled = YES;
+    
+
 }
 
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
+    NSLog(@"error: %@, %@", error, [error userInfo]);
     // notify the user
     [self.loadingIndicator stopAnimating];
     self.sendBarItem.enabled = YES;
     [self warningNotification:@"网络服务请求失败."];
-    NSLog(@"error: %@, %@", error, [error userInfo]);
+
 }
 
 - (IBAction)addRewardButtonPressed:(id)sender
@@ -275,6 +286,48 @@
     
 }
 
+#pragma mark - get the address from lat and lon
+- (void)parsePosition
+{
+    // Reverse geocode
+    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:self.curLocation.coordinate];
+    self.reverseGeocoder.delegate = self;
+    [self.reverseGeocoder start];
+}
+
+- (NSString *)getPlaceInfo:(MKPlacemark *)placemark
+{
+    NSLog(@"look at this");
+    return [NSString stringWithFormat:@"%@ %@", 
+                placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
+                placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
+}
+
+
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
+{
+    NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
+    [self.reverseGeocoder cancel];
+    // stop loading status
+    self.address = @"";
+}
+
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
+{
+    //    NSLog(@"Got it");
+    //    //NSDictionary *p = placemark.addressDictionary;
+    //    NSLog(@"street address: %@", placemark.thoroughfare);
+    //    NSLog(@"street-level: %@", placemark.subThoroughfare);
+    //    NSLog(@"city-level: %@", placemark.subLocality);
+    //    NSLog(@"city address: %@", placemark.locality);
+    
+    // stop loading status
+    [self.reverseGeocoder cancel];
+    self.address = [self getPlaceInfo:placemark];
+}
+
+
+
 #pragma mark - dealloc
 - (void)dealloc
 {
@@ -285,6 +338,8 @@
     [sendBarItem_ release];
     [managedObjectContext_ release];
     [loadingIndicator_ release];
+    [reverseGeocoder_ release];
+    [address_ release];
     [super dealloc];
 }
 @end

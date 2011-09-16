@@ -276,43 +276,30 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"processing louds...");
+    NSLog(@"Got louds then processing louds...");
     //NSString *responseString = [request responseString];
     NSData *responseData = [request responseData];
     
     // create the json parser 
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    NSError *error = nil;
+
     id result = [jsonParser objectWithData:responseData];
     [jsonParser release];
     
-    if (error == nil){
-        // set the newLouds 
- 
-        if ([request responseStatusCode] != 200){
-            // Maybe a system error here FIXME
-           // NSLog(@"remote error: %@, %@", [request responseStatusCode], [request responseStatusMessage]);
-            [self warningNotification:@"非正常返回."];
+
+        if ([request responseStatusCode] == 200){
+          
+            self.newLouds = [result objectForKey:@"add"];
+            self.discardLouds = [result objectForKey:@"del"];
+            
+            [self addLouds]; // save data to database
+            [self deleteLouds]; // del the no use louds
+            [self updateLouds]; // update the MO data
+            
         } else{
-            if ([result isKindOfClass:[NSMutableDictionary class]] &&
-                [result objectForKey:@"status"] == @"fail"){
-                NSLog(@"%@", @"The operation failed.");
-                [self warningNotification:@"操作失败."];
-                
-            } else {
-                self.newLouds = result;
-                [self addLouds]; // save data to database
-                [self updateLouds]; // update the MO data
-            }
+            [self warningNotification:@"请求服务出错"];
         }
 
-        
-    } else {
-        // error handle
-        NSLog(@"louds json parser error: %@, %@", error, [error userInfo]);
-        [self warningNotification:@"未知错误."];
-        abort();
-    }
 }
 
 
@@ -324,11 +311,11 @@
     NSLog(@"error: %@, %@", error, [error userInfo]);
 }
 
-- (void)syncLoudList
-{
-#warning TODO instead of the fetch method.
-    // TODO instead of the fetch method.
-}
+//- (void)syncLoudList
+//{
+//#warning TODO instead of the fetch method.
+//    // TODO instead of the fetch method.
+//}
 
 #pragma mark - get the images
 - (NSData *)fetchImage: (NSString *)partURI
@@ -368,7 +355,7 @@
 
 - (void)addLouds
 {
-    if (self.newLouds == nil){
+    if (self.newLouds == nil || [self.newLouds count] <= 0){
         return;
     }
     
@@ -389,6 +376,11 @@
             loud.grade = [newLoud valueForKey:@"grade"];
             loud.lat = [newLoud valueForKey:@"lat"];
             loud.lon = [newLoud valueForKey:@"lon"];
+            if ([newLoud valueForKey:@"address"] == [NSNull null]) {
+                loud.address = nil;
+            } else {
+                loud.address = [newLoud valueForKey:@"address"];                
+            }
              
             loud.created = [dateFormatter dateFromString:[newLoud objectForKey:@"created"]];
             NSMutableDictionary *loudUser = [newLoud valueForKey:@"user"];
@@ -415,7 +407,7 @@
 - (void) deleteLouds
 {
     
-    if (self.discardLouds == nil){
+    if (self.discardLouds == nil || [self.discardLouds count] <= 0){
         return;
     }
     

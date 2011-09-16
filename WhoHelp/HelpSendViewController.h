@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
-@interface HelpSendViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate>
+@interface HelpSendViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate, MKReverseGeocoderDelegate>
 {
 @private
     UITabBarController *helpTabBarController_;
@@ -23,6 +24,9 @@
     NSManagedObjectContext *managedObjectContext_;
     UIActivityIndicatorView *loadingIndicator_;
     
+    MKReverseGeocoder *reverseGeocoder_;
+    NSString *address_;
+    
 }
 
 @property (nonatomic, retain) UITabBarController *helpTabBarController;
@@ -32,11 +36,14 @@
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 @property (nonatomic, readonly) CLLocation *curLocation;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
+@property (nonatomic, retain) NSString *address;
 @property BOOL locationIsWork;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;
 - (IBAction)addRewardButtonPressed:(id)sender;
 - (void)postHelpTextToRemoteServer;
+- (void)parsePosition;
 
 @end
