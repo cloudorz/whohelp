@@ -227,22 +227,116 @@
     // Return the number of rows in the section.
     return [self.louds count];
 }
+    
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    
+    
+    Loud *loud = [self.louds objectAtIndex:indexPath.row];
+    
+
+    
+    static NSString *CellIdentifier;
+    CellIdentifier = [NSString stringWithFormat:@"helpEntry%d", loud.lid];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    CGSize theSize= [loud.content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+
+    UIImageView *avatarImage;
+    UILabel *nameLabel, *timeLabel, *distanceLabel, *cellText;
+    UIColor *bgGray = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
+    
     if (cell == nil) {
+
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = bgGray;
+        cell.contentView.backgroundColor = bgGray;
+        
+        
+        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(2, 2, IMGSIZE, IMGSIZE)] autorelease];
+        avatarImage.tag = CELLAVATAR;
+        avatarImage.opaque = YES;
+        avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        avatarImage.layer.borderWidth = 1;
+        avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+        avatarImage.backgroundColor = bgGray;
+        [cell addSubview:avatarImage];
+        
+        nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(2+IMGSIZE+LEFTSPACE, TOPSPACE, 75, NAMEFONTSIZE)] autorelease];
+        nameLabel.tag = CELLNAME;
+        nameLabel.opaque = YES;
+        nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
+        nameLabel.textAlignment = UITextAlignmentLeft;
+        nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+        nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        nameLabel.backgroundColor = bgGray;
+        [cell addSubview:nameLabel];
+        
+
+        cellText = [[[UILabel alloc] initWithFrame:CGRectMake(2+IMGSIZE+LEFTSPACE,  TOPSPACE+NAMEFONTSIZE+5, TEXTWIDTH, theSize.height)] autorelease];
+        cellText.tag = CELLTEXT;
+        cellText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
+        cellText.textAlignment = UITextAlignmentLeft;
+        cellText.lineBreakMode = UILineBreakModeWordWrap;
+        cellText.numberOfLines = 0;
+        cellText.textColor = [UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0];
+        cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        cellText.backgroundColor = bgGray;
+        cellText.opaque = YES;
+        [cell addSubview:cellText];
+        
+        avatarImage.image = [UIImage imageWithData:loud.userAvatar];
+        nameLabel.text = loud.userName;
+        
+        cellText.text = loud.content;
+        
+    } else {
+        distanceLabel = (UILabel *)[cell.contentView viewWithTag:CELLDISTANCE];
+        timeLabel = (UILabel *)[cell.contentView viewWithTag:CELLTIME];
+        [distanceLabel removeFromSuperview];
+        [timeLabel removeFromSuperview];
+        
     }
     
     // Configure the cell...
-    Loud *loud = [self.louds objectAtIndex:indexPath.row];
-    cell.textLabel.text = loud.content;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(2+IMGSIZE+LEFTSPACE, TOPSPACE+NAMEFONTSIZE+theSize.height+10, 75, SMALLFONTSIZE)] autorelease];
+    distanceLabel.tag = CELLDISTANCE;
+    distanceLabel.opaque = YES;
+    distanceLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
+    distanceLabel.textAlignment = UITextAlignmentLeft;
+    distanceLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
+    distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+    distanceLabel.backgroundColor = bgGray;
+    [cell addSubview:distanceLabel]; 
+    
+    timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(2+IMGSIZE+LEFTSPACE+75+100, TOPSPACE+NAMEFONTSIZE+theSize.height+10, TIMELENGTH, SMALLFONTSIZE)] autorelease];
+    timeLabel.tag = CELLTIME;
+    timeLabel.opaque = YES;
+    timeLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
+    timeLabel.textAlignment = UITextAlignmentRight;
+    timeLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
+    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+    timeLabel.backgroundColor = bgGray;
+    [cell addSubview:timeLabel];
+
+    
+    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[loud.lat doubleValue] longitude:[loud.lon doubleValue]] autorelease]]];
+    
+    timeLabel.text = [self descriptionForTime:loud.created];
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //return [indexPath row] * 20;
+    Loud *loud = [self.louds objectAtIndex:indexPath.row];
+
+    CGSize theSize= [loud.content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    return theSize.height + TOPSPACE + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE;
 }
 
 #pragma mark - Table view delegate
@@ -555,19 +649,24 @@
     NSInteger timePassed = abs([date timeIntervalSinceNow]);
     
     NSString *dateString = nil;
-    if (timePassed < 60*60){
-        dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
+    if (timePassed < 60){
+        dateString = [NSString stringWithFormat:@"%d秒前", timePassed];
     }else{
-        NSDateFormatter *dateFormat = [NSDateFormatter alloc];
-        [dateFormat setLocale:[NSLocale currentLocale]];
-        NSString *dateFormatString = nil;
-        if (timePassed < 24*60*60){
-            dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+        if (timePassed < 60*60){
+            dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
         }else{
-            dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
+            NSDateFormatter *dateFormat = [NSDateFormatter alloc];
+            [dateFormat setLocale:[NSLocale currentLocale]];
+            NSString *dateFormatString = nil;
+            
+            if (timePassed < 24*60*60){
+                dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+            }else{
+                dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
+            }
+            [dateFormat setDateFormat:dateFormatString];
+            dateString = [dateFormat stringFromDate:date];
         }
-        [dateFormat setDateFormat:dateFormatString];
-        dateString = [dateFormat stringFromDate:date];
     }
     return dateString;
 }

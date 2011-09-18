@@ -52,7 +52,6 @@
 						<string key="NSFrame">{{0, 411}, {320, 49}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:515</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -119,9 +118,9 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<string key="IBUIText">Name</string>
-						<object class="NSFont" key="IBUIFont" id="86536302">
-							<string key="NSName">Helvetica</string>
-							<double key="NSSize">17</double>
+						<object class="NSFont" key="IBUIFont">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">18</double>
 							<int key="NSfFlags">16</int>
 						</object>
 						<object class="NSColor" key="IBUITextColor" id="28476648">
@@ -179,7 +178,7 @@
 					<object class="IBUIImageView" id="388529597">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">308</int>
-						<string key="NSFrame">{{19, 29}, {52, 47}}</string>
+						<string key="NSFrame">{{19, 29}, {57, 57}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="136630376"/>
@@ -193,7 +192,7 @@
 						<string key="NSFrame">{{80, 238}, {171, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="1033527447"/>
 						<string key="NSReuseIdentifierKey">_NS:311</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -201,7 +200,11 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<string key="IBUIText"/>
-						<reference key="IBUIFont" ref="86536302"/>
+						<object class="NSFont" key="IBUIFont" id="86536302">
+							<string key="NSName">Helvetica</string>
+							<double key="NSSize">17</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<reference key="IBUITextColor" ref="28476648"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">1</int>
@@ -230,7 +233,7 @@
 					<object class="IBUITextView" id="786005778">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{27, 84}, {273, 128}}</string>
+						<string key="NSFrame">{{24, 94}, {273, 128}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="223540635"/>
@@ -259,10 +262,7 @@
 				<reference key="NSNextKeyView" ref="388529597"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
-						<int key="NSID">2</int>
-					</object>
+					<bytes key="NSWhite">MC45MjkzMTY4MzM5AA</bytes>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
@@ -346,12 +346,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="780779237"/>
 							<reference ref="136630376"/>
-							<reference ref="786005778"/>
 							<reference ref="2751033"/>
 							<reference ref="621799092"/>
 							<reference ref="1033527447"/>
 							<reference ref="223540635"/>
 							<reference ref="388529597"/>
+							<reference ref="786005778"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -496,7 +496,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>avatarImage</string>
 							<string>contentTextView</string>
-							<string>loadingIndicator</string>
 							<string>locationLabel</string>
 							<string>nameLabel</string>
 							<string>timeLabel</string>
@@ -505,7 +504,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIImageView</string>
 							<string>UITextView</string>
-							<string>UIActivityIndicatorView</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
@@ -517,7 +515,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>avatarImage</string>
 							<string>contentTextView</string>
-							<string>loadingIndicator</string>
 							<string>locationLabel</string>
 							<string>nameLabel</string>
 							<string>timeLabel</string>
@@ -531,10 +528,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">contentTextView</string>
 								<string key="candidateClassName">UITextView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">loadingIndicator</string>
-								<string key="candidateClassName">UIActivityIndicatorView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">locationLabel</string>

@@ -147,7 +147,10 @@
     [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
     [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
-    [preLoud setObject:self.address forKey:@"address"];
+    if (self.address != nil){
+        [preLoud setObject:self.address forKey:@"address"];
+    }
+    
     
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:preLoud];
@@ -309,7 +312,7 @@
     NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
     [self.reverseGeocoder cancel];
     // stop loading status
-    self.address = @"";
+    self.address = nil;
 }
 
 - (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark

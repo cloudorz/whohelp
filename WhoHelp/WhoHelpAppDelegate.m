@@ -7,7 +7,10 @@
 //
 
 #import "WhoHelpAppDelegate.h"
-@interface WhoHelpAppDelegate (Private)
+#import "HelpSendViewController.h"
+#import "LoginViewController.h"
+
+@interface WhoHelpAppDelegate (Private) 
 - (void) createEditableCopyOfDatabaseIfNeeded;
 @end
 
@@ -22,6 +25,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    self.window.rootViewController = self.tabBarController;
+    self.tabBarController.delegate = self;
     [self createEditableCopyOfDatabaseIfNeeded];
     [self.window makeKeyAndVisible];
     return YES;
@@ -73,6 +78,7 @@
     [super dealloc];
 }
 
+
 - (void)awakeFromNib
 {
     /*
@@ -99,6 +105,7 @@
         } 
     }
 }
+
 
 #pragma mark - Core Data stack
 
@@ -198,6 +205,31 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+#pragma mark - tab bar delegate
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    NSLog(@"fuck fuck");
+}
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+
+    if (12 == viewController.tabBarItem.tag){
+        HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
+        //helpSendVC.helpTabBarController = self;
+        [self.tabBarController presentModalViewController:helpSendVC animated:YES];
+        [helpSendVC release];
+        return NO;
+    } else if (13 == viewController.tabBarItem.tag){
+        LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [self.tabBarController presentModalViewController:helpLoginVC animated:NO];
+        [helpLoginVC release];
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - copy the sqlite file
 - (void)createEditableCopyOfDatabaseIfNeeded
 {
@@ -220,11 +252,4 @@
     } 
 }
 
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
-    NSLog(@"%d", viewController.tabBarItem.tag);
-    if (12 == viewController.tabBarItem.tag) {
-        return NO;
-    }
-    return YES;
-}
 @end

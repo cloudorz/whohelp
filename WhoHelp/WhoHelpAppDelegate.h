@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WhoHelpAppDelegate : NSObject <UIApplicationDelegate>
+@interface WhoHelpAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate>
 {
 @private
     UITabBarController *tabBarController_;
@@ -20,6 +20,8 @@
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
