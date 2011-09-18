@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="562" systemVersion="11B26" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="iOS 4.3">
     <entity name="Loud" representedClassName="Loud">
+        <attribute name="address" optional="YES" attributeType="String"/>
         <attribute name="content" attributeType="String"/>
         <attribute name="created" attributeType="Date"/>
         <attribute name="grade" attributeType="Integer 16" defaultValueString="0"/>
@@ -23,7 +24,7 @@
         <attribute name="updated" optional="YES" attributeType="Date"/>
     </entity>
     <elements>
-        <element name="Loud" positionX="-47" positionY="150" width="128" height="180"/>
+        <element name="Loud" positionX="-47" positionY="150" width="128" height="195"/>
         <element name="Profile" positionX="160" positionY="117" width="128" height="180"/>
     </elements>
 </model>
