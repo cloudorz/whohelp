@@ -2,7 +2,7 @@
 //  Loud.h
 //  WhoHelp
 //
-//  Created by cloud on 11-9-12.
+//  Created by cloud on 11-9-16.
 //  Copyright (c) 2011年 __MyCompanyName__. All rights reserved.
 //
 
@@ -22,5 +22,6 @@
 @property (nonatomic, retain) NSData * userAvatar;
 @property (nonatomic, retain) NSString * userName;
 @property (nonatomic, retain) NSNumber * userPhone;
+@property (nonatomic, retain) NSString * address;
 
 @end
