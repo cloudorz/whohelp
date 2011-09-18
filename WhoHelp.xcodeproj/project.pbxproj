@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		614E3E74141DB3FC00418314 /* Loud.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3E73141DB3FC00418314 /* Loud.m */; };
 		614E3E9C141DDD9200418314 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9B141DDD9200418314 /* CFNetwork.framework */; };
 		614E3E9E141DDDA200418314 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9D141DDDA200418314 /* SystemConfiguration.framework */; };
 		614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */; };
@@ -45,8 +44,9 @@
 		615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 615E6A7F141F478900400B60 /* QuartzCore.framework */; };
 		615E6A841420785200400B60 /* HelpSendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A821420785100400B60 /* HelpSendViewController.m */; };
 		615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A831420785200400B60 /* HelpSendViewController.xib */; };
-		615E6A881420924F00400B60 /* HelpTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A871420924E00400B60 /* HelpTabBarViewController.m */; };
-		615E6A8B1421B83400400B60 /* DownloadImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A8A1421B83300400B60 /* DownloadImage.m */; };
+		615E6A8F1423090200400B60 /* Loud.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A8E1423090200400B60 /* Loud.m */; };
+		615E6AE61424E05800400B60 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6AE41424E05700400B60 /* LoginViewController.m */; };
+		615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AE51424E05700400B60 /* LoginViewController.xib */; };
 		617E3A39141B584F00441135 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A38141B584F00441135 /* UIKit.framework */; };
 		617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
 		617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
@@ -98,8 +98,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		614E3E72141DB3FC00418314 /* Loud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Loud.h; sourceTree = "<group>"; };
-		614E3E73141DB3FC00418314 /* Loud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Loud.m; sourceTree = "<group>"; };
 		614E3E9B141DDD9200418314 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		614E3E9D141DDDA200418314 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
@@ -165,10 +163,11 @@
 		615E6A811420785100400B60 /* HelpSendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSendViewController.h; sourceTree = "<group>"; };
 		615E6A821420785100400B60 /* HelpSendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSendViewController.m; sourceTree = "<group>"; };
 		615E6A831420785200400B60 /* HelpSendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSendViewController.xib; sourceTree = "<group>"; };
-		615E6A861420924E00400B60 /* HelpTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpTabBarViewController.h; sourceTree = "<group>"; };
-		615E6A871420924E00400B60 /* HelpTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpTabBarViewController.m; sourceTree = "<group>"; };
-		615E6A891421B83100400B60 /* DownloadImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadImage.h; sourceTree = "<group>"; };
-		615E6A8A1421B83300400B60 /* DownloadImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadImage.m; sourceTree = "<group>"; };
+		615E6A8D1423090200400B60 /* Loud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Loud.h; sourceTree = "<group>"; };
+		615E6A8E1423090200400B60 /* Loud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Loud.m; sourceTree = "<group>"; };
+		615E6AE31424E05600400B60 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		615E6AE41424E05700400B60 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		615E6AE51424E05700400B60 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		617E3A34141B584F00441135 /* WhoHelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhoHelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A38141B584F00441135 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -310,6 +309,15 @@
 			name = JSON;
 			sourceTree = "<group>";
 		};
+		615E6A8C1422D8B700400B60 /* Refresh */ = {
+			isa = PBXGroup;
+			children = (
+				615E6A79141F41B800400B60 /* EGORefreshTableHeaderView.h */,
+				615E6A78141F41B800400B60 /* EGORefreshTableHeaderView.m */,
+			);
+			name = Refresh;
+			sourceTree = "<group>";
+		};
 		617E3A29141B584E00441135 = {
 			isa = PBXGroup;
 			children = (
@@ -350,20 +358,18 @@
 		617E3A40141B584F00441135 /* WhoHelp */ = {
 			isa = PBXGroup;
 			children = (
+				615E6A8C1422D8B700400B60 /* Refresh */,
 				614E3EDF141E01DC00418314 /* JSON */,
 				614E3EDC141DE4CC00418314 /* RESTful */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
-				615E6A79141F41B800400B60 /* EGORefreshTableHeaderView.h */,
-				615E6A78141F41B800400B60 /* EGORefreshTableHeaderView.m */,
-				615E6A891421B83100400B60 /* DownloadImage.h */,
-				615E6A8A1421B83300400B60 /* DownloadImage.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
-				615E6A861420924E00400B60 /* HelpTabBarViewController.h */,
-				615E6A871420924E00400B60 /* HelpTabBarViewController.m */,
 				617E3A76141B69D300441135 /* HelpListViewController.h */,
 				617E3A77141B69D300441135 /* HelpListViewController.m */,
 				617E3A78141B69D300441135 /* HelpListViewController.xib */,
+				615E6AE31424E05600400B60 /* LoginViewController.h */,
+				615E6AE41424E05700400B60 /* LoginViewController.m */,
+				615E6AE51424E05700400B60 /* LoginViewController.xib */,
 				617E3A86141B8D7400441135 /* HelpSettingViewController.h */,
 				617E3A87141B8D7400441135 /* HelpSettingViewController.m */,
 				617E3A88141B8D7400441135 /* HelpSettingViewController.xib */,
@@ -391,8 +397,6 @@
 				615E6A6C141F418F00400B60 /* grayArrow@2x.png */,
 				615E6A6D141F418F00400B60 /* whiteArrow.png */,
 				615E6A6E141F418F00400B60 /* whiteArrow@2x.png */,
-				614E3E72141DB3FC00418314 /* Loud.h */,
-				614E3E73141DB3FC00418314 /* Loud.m */,
 				617E3AA6141BC42700441135 /* Profile.h */,
 				617E3AA7141BC42700441135 /* Profile.m */,
 				617E3A97141B9B1500441135 /* back.png */,
@@ -411,6 +415,8 @@
 				617E3A43141B584F00441135 /* InfoPlist.strings */,
 				617E3A46141B584F00441135 /* main.m */,
 				617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */,
+				615E6A8D1423090200400B60 /* Loud.h */,
+				615E6A8E1423090200400B60 /* Loud.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -528,6 +534,7 @@
 				615E6A75141F418F00400B60 /* whiteArrow.png in Resources */,
 				615E6A76141F418F00400B60 /* whiteArrow@2x.png in Resources */,
 				615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */,
+				615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,7 +577,6 @@
 				617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */,
 				617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */,
 				617E3AA8141BC42800441135 /* Profile.m in Sources */,
-				614E3E74141DB3FC00418314 /* Loud.m in Sources */,
 				614E3ED1141DE49D00418314 /* ASIAuthenticationDialog.m in Sources */,
 				614E3ED2141DE49D00418314 /* ASIDataCompressor.m in Sources */,
 				614E3ED3141DE49D00418314 /* ASIDataDecompressor.m in Sources */,
@@ -594,8 +600,8 @@
 				614E3F04141E026300418314 /* SBJsonWriter.m in Sources */,
 				615E6A7A141F41B800400B60 /* EGORefreshTableHeaderView.m in Sources */,
 				615E6A841420785200400B60 /* HelpSendViewController.m in Sources */,
-				615E6A881420924F00400B60 /* HelpTabBarViewController.m in Sources */,
-				615E6A8B1421B83400400B60 /* DownloadImage.m in Sources */,
+				615E6A8F1423090200400B60 /* Loud.m in Sources */,
+				615E6AE61424E05800400B60 /* LoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
