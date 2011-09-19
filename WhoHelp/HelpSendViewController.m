@@ -10,6 +10,7 @@
 #import "WhoHelpAppDelegate.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
+#import "Config.h"
 
 @interface HelpSendViewController (Private)
 - (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
@@ -122,7 +123,6 @@
 {
 
     [self dismissModalViewControllerAnimated:YES];
-    //[[self.helpTabBarController.viewControllers objectAtIndex:1] popToRootViewControllerAnimated:NO];
 
 }
 
@@ -134,12 +134,11 @@
 
 - (void)postHelpTextToRemoteServer
 {
-    NSLog(@"send now, %@", self.helpTextView.text);
     
     [self.loadingIndicator startAnimating];
     self.sendBarItem.enabled = NO;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"http://rest.whohelp.me/l/?tk=q1w21&ak=12345678"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=q1w21&ak=%@", SENDURI, APPKEY]];
     
     // make json data for post
     CLLocationCoordinate2D curloc = self.curLocation.coordinate;
@@ -151,11 +150,10 @@
         [preLoud setObject:self.address forKey:@"address"];
     }
     
-    
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:preLoud];
-    
-    NSLog(@"data: %@", dataString);
+    [preJson release];
+    [preLoud release];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
@@ -179,7 +177,7 @@
     
 
     if ([request responseStatusCode] == 200){
-        if ([result objectForKey:@"status"] == @"fail"){
+        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
             [self warningNotification:@"发送求助失败"];
         } else{
             [self dismissModalViewControllerAnimated:YES];
@@ -339,7 +337,7 @@
     [numIndicator_ release];
     [locationManager_ release];
     [sendBarItem_ release];
-    [managedObjectContext_ release];
+    //[managedObjectContext_ release];
     [loadingIndicator_ release];
     [reverseGeocoder_ release];
     [address_ release];

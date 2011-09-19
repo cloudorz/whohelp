@@ -21,6 +21,45 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize tabBarController=tabBarController_;
+@synthesize profile=profile_;
+
+- (Profile *)profile
+{
+    if (nil == profile_){
+        // Create request
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        
+        // config the request
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
+        [request setEntity:entity];
+        
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+        [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
+        [request setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        [request release];
+        
+        if (error == nil) {
+            if ([mutableFetchResults count] > 0) {
+                
+                NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+                profile_ = (Profile *)res;
+            }
+            
+        } else {
+            // Handle the error FIXME
+            NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+        }
+        
+        [mutableFetchResults release];
+    }
+    
+    return profile_;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -60,6 +99,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [self tabBarController:self.tabBarController shouldSelectViewController:self.tabBarController.selectedViewController];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -214,19 +254,21 @@
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-
-    if (12 == viewController.tabBarItem.tag){
-        HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
-        //helpSendVC.helpTabBarController = self;
-        [self.tabBarController presentModalViewController:helpSendVC animated:YES];
-        [helpSendVC release];
-        return NO;
-    } else if (13 == viewController.tabBarItem.tag){
+    if (nil == self.profile){
         LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [self.tabBarController presentModalViewController:helpLoginVC animated:NO];
         [helpLoginVC release];
         return NO;
+    } else{
+        if (12 == viewController.tabBarItem.tag){
+            HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
+            //helpSendVC.helpTabBarController = self;
+            [self.tabBarController presentModalViewController:helpSendVC animated:YES];
+            [helpSendVC release];
+            return NO;
+        }
     }
+
     return YES;
 }
 

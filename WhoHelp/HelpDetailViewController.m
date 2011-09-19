@@ -80,6 +80,7 @@
 - (NSString *)descriptionForTime:(NSDate *)date
 {
     // convert the time formate to human reading. 
+    // FIXME 24hours maybe two days.
     NSInteger timePassed = abs([date timeIntervalSinceNow]);
     
     NSString *dateString = nil;
@@ -114,7 +115,6 @@
     switch (item.tag) {
         case 1:
         {
-            NSLog(@"Let me back.");
             [self.navigationController popViewControllerAnimated:YES];
             break;
         }

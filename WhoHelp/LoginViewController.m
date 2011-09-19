@@ -10,11 +10,13 @@
 #import "WhoHelpAppDelegate.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
+#import "Config.h"
+#import "Profile.h"
 
 @implementation LoginViewController
 
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize name=name_;
+@synthesize phone=phone_;
 @synthesize pass=pass_;
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -49,11 +51,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                          action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
-    [tap release];
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                          action:@selector(dismissKeyboard)];
+//    
+//    [self.view addGestureRecognizer:tap];
+//    [tap release];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -80,6 +82,26 @@
 - (IBAction)loginButtonPressed:(id)sender
 {
     NSLog(@"%@", @"login request");
+    [sender setEnabled: NO];
+    
+    NSString *inputPhone = self.phone.text;
+    NSString *inputPass = self.pass.text;
+    NSString *decimalRegex = @"^[0-9]{11}$";
+    NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
+    
+    if ([inputPass length] >0 && [decimalTest evaluateWithObject:inputPhone]){
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        
+        [data setObject:inputPhone forKey:@"phone"];
+        [data setObject:inputPass forKey:@"password"];
+        
+        [self postUserInfo:data];
+        [data release];
+    }else{
+        [self warningNotification:@"手机号(11位数字)与密码不能为空"];
+    }
+
+    [sender setEnabled: YES];
 }
 
 - (IBAction)forgotPasswordButtonPressed:(id)sender
@@ -93,21 +115,149 @@
 }
 
 -(void)dismissKeyboard {
-    [self.name resignFirstResponder];
+    [self.phone resignFirstResponder];
     [self.pass resignFirstResponder];
 }
 
 - (IBAction)doneEditing:(id)sender
 {
     [sender resignFirstResponder];
-    NSLog(@"Got here");
+}
+
+
+#pragma mark - handling errors
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
+{
+    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
+    [Notpermitted show];
+    [Notpermitted release];
+}
+
+- (void)warningNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"警告" forMessage:message];
+}
+
+- (void)errorNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"错误" forMessage:message];  
+}
+
+#pragma mark - get the images
+- (void)postUserInfo: (NSMutableDictionary *)userInfo
+{
+    [self.loadingIndicator startAnimating];
+    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
+    NSString *dataString = [preJson stringWithObject:userInfo];
+    [preJson release];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", AUTHURI, APPKEY]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
+    [request setRequestMethod:@"POST"];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            id data = [request responseData];
+            id result = [jsonParser objectWithData:data];
+            [jsonParser release];
+
+            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+                [self warningNotification:@"登录失败请输入正确的手机号和密码"];
+            } else{
+                
+                [self saveUserInfo:result];
+                [self dismissModalViewControllerAnimated:YES];
+            }
+            
+        } else{
+            [self warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [self warningNotification:@"请求服务错误"];
+    }
+    [self.loadingIndicator stopAnimating];
+}
+
+- (void)saveUserInfo:(NSMutableDictionary *) data
+{
+    // save to mo
+    NSLog(@"%@", @"save user info...");
+   
+    Profile *profile = (Profile *)[self getProfileByPhone:[data objectForKey:@"phone"]];
+    
+    if (profile == nil){
+        profile =  (Profile *)[NSEntityDescription insertNewObjectForEntityForName:@"Profile" inManagedObjectContext:self.managedObjectContext];
+    }
+    
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    
+    profile.name = [data objectForKey:@"name"];
+    profile.phone = [data objectForKey:@"phone"];
+    profile.token = [data objectForKey:@"token"];
+    profile.updated = [dateFormatter dateFromString:[data objectForKey:@"updated"]];
+    profile.isLogin = [NSNumber numberWithBool:TRUE];
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        // Handle the error. 
+        [self warningNotification:@"数据存储失败."];
+        NSLog(@"save data error: %@, %@", error, [error userInfo]);
+    }
+    
+    [dateFormatter release];
+}
+
+#pragma mark - database operation
+- (NSManagedObject *)getProfileByPhone:(NSNumber *)phone
+{
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"phone == %@", phone]];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+    
+    if (error == nil) {
+        if ([mutableFetchResults count] > 0) {
+            
+            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+            [mutableFetchResults release];
+            return res;
+        }
+        
+    } else {
+        // Handle the error FIXME
+        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    }
+    
+    [mutableFetchResults release];
+    return nil;
+    
 }
 
 #pragma mark - dealloc
 - (void)dealloc
 {
-    [managedObjectContext_ release];
-    [name_ release];
+    //[managedObjectContext_ release];
+    [phone_ release];
     [pass_ release];
     [loadingIndicator_ release];
     [super dealloc];

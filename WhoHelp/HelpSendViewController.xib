@@ -53,11 +53,11 @@
 						<string key="NSFrameSize">{320, 44}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="90470055"/>
+						<reference key="NSNextKeyView" ref="221052372"/>
 						<string key="NSReuseIdentifierKey">_NS:345</string>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<int key="IBUIBarStyle">1</int>
+						<int key="IBUIBarStyle">2</int>
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUIBarButtonItem" id="926976811">
@@ -72,7 +72,6 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="923091837">
-								<bool key="IBUIEnabled">NO</bool>
 								<string key="IBUITitle">求助</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUIToolbar" ref="619936824"/>
@@ -89,6 +88,10 @@
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="619936824"/>
 							</object>
+						</object>
+						<object class="NSColor" key="IBUITintColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4yOTk1NTgzODUgMC42OTE2MjU0NzgzIDAuMDU3OTgxOTcwMTkAA</bytes>
 						</object>
 					</object>
 					<object class="IBUITextView" id="90470055">
@@ -159,6 +162,7 @@
 						<string key="NSFrame">{{284, 214}, {16, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:311</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -182,6 +186,7 @@
 						<string key="NSFrame">{{282, 12}, {20, 20}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="90470055"/>
 						<string key="NSReuseIdentifierKey">_NS:824</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>

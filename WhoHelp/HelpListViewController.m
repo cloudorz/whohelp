@@ -13,6 +13,7 @@
 #import "HelpDetailViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
+#import "Config.h"
 
 // fix the get location bug
 @implementation CLLocationManager (TemporaryHack)
@@ -361,8 +362,8 @@
 {
     NSLog(@"%@", @"fetching louds....");
     CLLocationCoordinate2D curloc = self.curLocation.coordinate;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"http://rest.whohelp.me/l/list?tk=q1w21&ak=12345678&lat=%f&lon=%f",
-                                       curloc.latitude, curloc.longitude]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=q1w21&ak=%@&lat=%f&lon=%f",
+                                       SYNCURI, APPKEY, curloc.latitude, curloc.longitude]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -414,7 +415,7 @@
 #pragma mark - get the images
 - (NSData *)fetchImage: (NSString *)partURI
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"http://static.whohelp.me/%@", partURI]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", IMGURI, partURI]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request startSynchronous];
     NSError *error = [request error];
@@ -452,8 +453,6 @@
     if (self.newLouds == nil || [self.newLouds count] <= 0){
         return;
     }
-    
-    NSLog(@"%@", @"update the louds list...");
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
@@ -540,14 +539,16 @@
 
     if (error == nil) {
         if ([mutableFetchResults count] > 0) {
-            return [mutableFetchResults objectAtIndex:0];
+            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+            [mutableFetchResults release];
+            return res;
         }
 
     } else {
         // Handle the error FIXME
         NSLog(@"get by lid error: %@, %@", error, [error userInfo]);
     }
-
+    [mutableFetchResults release];
     return nil;
     
 }
@@ -676,7 +677,7 @@
 {
     [profiles_ release];
     [louds_ release];
-    [managedObjectContext_ release];
+    //[managedObjectContext_ release];
     [newLouds_ release];
     [discardLouds_ release];
     [_refreshHeaderView release];
