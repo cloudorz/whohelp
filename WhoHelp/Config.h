@@ -22,9 +22,10 @@
 #define CELLTIME 3
 #define CELLTEXT 4
 #define CELLBG 6
+#define CELLARROW 7
 
 #define TEXTWIDTH 245.0f
-#define LEFTSPACE 12.0f
+#define LEFTSPACE 11.0f
 #define BOTTOMSPACE 5.0f
 #define TOPSPACE 5.0f
 #define RIGHTSPACE 10.0f

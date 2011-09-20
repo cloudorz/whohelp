@@ -277,7 +277,7 @@
     
     CGSize theSize= [loud.content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 
-    UIImageView *avatarImage;
+    UIImageView *avatarImage, *arrowImage;
     UILabel *nameLabel, *timeLabel, *distanceLabel;
     OHAttributedLabel *cellText;
     UIButton *bgButton;
@@ -300,12 +300,23 @@
         avatarImage.backgroundColor = bgGray;
         [cell addSubview:avatarImage];
         
-        bgButton = [[UIButton alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE, 5, TEXTWIDTH+10, theSize.height + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN)];
+        bgButton = [[[UIButton alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE, 5, TEXTWIDTH+10, theSize.height + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN)] autorelease];
         bgButton.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
         bgButton.tag = CELLBG;
+        bgButton.layer.borderWidth = 1;
+        bgButton.layer.borderColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0].CGColor;
+        bgButton.layer.cornerRadius = 4;
         bgButton.autoresizingMask = UIViewAutoresizingNone;
         bgButton.enabled = NO;
         [cell addSubview:bgButton];
+        
+        arrowImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+2, 5+5, 10, 15)] autorelease];
+        arrowImage.tag = CELLARROW;
+        arrowImage.opaque = YES;
+        arrowImage.autoresizingMask = UIViewAutoresizingNone;
+        arrowImage.backgroundColor = bgGray;
+        arrowImage.image = [UIImage imageNamed:@"list_arrow.png"];
+        [cell addSubview:arrowImage];
         
         nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE, TOPSPACE+TEXTMARGIN, 75, NAMEFONTSIZE)] autorelease];
         nameLabel.tag = CELLNAME;
@@ -314,19 +325,15 @@
         nameLabel.textAlignment = UITextAlignmentLeft;
         nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
         nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        //nameLabel.backgroundColor = bgGray;
         [cell addSubview:nameLabel];
         
 
         cellText = [[[OHAttributedLabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE,  TOPSPACE+NAMEFONTSIZE+5+TEXTMARGIN, TEXTWIDTH, theSize.height)] autorelease];
         cellText.tag = CELLTEXT;
-        //cellText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
         cellText.textAlignment = UITextAlignmentLeft;
         cellText.lineBreakMode = UILineBreakModeWordWrap;
         cellText.numberOfLines = 0;
-        //cellText.textColor = [UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0];
         cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        //cellText.backgroundColor = bgGray;
         cellText.opaque = YES;
         [cell addSubview:cellText];
         
