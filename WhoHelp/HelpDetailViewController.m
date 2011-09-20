@@ -15,7 +15,7 @@
 @synthesize locationLabel=locaitonLabel_;
 @synthesize timeLabel=timeLabel_;
 @synthesize avatarImage=avatarImage_;
-@synthesize contentTextView=contentTextView_;
+@synthesize contentTextLabel=contentTextLabel_;
 @synthesize distance=distance_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -57,9 +57,19 @@
 
     if (self.loud.userAvatar != nil){
         self.avatarImage.image = [UIImage imageWithData:self.loud.userAvatar];
+        self.avatarImage.opaque = YES;
     }
     self.nameLabel.text = self.loud.userName;
-    self.contentTextView.text = self.loud.content;
+    
+    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:self.loud.content];
+    [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+    [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
+    
+    NSRange rang = [self.loud.content rangeOfString:@"$" options:NSBackwardsSearch];
+    if (NSNotFound != rang.location){
+        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, self.loud.content.length-rang.location)];
+    }
+    self.contentTextLabel.attributedText = attributedString;
     // get the geocoder address 
     if (nil == self.loud.address){
         self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
@@ -154,7 +164,7 @@
     [loud_ release];
     [nameLabel_ release];
     [timeLabel_ release];
-    [contentTextView_ release];
+    [contentTextLabel_ release];
     [avatarImage_ release];
     [super dealloc];
 }

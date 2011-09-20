@@ -21,9 +21,10 @@
 #define CELLDISTANCE 2
 #define CELLTIME 3
 #define CELLTEXT 4
+#define CELLBG 6
 
-#define TEXTWIDTH 260.0f
-#define LEFTSPACE 5.0f
+#define TEXTWIDTH 245.0f
+#define LEFTSPACE 12.0f
 #define BOTTOMSPACE 5.0f
 #define TOPSPACE 5.0f
 #define RIGHTSPACE 10.0f
@@ -32,5 +33,7 @@
 #define SMALLFONTSIZE 9.0f
 #define TEXTFONTSIZE 14.0f
 #define TIMELENGTH 75.0f
+#define IMGLEFT 10.0f
+#define TEXTMARGIN 5.0f
 
 #endif

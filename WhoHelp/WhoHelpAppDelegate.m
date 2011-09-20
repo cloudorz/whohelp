@@ -25,38 +25,37 @@
 
 - (Profile *)profile
 {
-    if (nil == profile_){
-        // Create request
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        
-        // config the request
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
-        [request setEntity:entity];
-        
-        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
-        [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
-        [request setPredicate:predicate];
-        
-        NSError *error = nil;
-        NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        [request release];
-        
-        if (error == nil) {
-            if ([mutableFetchResults count] > 0) {
-                
-                NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-                profile_ = (Profile *)res;
-            }
+
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+    
+    if (error == nil) {
+        if ([mutableFetchResults count] > 0) {
             
-        } else {
-            // Handle the error FIXME
-            NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+            profile_ = (Profile *)res;
         }
         
-        [mutableFetchResults release];
+    } else {
+        // Handle the error FIXME
+        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
     }
+    
+    [mutableFetchResults release];
     
     return profile_;
 }
@@ -114,6 +113,7 @@
     [__managedObjectContext release];
     [__managedObjectModel release];
     [__persistentStoreCoordinator release];
+    [profile_ release];
     [tabBarController_ release];
     [super dealloc];
 }

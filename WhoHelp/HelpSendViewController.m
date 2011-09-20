@@ -50,6 +50,43 @@
     return [[[CLLocation alloc] initWithLatitude:30.293461 longitude:120.160904] autorelease];
 }
 
+- (Profile *)profile
+{
+    
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+    
+    if (error == nil) {
+        if ([mutableFetchResults count] > 0) {
+            
+            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+            profile_ = (Profile *)res;
+        }
+        
+    } else {
+        // Handle the error FIXME
+        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    }
+    
+    [mutableFetchResults release];
+    
+    return profile_;
+}
+
 - (NSManagedObjectContext *)managedObjectContext
 {
     if (managedObjectContext_ == nil){
@@ -138,7 +175,7 @@
     [self.loadingIndicator startAnimating];
     self.sendBarItem.enabled = NO;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=q1w21&ak=%@", SENDURI, APPKEY]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, self.profile.token, APPKEY]];
     
     // make json data for post
     CLLocationCoordinate2D curloc = self.curLocation.coordinate;

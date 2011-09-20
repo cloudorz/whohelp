@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "EGORefreshTableHeaderView.h"
+#import "WhoHelpAppDelegate.h"
+#import "Profile.h"
+#import "OHAttributedLabel.h"
+#import "NSAttributedString+Attributes.h"
 
-@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate>
+@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, OHAttributedLabelDelegate>
 {
 @private
     NSMutableArray *louds_;
@@ -26,6 +30,9 @@
     CLLocationManager *locationManager_;
     BOOL locationIsWork_;
     
+    WhoHelpAppDelegate *helpAppDelegate_;
+    Profile *profile_;
+    
 }
 
 @property (nonatomic, retain) NSMutableArray *louds;
@@ -35,6 +42,7 @@
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 @property (nonatomic, readonly) CLLocation *curLocation;
+@property (nonatomic, retain, readonly) Profile *profile;
 @property BOOL locationIsWork;
 
 - (void)reloadTableViewDataSource;

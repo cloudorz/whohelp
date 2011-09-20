@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
+#import "Profile.h"
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate, MKReverseGeocoderDelegate>
 {
@@ -27,6 +28,8 @@
     MKReverseGeocoder *reverseGeocoder_;
     NSString *address_;
     
+    Profile *profile_;
+    
 }
 
 @property (nonatomic, retain) UITabBarController *helpTabBarController;
@@ -37,6 +40,7 @@
 @property (nonatomic, readonly) CLLocation *curLocation;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain, readonly) Profile *profile;
 @property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
 @property (nonatomic, retain) NSString *address;
 @property BOOL locationIsWork;

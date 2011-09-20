@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "Loud.h"
+#import "OHAttributedLabel.h"
+#import "NSAttributedString+Attributes.h"
 
 @interface HelpDetailViewController : UIViewController
 {
@@ -18,7 +20,7 @@
     UILabel *locaitonLabel_;
     UILabel *timeLabel_;
     UIImageView *avatarImage_;
-    UITextView *contentTextView_;
+    OHAttributedLabel *contentTextLabel_;
     double distance_;
 }
 
@@ -27,7 +29,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *locationLabel;
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
-@property (nonatomic, retain) IBOutlet UITextView *contentTextView;
+@property (nonatomic, retain) IBOutlet OHAttributedLabel *contentTextLabel;
 @property double distance;
 
 - (NSString *)descriptionForTime:(NSDate *)date;
