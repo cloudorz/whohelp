@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
+		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
+		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
 		614E3E9C141DDD9200418314 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9B141DDD9200418314 /* CFNetwork.framework */; };
 		614E3E9E141DDDA200418314 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9D141DDDA200418314 /* SystemConfiguration.framework */; };
 		614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */; };
@@ -87,6 +90,7 @@
 		617E3AA0141B9B1600441135 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9A141B9B1500441135 /* mail.png */; };
 		617E3AA1141B9B1600441135 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9B141B9B1600441135 /* settings.png */; };
 		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
+		61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B1342D1428D27C0067AF09 /* list_arrow.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +104,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
+		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
+		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
+		6145385214288F7600BA2C34 /* OHAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHAttributedLabel.h; sourceTree = "<group>"; };
+		614538551428930B00BA2C34 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		614E3E9B141DDD9200418314 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		614E3E9D141DDDA200418314 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
@@ -217,6 +226,7 @@
 		617E3A9A141B9B1500441135 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
 		617E3A9B141B9B1600441135 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		617E3A9C141B9B1600441135 /* type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = type.png; sourceTree = "<group>"; };
+		61B1342D1428D27C0067AF09 /* list_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_arrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +234,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				614538561428930B00BA2C34 /* CoreText.framework in Frameworks */,
 				615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */,
 				614E3EDE141DE6DA00418314 /* MobileCoreServices.framework in Frameworks */,
 				614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */,
@@ -253,6 +264,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6145384D14288F5300BA2C34 /* OHAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */,
+				6145385014288F7600BA2C34 /* OHAttributedLabel.m */,
+				6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */,
+				6145385214288F7600BA2C34 /* OHAttributedLabel.h */,
+			);
+			name = OHAttributedLabel;
+			sourceTree = "<group>";
+		};
 		614E3EDC141DE4CC00418314 /* RESTful */ = {
 			isa = PBXGroup;
 			children = (
@@ -344,6 +366,7 @@
 		617E3A37141B584F00441135 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				614538551428930B00BA2C34 /* CoreText.framework */,
 				615E6A7F141F478900400B60 /* QuartzCore.framework */,
 				614E3EDD141DE6DA00418314 /* MobileCoreServices.framework */,
 				614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */,
@@ -363,6 +386,7 @@
 		617E3A40141B584F00441135 /* WhoHelp */ = {
 			isa = PBXGroup;
 			children = (
+				6145384D14288F5300BA2C34 /* OHAttributedLabel */,
 				615E6A8C1422D8B700400B60 /* Refresh */,
 				614E3EDF141E01DC00418314 /* JSON */,
 				614E3EDC141DE4CC00418314 /* RESTful */,
@@ -395,6 +419,7 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				61B1342D1428D27C0067AF09 /* list_arrow.png */,
 				615E6AE91425BA6200400B60 /* button.png */,
 				615E6AEA1425BA6200400B60 /* button@2x.png */,
 				615E6A67141F418E00400B60 /* blackArrow.png */,
@@ -545,6 +570,7 @@
 				615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */,
 				615E6AEB1425BA6200400B60 /* button.png in Resources */,
 				615E6AEC1425BA6200400B60 /* button@2x.png in Resources */,
+				61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,6 +638,8 @@
 				615E6A8F1423090200400B60 /* Loud.m in Sources */,
 				615E6AE61424E05800400B60 /* LoginViewController.m in Sources */,
 				615E6AF01426066400400B60 /* Profile.m in Sources */,
+				6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */,
+				6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
