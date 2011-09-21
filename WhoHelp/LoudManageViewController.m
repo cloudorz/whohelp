@@ -1,15 +1,17 @@
 //
-//  HelpTabBarViewController.m
+//  LoudManageViewController.m
 //  WhoHelp
 //
-//  Created by cloud on 11-9-14.
+//  Created by cloud on 11-9-21.
 //  Copyright 2011年 __MyCompanyName__. All rights reserved.
 //
 
-#import "HelpTabBarViewController.h"
-#import "HelpSendViewController.h"
+#import "LoudManageViewController.h"
 
-@implementation HelpTabBarViewController
+@implementation LoudManageViewController
+
+@synthesize errorLabel=errorLabel_;
+@synthesize loadingIndicator=loadingIndicator_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,30 +32,11 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
-*/
-
-#pragma mark - tab bar delegate
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-{
-    if (12 == item.tag){
-        HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
-        //helpSendVC.helpTabBarController = self;
-        [self presentModalViewController:helpSendVC animated:YES];
-        [helpSendVC release];
-    }
+    [self.loadingIndicator stopAnimating];
+    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)viewDidUnload
@@ -67,6 +50,29 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
+}
+
+#pragma mark - actions on view
+- (IBAction)cancelButtonPressed:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)doneButtonPressed:(id)sender
+{
+    NSLog(@"%@", @"Done change the password...");
+}
+
+- (void)dealloc
+{
+    [loadingIndicator_ release];
+    [errorLabel_ release];
+    [super dealloc];
 }
 
 @end

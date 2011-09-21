@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HelpSettingViewController : UITableViewController
+@interface HelpSettingViewController : UIViewController <UITableViewDelegate>
+{
+@private
+    NSMutableArray *menu_;
+}
+
+@property (nonatomic, retain, readonly) NSMutableArray *menu;
 
 @end
