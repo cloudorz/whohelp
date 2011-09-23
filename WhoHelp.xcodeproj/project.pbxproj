@@ -95,8 +95,6 @@
 		61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */; };
 		61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13442142A249E0067AF09 /* ChangNameViewController.m */; };
 		61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13443142A249E0067AF09 /* ChangNameViewController.xib */; };
-		61B13449142A24E30067AF09 /* ChangAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13447142A24E20067AF09 /* ChangAvatarViewController.m */; };
-		61B1344A142A24E30067AF09 /* ChangAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13448142A24E30067AF09 /* ChangAvatarViewController.xib */; };
 		61B13453142A26630067AF09 /* LoudManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13451142A26620067AF09 /* LoudManageViewController.m */; };
 		61B13454142A26630067AF09 /* LoudManageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13452142A26620067AF09 /* LoudManageViewController.xib */; };
 		61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */; };
@@ -243,9 +241,6 @@
 		61B13441142A249D0067AF09 /* ChangNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangNameViewController.h; sourceTree = "<group>"; };
 		61B13442142A249E0067AF09 /* ChangNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangNameViewController.m; sourceTree = "<group>"; };
 		61B13443142A249E0067AF09 /* ChangNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangNameViewController.xib; sourceTree = "<group>"; };
-		61B13446142A24E20067AF09 /* ChangAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangAvatarViewController.h; sourceTree = "<group>"; };
-		61B13447142A24E20067AF09 /* ChangAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangAvatarViewController.m; sourceTree = "<group>"; };
-		61B13448142A24E30067AF09 /* ChangAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangAvatarViewController.xib; sourceTree = "<group>"; };
 		61B13450142A26620067AF09 /* LoudManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoudManageViewController.h; sourceTree = "<group>"; };
 		61B13451142A26620067AF09 /* LoudManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoudManageViewController.m; sourceTree = "<group>"; };
 		61B13452142A26620067AF09 /* LoudManageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoudManageViewController.xib; sourceTree = "<group>"; };
@@ -411,6 +406,7 @@
 		617E3A40141B584F00441135 /* WhoHelp */ = {
 			isa = PBXGroup;
 			children = (
+				61B1345F142A35B20067AF09 /* Setting */,
 				6145384D14288F5300BA2C34 /* OHAttributedLabel */,
 				615E6A8C1422D8B700400B60 /* Refresh */,
 				614E3EDF141E01DC00418314 /* JSON */,
@@ -434,21 +430,6 @@
 				615E6A811420785100400B60 /* HelpSendViewController.h */,
 				615E6A821420785100400B60 /* HelpSendViewController.m */,
 				615E6A831420785200400B60 /* HelpSendViewController.xib */,
-				61B1343B142A12B90067AF09 /* ChangPassswordViewController.h */,
-				61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */,
-				61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */,
-				61B13441142A249D0067AF09 /* ChangNameViewController.h */,
-				61B13442142A249E0067AF09 /* ChangNameViewController.m */,
-				61B13443142A249E0067AF09 /* ChangNameViewController.xib */,
-				61B13446142A24E20067AF09 /* ChangAvatarViewController.h */,
-				61B13447142A24E20067AF09 /* ChangAvatarViewController.m */,
-				61B13448142A24E30067AF09 /* ChangAvatarViewController.xib */,
-				61B13450142A26620067AF09 /* LoudManageViewController.h */,
-				61B13451142A26620067AF09 /* LoudManageViewController.m */,
-				61B13452142A26620067AF09 /* LoudManageViewController.xib */,
-				61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */,
-				61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */,
-				61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */,
 				617E3A4C141B584F00441135 /* MainWindow.xib */,
 				617E3A41141B584F00441135 /* Supporting Files */,
 				617E3A60141B584F00441135 /* WhoHelpTests */,
@@ -511,6 +492,25 @@
 				617E3A63141B584F00441135 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		61B1345F142A35B20067AF09 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				61B1343B142A12B90067AF09 /* ChangPassswordViewController.h */,
+				61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */,
+				61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */,
+				61B13441142A249D0067AF09 /* ChangNameViewController.h */,
+				61B13442142A249E0067AF09 /* ChangNameViewController.m */,
+				61B13443142A249E0067AF09 /* ChangNameViewController.xib */,
+				61B13450142A26620067AF09 /* LoudManageViewController.h */,
+				61B13451142A26620067AF09 /* LoudManageViewController.m */,
+				61B13452142A26620067AF09 /* LoudManageViewController.xib */,
+				61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */,
+				61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */,
+				61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */,
+			);
+			name = Setting;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -613,7 +613,6 @@
 				61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */,
 				61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */,
 				61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */,
-				61B1344A142A24E30067AF09 /* ChangAvatarViewController.xib in Resources */,
 				61B13454142A26630067AF09 /* LoudManageViewController.xib in Resources */,
 				61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */,
 			);
@@ -687,7 +686,6 @@
 				6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */,
 				61B1343E142A12BA0067AF09 /* ChangPassswordViewController.m in Sources */,
 				61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */,
-				61B13449142A24E30067AF09 /* ChangAvatarViewController.m in Sources */,
 				61B13453142A26630067AF09 /* LoudManageViewController.m in Sources */,
 				61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */,
 			);

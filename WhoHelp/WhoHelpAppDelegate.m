@@ -246,11 +246,11 @@
 }
 
 #pragma mark - tab bar delegate
-
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-    NSLog(@"fuck fuck");
-}
+//
+//- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+//{
+//    NSLog(@"fuck fuck");
+//}
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {

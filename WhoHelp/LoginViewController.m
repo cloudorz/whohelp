@@ -186,8 +186,6 @@
 
 - (void)saveUserInfo:(NSMutableDictionary *) data
 {
-    // save to mo
-    NSLog(@"%@", @"save user info...");
    
     Profile *profile = (Profile *)[self getProfileByPhone:[data objectForKey:@"phone"]];
     

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
+#import "Profile.h"
 
 @interface ChangPassswordViewController : UIViewController <UITextFieldDelegate>
 {
@@ -18,6 +19,8 @@
     UITextField *repeatPassword_;
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
+    Profile *profile_;
+    NSManagedObjectContext *managedObjectContext_;
 }
 
 @property (nonatomic ,retain) IBOutlet UITextField *oldPassword;
@@ -25,9 +28,16 @@
 @property (nonatomic ,retain) IBOutlet UITextField *repeatPassword;
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) Profile *profile;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)doneEditing:(id)sender;
+
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
+- (void)warningNotification:(NSString *)message;
+- (void)errorNotification:(NSString *)message;
+- (void)postPasswordInfo: (NSMutableDictionary *)passwordInfo;
 
 @end

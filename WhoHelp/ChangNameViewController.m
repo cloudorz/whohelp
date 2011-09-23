@@ -7,12 +7,27 @@
 //
 
 #import "ChangNameViewController.h"
+#import "SBJson.h"
+#import "ASIHTTPRequest.h"
+#import "Config.h"
+#import "WhoHelpAppDelegate.h"
 
 @implementation ChangNameViewController
 
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize newName=newName_;
+@synthesize profile=profile_;
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    if (managedObjectContext_ == nil){
+        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        managedObjectContext_ = appDelegate.managedObjectContext;
+    }
+    
+    return managedObjectContext_;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +62,12 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.newName.text = self.profile.name;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -66,12 +87,91 @@
 
 - (IBAction)doneButtonPressed:(id)sender
 {
-    NSLog(@"%@", @"Done change the password...");
+    NSMutableAttributedString *attributedString;
+    if ([self.newName.text isEqualToString:@""]){
+        attributedString = [NSMutableAttributedString attributedStringWithString:@"名字不能为空"];
+        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+        [attributedString setTextColor:[UIColor redColor]];
+        self.errorLabel.attributedText = attributedString;
+        
+        return;
+    }
+    
+    NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+    [info setObject:self.newName.text forKey:@"name"];
+    
+    [self.loadingIndicator startAnimating];
+    [self postNameInfo:info];
+    [self.loadingIndicator stopAnimating];
+    
+    [info release];
 }
 
 - (IBAction)doneEditing:(id)sender
 {
     [sender resignFirstResponder];
+}
+
+#pragma mark - get the images
+- (void)postNameInfo: (NSMutableDictionary *)nameInfo
+{
+    [self.loadingIndicator startAnimating];
+    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
+    NSString *dataString = [preJson stringWithObject:nameInfo];
+    [preJson release];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
+    [request setRequestMethod:@"PUT"];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            id data = [request responseData];
+            id result = [jsonParser objectWithData:data];
+            [jsonParser release];
+            
+            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+                [self warningNotification:@"错误操作"];
+            } else{
+                self.profile.name = [nameInfo objectForKey:@"name"];
+                NSError *error = nil;
+                if (![self.managedObjectContext save:&error]) { 
+                    [self warningNotification:@"数据存储失败."];
+                }else{
+                    [self.navigationController popViewControllerAnimated:NO];
+                }
+            }
+            
+        } else{
+            [self warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [self warningNotification:@"请求服务错误"];
+    }
+}
+
+#pragma mark - handling errors
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
+{
+    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
+    [Notpermitted show];
+    [Notpermitted release];
+}
+
+- (void)warningNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"警告" forMessage:message];
+}
+
+- (void)errorNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
 - (void)dealloc

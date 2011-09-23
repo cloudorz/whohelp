@@ -563,7 +563,9 @@
     
     for (int i=0, count=[self.discardLouds count]; i < count; i++) {
         NSManagedObject *loudToDelete = [self getLoudByLid:[self.discardLouds objectAtIndex:i]];
-        [self.managedObjectContext deleteObject:loudToDelete];
+        if (nil != loudToDelete){
+            [self.managedObjectContext deleteObject:loudToDelete];
+        }
     }
     // Commit the change.
     NSError *error = nil;

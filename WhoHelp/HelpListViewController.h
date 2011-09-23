@@ -30,7 +30,6 @@
     CLLocationManager *locationManager_;
     BOOL locationIsWork_;
     
-    WhoHelpAppDelegate *helpAppDelegate_;
     Profile *profile_;
     
 }

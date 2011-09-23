@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
+#import "Profile.h"
 
 @interface ChangNameViewController : UIViewController
 {
@@ -16,14 +17,25 @@
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
     UITextField *newName_;
+    Profile *profile_;
+    NSManagedObjectContext *managedObjectContext_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *newName;
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) Profile *profile;
+
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
+- (void)warningNotification:(NSString *)message;
+- (void)errorNotification:(NSString *)message;
+
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)doneEditing:(id)sender;
+
+- (void)postNameInfo: (NSMutableDictionary *)nameInfo;
 
 @end

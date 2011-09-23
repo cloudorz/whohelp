@@ -15,6 +15,9 @@
 #define SENDURI @"http://rest.whohelp.me/l/"
 #define IMGURI @"http://static.whohelp.me/"
 #define AUTHURI @"http://rest.whohelp.me/auth"
+#define PASSURI @"http://rest.whohelp.me/pass"
+#define USERURI @"http://rest.whohelp.me/u/"
+#define UPLOADURI @"http://rest.whohelp.me/upload"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

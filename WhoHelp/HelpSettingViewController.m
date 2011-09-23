@@ -9,11 +9,16 @@
 #import "HelpSettingViewController.h"
 #import "ChangPassswordViewController.h"
 #import "ChangNameViewController.h"
-#import "ChangAvatarViewController.h"
 #import "LoudManageViewController.h"
 #import "DeleteAccountViewController.h"
+#import "WhoHelpAppDelegate.h"
+#import "LoginViewController.h"
+#import "ASIFormDataRequest.h"
+#import "Config.h"
+#import "SBJson.h"
 
 @implementation HelpSettingViewController
+@synthesize image=image_;
 
 - (NSMutableArray *)menu
 {
@@ -42,6 +47,53 @@
     }
     
     return menu_;
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    if (managedObjectContext_ == nil){
+        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        managedObjectContext_ = appDelegate.managedObjectContext;
+    }
+    
+    return managedObjectContext_;
+}
+
+- (Profile *)profile
+{
+    
+    // Create request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    
+    // config the request
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    [request release];
+    
+    if (error == nil) {
+        if ([mutableFetchResults count] > 0) {
+            
+            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
+            profile_ = (Profile *)res;
+        }
+        
+    } else {
+        // Handle the error FIXME
+        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    }
+    
+    [mutableFetchResults release];
+    
+    return profile_;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -137,12 +189,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     }
     // Configure the cell...
     NSString *menuString = [[self.menu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]; 
     cell.textLabel.text = menuString;
-    if (![menuString isEqual:@"退出登录"]){
+    if (![menuString isEqualToString:@"退出登录"] && 
+        ![menuString isEqualToString:@"修改头像"]){
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
@@ -213,38 +266,175 @@
 
     } else if(1 == indexPath.section && 0 == indexPath.row){
         ChangNameViewController *changNameVC = [[ChangNameViewController alloc] initWithNibName:@"ChangNameViewController" bundle:nil];
-        // ...
+        changNameVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changNameVC animated:YES];
         [changNameVC release];
     } else if(1 == indexPath.section && 1 == indexPath.row){
-        ChangAvatarViewController *changAvatarVC = [[ChangAvatarViewController alloc] initWithNibName:@"ChangAvatarViewController" bundle:nil];
-        // ...
-        // Pass the selected object to the new view controller.
-        [self.navigationController pushViewController:changAvatarVC animated:YES];
-        [changAvatarVC release];
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+            UIActionSheet *photoSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照", @"从相册中选取", nil];
+            photoSheet.tag = 1;
+            [photoSheet showFromTabBar:self.tabBarController.tabBar];
+            [photoSheet release];
+        } else {
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            picker.delegate = self;
+            picker.allowsEditing = YES;
+            [self presentModalViewController:picker animated:YES];
+        }
     } else if (1 == indexPath.section && 2 == indexPath.row){
         ChangPassswordViewController *changPassVC = [[ChangPassswordViewController alloc] initWithNibName:@"ChangPassswordViewController" bundle:nil];
-        // ...
+        changPassVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changPassVC animated:YES];
         [changPassVC release];
 
     } else if(2 == indexPath.section && 1 == indexPath.row){
         DeleteAccountViewController *deleteAccountVC = [[DeleteAccountViewController alloc] initWithNibName:@"DeleteAccountViewController" bundle:nil];
-        // ...
+        deleteAccountVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:deleteAccountVC animated:YES];
         [deleteAccountVC release];
     } else if(2 == indexPath.section && 0 == indexPath.row){
-        // TODO   
+        UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"退出登录", nil];
+        logoutSheet.tag = 2;
+        [logoutSheet showFromTabBar:self.tabBarController.tabBar];
+        [logoutSheet release];
     }
      
+}
+
+#pragma mark - actionsheetp delegate
+//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    NSLog(@"click the button on action sheet");
+//}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex){
+        return;
+    }
+    
+    if (1 == actionSheet.tag) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        // handle photo
+        switch (buttonIndex) {
+            case 0:
+                NSLog(@"%@", @"action sheet for take photo");
+                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                break;
+            case 1:
+                NSLog(@"%@", @"get from libaray");
+                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                break;
+        }
+        [self presentModalViewController:picker animated:YES];
+        
+    } else if (2 == actionSheet.tag) {
+        switch (buttonIndex) {
+            case 0:
+                self.profile.isLogin = NO;
+                NSError *error = nil;
+                if (![self.managedObjectContext save:&error]) {
+                    // Handle the error. 
+                    [self warningNotification:@"数据存储失败."];
+                }else{
+                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
+                    [helpLoginVC release];
+                }
+                break;
+                
+        }
+
+    }
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [self dismissModalViewControllerAnimated:YES];
+    [picker release];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+
+    self.image = UIImageJPEGRepresentation([self thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@", UPLOADURI, APPKEY, self.profile.token]]];
+    [request setData:self.image withFileName:[NSString stringWithFormat:@"%@.jpg", self.profile.phone] andContentType:@"image/jpg" forKey:@"photo"];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            id data = [request responseData];
+            id result = [jsonParser objectWithData:data];
+            [jsonParser release];
+            
+            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+                [self warningNotification:@"上传头像失败"];
+            }
+        } else{
+            [self warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [self warningNotification:@"请求服务错误"];
+    }
+    
+    [self dismissModalViewControllerAnimated:YES];
+    [picker release];
+    
+}
+
+
+- (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize
+{
+    
+    UIImage *newimage;
+
+    if (nil == image) {        
+        newimage = nil;
+    }
+    else{
+        UIGraphicsBeginImageContext(asize);
+        
+        [image drawInRect:CGRectMake(0, 0, asize.width, asize.height)];
+        newimage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+    }
+    
+    return newimage;
+    
+}
+
+#pragma mark - handling errors
+- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
+{
+    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
+    [Notpermitted show];
+    [Notpermitted release];
+}
+
+- (void)warningNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"警告" forMessage:message];
+}
+
+- (void)errorNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
 - (void)dealloc
 {
     [menu_ release];
+    [image_ release];
     [super dealloc];
 }
 
