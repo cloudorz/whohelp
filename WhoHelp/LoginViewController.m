@@ -12,6 +12,7 @@
 #import "SBJson.h"
 #import "Config.h"
 #import "Profile.h"
+#import "ResetPasswordViewController.h"
 
 @implementation LoginViewController
 
@@ -106,7 +107,9 @@
 
 - (IBAction)forgotPasswordButtonPressed:(id)sender
 {
-    NSLog(@"%@", @"jump to reset password view");
+    ResetPasswordViewController *resetPVC = [[ResetPasswordViewController alloc] initWithNibName:@"ResetPasswordViewController" bundle:nil];
+    [self presentModalViewController:resetPVC animated:YES];
+    [resetPVC release];
 }
 
 - (IBAction)signupButtonPressed:(id)sender
