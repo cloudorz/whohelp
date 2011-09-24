@@ -18,6 +18,7 @@
 #define PASSURI @"http://rest.whohelp.me/pass"
 #define USERURI @"http://rest.whohelp.me/u/"
 #define UPLOADURI @"http://rest.whohelp.me/upload"
+#define LOUD3URI @"http://rest.whohelp.me/l/dels"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

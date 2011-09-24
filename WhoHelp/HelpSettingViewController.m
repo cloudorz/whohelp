@@ -255,11 +255,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
+
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     
     if (0 == indexPath.section && 0 == indexPath.row){
         LoudManageViewController *loudVC = [[LoudManageViewController alloc] initWithNibName:@"LoudManageViewController" bundle:nil];
-        // ...
+        loudVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:loudVC animated:YES];
         [loudVC release];

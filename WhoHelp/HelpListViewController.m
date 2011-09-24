@@ -310,7 +310,7 @@
         bgButton.enabled = NO;
         [cell addSubview:bgButton];
         
-        arrowImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+2, 5+5, 10, 15)] autorelease];
+        arrowImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+2, 5+5+1, 10, 15)] autorelease];
         arrowImage.tag = CELLARROW;
         arrowImage.opaque = YES;
         arrowImage.autoresizingMask = UIViewAutoresizingNone;

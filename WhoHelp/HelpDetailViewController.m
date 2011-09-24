@@ -7,6 +7,7 @@
 //
 
 #import "HelpDetailViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation HelpDetailViewController
 
@@ -58,6 +59,8 @@
     if (self.loud.userAvatar != nil){
         self.avatarImage.image = [UIImage imageWithData:self.loud.userAvatar];
         self.avatarImage.opaque = YES;
+        self.avatarImage.layer.borderWidth = 1.0;
+        self.avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
     }
     self.nameLabel.text = self.loud.userName;
     
