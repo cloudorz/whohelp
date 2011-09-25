@@ -13,6 +13,7 @@
 #import "Config.h"
 #import "Profile.h"
 #import "ResetPasswordViewController.h"
+#import "SignupViewController.h"
 
 @implementation LoginViewController
 
@@ -82,7 +83,6 @@
 #pragma mark - action login forgot password
 - (IBAction)loginButtonPressed:(id)sender
 {
-    NSLog(@"%@", @"login request");
     [sender setEnabled: NO];
     
     NSString *inputPhone = self.phone.text;
@@ -114,7 +114,11 @@
 
 - (IBAction)signupButtonPressed:(id)sender
 {
-    NSLog(@"%@", @"jump to signup view");
+
+    SignupViewController *signupVC = [[SignupViewController alloc] initWithNibName:@"SignupViewController" bundle:nil];
+    [self presentModalViewController:signupVC animated:YES];
+    [signupVC release];
+    
 }
 
 -(void)dismissKeyboard {

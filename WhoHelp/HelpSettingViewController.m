@@ -325,11 +325,9 @@
         // handle photo
         switch (buttonIndex) {
             case 0:
-                NSLog(@"%@", @"action sheet for take photo");
                 picker.sourceType = UIImagePickerControllerSourceTypeCamera;
                 break;
             case 1:
-                NSLog(@"%@", @"get from libaray");
                 picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 break;
         }

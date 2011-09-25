@@ -101,6 +101,10 @@
 		61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */; };
 		61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13461142DC0640067AF09 /* ResetPasswordViewController.m */; };
 		61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */; };
+		61B13468142F182B0067AF09 /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13466142F18280067AF09 /* SignupViewController.m */; };
+		61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13467142F18290067AF09 /* SignupViewController.xib */; };
+		61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1346B142F43DA0067AF09 /* Signup2ViewController.m */; };
+		61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,6 +256,12 @@
 		61B13460142DC0630067AF09 /* ResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController.h; sourceTree = "<group>"; };
 		61B13461142DC0640067AF09 /* ResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController.m; sourceTree = "<group>"; };
 		61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResetPasswordViewController.xib; sourceTree = "<group>"; };
+		61B13465142F18260067AF09 /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupViewController.h; sourceTree = "<group>"; };
+		61B13466142F18280067AF09 /* SignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupViewController.m; sourceTree = "<group>"; };
+		61B13467142F18290067AF09 /* SignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignupViewController.xib; sourceTree = "<group>"; };
+		61B1346A142F43D80067AF09 /* Signup2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Signup2ViewController.h; sourceTree = "<group>"; };
+		61B1346B142F43DA0067AF09 /* Signup2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Signup2ViewController.m; sourceTree = "<group>"; };
+		61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Signup2ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -517,6 +527,12 @@
 				61B13460142DC0630067AF09 /* ResetPasswordViewController.h */,
 				61B13461142DC0640067AF09 /* ResetPasswordViewController.m */,
 				61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */,
+				61B13465142F18260067AF09 /* SignupViewController.h */,
+				61B13466142F18280067AF09 /* SignupViewController.m */,
+				61B13467142F18290067AF09 /* SignupViewController.xib */,
+				61B1346A142F43D80067AF09 /* Signup2ViewController.h */,
+				61B1346B142F43DA0067AF09 /* Signup2ViewController.m */,
+				61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */,
 			);
 			name = Setting;
 			sourceTree = "<group>";
@@ -624,6 +640,8 @@
 				61B13454142A26630067AF09 /* LoudManageViewController.xib in Resources */,
 				61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */,
 				61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */,
+				61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */,
+				61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,6 +716,8 @@
 				61B13453142A26630067AF09 /* LoudManageViewController.m in Sources */,
 				61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */,
 				61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */,
+				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,
+				61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

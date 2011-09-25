@@ -20,6 +20,7 @@
 #define UPLOADURI @"http://rest.whohelp.me/upload"
 #define LOUD3URI @"http://rest.whohelp.me/l/dels"
 #define RESETURI @"http://rest.whohelp.me/reset"
+#define CODEURI @"http://rest.whohelp.me/code"
 
 #define CELLAVATAR 5
 #define CELLNAME 1
