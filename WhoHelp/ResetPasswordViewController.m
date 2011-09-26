@@ -92,33 +92,37 @@
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@", RESETURI, APPKEY, phone]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request startSynchronous];
+    [request setDelegate:self];
+    [request startAsynchronous];
     
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                NSMutableAttributedString *attributedString;
-                attributedString = [NSMutableAttributedString attributedStringWithString:@"非注册手机号"];
-                [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-                [attributedString setTextColor:[UIColor redColor]];
-                self.errorLabel.attributedText = attributedString;
-            } else{
-                [self dismissModalViewControllerAnimated:YES];
-            }
-            
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    if ([request responseStatusCode] == 200){
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        id data = [request responseData];
+        id result = [jsonParser objectWithData:data];
+        [jsonParser release];
+        
+        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"非注册手机号"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
         } else{
-            [self warningNotification:@"服务器异常返回"];
+            [self dismissModalViewControllerAnimated:YES];
         }
         
-    }else{
-        [self warningNotification:@"请求服务错误"];
+    } else{
+        [self warningNotification:@"服务器异常返回"];
     }
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+   [self warningNotification:@"请求服务错误"];
 }
 
 #pragma mark - handling errors

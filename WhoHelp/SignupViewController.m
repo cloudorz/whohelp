@@ -155,42 +155,48 @@
 {
     [self.loadingIndicator startAnimating];
     
-    self.codeString = [self genRandStringLength:6];
+    self.codeString = [self genRandStringLength:4];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@&code=%@", CODEURI, APPKEY, self.phone.text, self.codeString]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request startSynchronous];
+    [request setDelegate:self];
+    [request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{    
+    // Use when fetching binary data
     
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                NSMutableAttributedString *attributedString;
-                attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
-                [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-                [attributedString setTextColor:[UIColor redColor]];
-                self.errorLabel.attributedText = attributedString;
-            } else{
-                self.phone.enabled = NO;
-                self.codeLabel.hidden = NO;
-                self.code.hidden = NO;
-                if (nil != self.resendButton){
-                    [self.resendButton removeFromSuperview];
-                }
-            }
-            
-        } else{
-            [self warningNotification:@"服务器异常返回"];
-        }
+    if ([request responseStatusCode] == 200){
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        id data = [request responseData];
+        id result = [jsonParser objectWithData:data];
+        [jsonParser release];
         
-    }else{
-        [self warningNotification:@"请求服务错误"];
+        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
+        } else{
+            self.phone.enabled = NO;
+            self.codeLabel.hidden = NO;
+            self.code.hidden = NO;
+            if (nil != self.resendButton){
+                [self.resendButton removeFromSuperview];
+            }
+        } 
+    } else{
+        [self warningNotification:@"服务器异常返回"];
     }
+   
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    //NSError *error = [request error];
+    [self warningNotification:@"请求服务错误"];
 }
 
 #pragma mark - handling errors
