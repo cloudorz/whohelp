@@ -202,11 +202,6 @@
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
@@ -222,6 +217,7 @@
     [super viewWillAppear:animated];
     self.locationIsWork = NO;
     self.tableView.separatorStyle = NO;
+    self.view.backgroundColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
     [self.locationManager startUpdatingLocation];
     
 }
@@ -281,7 +277,7 @@
     UILabel *nameLabel, *timeLabel, *distanceLabel;
     OHAttributedLabel *cellText;
     UIButton *bgButton;
-    UIColor *bgGray = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
+    UIColor *bgGray = self.view.backgroundColor;
     
     if (cell == nil) {
 
