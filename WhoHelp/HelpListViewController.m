@@ -296,7 +296,7 @@
         avatarImage.backgroundColor = bgGray;
         [cell addSubview:avatarImage];
         
-        bgButton = [[[UIButton alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE, 5, TEXTWIDTH+10, theSize.height + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN)] autorelease];
+        bgButton = [[[UIButton alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE, 5, TEXTWIDTH+TEXTMLEFTARGIN+TEXTMARGIN+2, theSize.height + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN)] autorelease];
         bgButton.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
         bgButton.tag = CELLBG;
         bgButton.layer.borderWidth = 1;
@@ -314,7 +314,7 @@
         arrowImage.image = [UIImage imageNamed:@"list_arrow.png"];
         [cell addSubview:arrowImage];
         
-        nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE, TOPSPACE+TEXTMARGIN, 75, NAMEFONTSIZE)] autorelease];
+        nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TOPSPACE+TEXTMARGIN, 75, NAMEFONTSIZE+2)] autorelease];
         nameLabel.tag = CELLNAME;
         nameLabel.opaque = YES;
         nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
@@ -324,7 +324,7 @@
         [cell addSubview:nameLabel];
         
 
-        cellText = [[[OHAttributedLabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE,  TOPSPACE+NAMEFONTSIZE+5+TEXTMARGIN, TEXTWIDTH, theSize.height)] autorelease];
+        cellText = [[[OHAttributedLabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN,  TOPSPACE+NAMEFONTSIZE+10+TEXTMARGIN, TEXTWIDTH, theSize.height)] autorelease];
         cellText.tag = CELLTEXT;
         cellText.textAlignment = UITextAlignmentLeft;
         cellText.lineBreakMode = UILineBreakModeWordWrap;
@@ -356,7 +356,7 @@
     }
     
     // Configure the cell...
-    distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+10, 75, SMALLFONTSIZE)] autorelease];
+    distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+15, 75, SMALLFONTSIZE)] autorelease];
     distanceLabel.tag = CELLDISTANCE;
     distanceLabel.opaque = YES;
     distanceLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
@@ -366,7 +366,7 @@
     //distanceLabel.backgroundColor = bgGray;
     [cell addSubview:distanceLabel]; 
     
-    timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE+75+90, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+10, TIMELENGTH, SMALLFONTSIZE)] autorelease];
+    timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE+75+90, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+15, TIMELENGTH, SMALLFONTSIZE)] autorelease];
     timeLabel.tag = CELLTIME;
     timeLabel.opaque = YES;
     timeLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];

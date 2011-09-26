@@ -33,6 +33,7 @@
 - (void)errorNotification:(NSString *)message;
 
 - (void)delAccount: (NSMutableDictionary *)passwordInfo;
+- (void)delAccount2;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;

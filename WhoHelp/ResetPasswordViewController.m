@@ -90,7 +90,7 @@
 {
     [self.loadingIndicator startAnimating];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@", RESETURI, APPKEY, phone]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@", PASSURI, APPKEY, phone]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];

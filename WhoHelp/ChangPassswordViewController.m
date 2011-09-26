@@ -159,7 +159,7 @@
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"PUT"];
     [request startSynchronous];
     
     NSError *error = [request error];

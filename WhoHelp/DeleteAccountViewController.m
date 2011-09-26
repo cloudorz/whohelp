@@ -122,16 +122,46 @@
 #pragma mark - get the images
 - (void)delAccount: (NSMutableDictionary *)passwordInfo
 {
-    [self.loadingIndicator startAnimating];
+
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:passwordInfo];
     [preJson release];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/del?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", PASSURI, APPKEY, self.profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
-    [request setRequestMethod:@"PUT"];
+    [request setRequestMethod:@"POST"];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            id data = [request responseData];
+            id result = [jsonParser objectWithData:data];
+            [jsonParser release];
+            
+            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+                [self warningNotification:@"密码错误"];
+            } else{
+                [self delAccount2];
+            }
+            
+        } else{
+            [self warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [self warningNotification:@"请求服务错误"];
+    }
+}
+
+- (void)delAccount2
+{
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
     [request startSynchronous];
     
     NSError *error = [request error];

@@ -19,7 +19,6 @@
 #define USERURI @"http://rest.whohelp.me/u/"
 #define UPLOADURI @"http://rest.whohelp.me/upload"
 #define LOUD3URI @"http://rest.whohelp.me/l/dels"
-#define RESETURI @"http://rest.whohelp.me/reset"
 #define CODEURI @"http://rest.whohelp.me/code"
 
 #define CELLAVATAR 5
@@ -42,5 +41,6 @@
 #define TIMELENGTH 75.0f
 #define IMGLEFT 10.0f
 #define TEXTMARGIN 5.0f
+#define TEXTMLEFTARGIN 5.0f
 
 #endif
