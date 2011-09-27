@@ -123,31 +123,30 @@
 - (void)delAccount: (NSMutableDictionary *)passwordInfo
 {
 
-    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
-    NSString *dataString = [preJson stringWithObject:passwordInfo];
-    [preJson release];
+//    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
+//    NSString *dataString = [preJson stringWithObject:passwordInfo];
+//    [preJson release];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", PASSURI, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@&tk=%@&pw=%@", USERURI, self.profile.phone, APPKEY, self.profile.token, [passwordInfo objectForKey:@"password"]]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"POST"];
+//    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request startSynchronous];
     
     NSError *error = [request error];
     if (!error) {
         if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
             
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"密码错误"];
-            } else{
-                [self delAccount2];
-            }
+            [self delAccount2];
             
-        } else{
+        } else if (406 == [request responseStatusCode]){
+            
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码或手机号错误"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
+            
+        }else{
             [self warningNotification:@"服务器异常返回"];
         }
         
@@ -167,25 +166,25 @@
     NSError *error = [request error];
     if (!error) {
         if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"密码错误"];
-            } else{
-                [self.managedObjectContext deleteObject:self.profile];
-                NSError *error = nil;
-                if (![self.managedObjectContext save:&error]) { 
-                    [self warningNotification:@"数据存储失败."];
-                }else{
-                    self.profile = nil;
-                    [self.navigationController popViewControllerAnimated:NO];
-                }
+   
+            [self.managedObjectContext deleteObject:self.profile];
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) { 
+                [self warningNotification:@"数据存储失败."];
+            }else{
+                self.profile = nil;
+                [self.navigationController popViewControllerAnimated:NO];
             }
             
-        } else{
+        } else if (403 == [request responseStatusCode]) {
+            
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"非法操作"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
+            
+        }else{
             [self warningNotification:@"服务器异常返回"];
         }
         

@@ -122,7 +122,7 @@
     
     NSMutableDictionary *passwords = [[NSMutableDictionary alloc] init];
     [passwords setObject:self.oldPassword.text forKey:@"old_password"];
-    [passwords setObject:self.newPassword.text forKey:@"new_password"];
+    [passwords setObject:self.newPassword.text forKey:@"password"];
     
     [self.loadingIndicator startAnimating];
     [self postPasswordInfo:passwords];
@@ -155,9 +155,10 @@
     NSString *dataString = [preJson stringWithObject:passwordInfo];
     [preJson release];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", PASSURI, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"PUT"];
     [request startSynchronous];
@@ -165,23 +166,25 @@
     NSError *error = [request error];
     if (!error) {
         if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
+       
+            self.profile.isLogin = NO;
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) { 
+                [self warningNotification:@"数据存储失败."];
+            }else{
+                [self.navigationController popViewControllerAnimated:NO];
+            }  
             
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"密码错误操作终止"];
-            } else{
-                self.profile.isLogin = NO;
-                NSError *error = nil;
-                if (![self.managedObjectContext save:&error]) { 
-                    [self warningNotification:@"数据存储失败."];
-                }else{
-                    [self.navigationController popViewControllerAnimated:NO];
-                }
-            }
+        } else if (406 == [request responseStatusCode]){
             
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码不正确"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
+
+        } else if (400 == [request responseStatusCode]) {
+            [self warningNotification:@"参数不正确"];
         } else{
             [self warningNotification:@"服务器异常返回"];
         }

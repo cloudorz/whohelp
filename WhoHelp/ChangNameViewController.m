@@ -123,6 +123,7 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"PUT"];
     [request startSynchronous];
@@ -130,23 +131,17 @@
     NSError *error = [request error];
     if (!error) {
         if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"错误操作"];
-            } else{
-                self.profile.name = [nameInfo objectForKey:@"name"];
-                NSError *error = nil;
-                if (![self.managedObjectContext save:&error]) { 
-                    [self warningNotification:@"数据存储失败."];
-                }else{
-                    [self.navigationController popViewControllerAnimated:NO];
-                }
+
+            self.profile.name = [nameInfo objectForKey:@"name"];
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) { 
+                [self warningNotification:@"数据存储失败."];
+            }else{
+                [self.navigationController popViewControllerAnimated:NO];
             }
             
+        } else if (403 == [request responseStatusCode]){
+            [self warningNotification:@"非法操作"];
         } else{
             [self warningNotification:@"服务器异常返回"];
         }

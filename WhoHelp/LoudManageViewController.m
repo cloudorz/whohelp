@@ -42,7 +42,6 @@
     if (nil != self.buttons){
         for (UIButton *b in self.buttons) {
             [b removeFromSuperview];
-            NSLog(@"fickk kkfdkafda");
         }
         self.buttons = nil;
     }
@@ -55,7 +54,7 @@
     
     [self remove3Buttons];
     self.buttons = [[NSMutableArray alloc] init];
-    for (NSInteger i=0; i<3; i++) {
+    for (NSInteger i=0; i<3 && i<[self.louds count]; i++) {
         NSDictionary *loud = [self.louds objectAtIndex:i];
         
         UIButton *entryButton = [UIButton buttonWithType:UIButtonTypeCustom];

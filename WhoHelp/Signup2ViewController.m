@@ -127,29 +127,20 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", USERURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"POST"];
     [request startSynchronous];
     
     NSError *error = [request error];
     if (!error) {
-        if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
+        if ([request responseStatusCode] == 201){
+
+            [self dismissModalViewControllerAnimated:YES];
             
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                NSMutableAttributedString *attributedString;
-                attributedString = [NSMutableAttributedString attributedStringWithString:@"填写的信息有误"];
-                [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-                [attributedString setTextColor:[UIColor redColor]];
-                self.errorLabel.attributedText = attributedString;
-            } else{
-                [self dismissModalViewControllerAnimated:YES];
-            }
-            
-        } else{
+        } else if (400 == [request responseStatusCode]) {
+            [self warningNotification:@"参数错误"];
+        }else{
             [self warningNotification:@"服务器异常返回"];
         }
         
@@ -251,14 +242,9 @@
     NSError *error = [request error];
     if (!error) {
         if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"上传头像失败"];
-            }
+            // Nothing
+        } else if (400 == [request responseStatusCode]){
+            [self warningNotification:@"上传头像失败"];
         } else{
             [self warningNotification:@"服务器异常返回"];
         }

@@ -161,6 +161,7 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", AUTHURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"POST"];
     [request startSynchronous];
@@ -172,16 +173,15 @@
             id data = [request responseData];
             id result = [jsonParser objectWithData:data];
             [jsonParser release];
-
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"登录失败请输入正确的手机号和密码"];
-            } else{
                 
-                [self saveUserInfo:result];
-                [self dismissModalViewControllerAnimated:YES];
-            }
+            [self saveUserInfo:result];
+            [self dismissModalViewControllerAnimated:YES];
             
-        } else{
+        } else if (406 == [request responseStatusCode]) {
+            [self warningNotification:@"登录失败请输入正确的手机号和密码"];
+        } else if (400 == [request responseStatusCode]) {
+            [self warningNotification:@"参数不正确"];
+        }else{
             [self warningNotification:@"服务器异常返回"];
         }
         

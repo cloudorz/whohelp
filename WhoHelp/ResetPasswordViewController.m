@@ -69,7 +69,7 @@
     [sender setEnabled:NO];
     
     NSMutableAttributedString *attributedString;
-    NSString *decimalRegex = @"^[0-9]{11}$";
+    NSString *decimalRegex = @"^1[358][0-9]{9}$";
     NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
     if ([decimalTest evaluateWithObject:self.phone.text]){
         [self resetPasswordInfo:self.phone.text];
@@ -90,8 +90,9 @@
 {
     [self.loadingIndicator startAnimating];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@", PASSURI, APPKEY, phone]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@", USERURI, phone, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
     [request setDelegate:self];
     [request startAsynchronous];
     
@@ -100,21 +101,15 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     if ([request responseStatusCode] == 200){
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        id data = [request responseData];
-        id result = [jsonParser objectWithData:data];
-        [jsonParser release];
+
+        [self dismissModalViewControllerAnimated:YES];
         
-        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"非注册手机号"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
-        } else{
-            [self dismissModalViewControllerAnimated:YES];
-        }
-        
+    } else if (404 == [request responseStatusCode]) {
+        NSMutableAttributedString *attributedString;
+        attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号未注册"];
+        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+        [attributedString setTextColor:[UIColor redColor]];
+        self.errorLabel.attributedText = attributedString;
     } else{
         [self warningNotification:@"服务器异常返回"];
     }

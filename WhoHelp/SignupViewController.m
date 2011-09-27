@@ -99,7 +99,7 @@
     [sender setEnabled:NO];
     
     NSMutableAttributedString *attributedString;
-    NSString *decimalRegex = @"^[0-9]{11}$";
+    NSString *decimalRegex = @"^1[358][0-9]{9}$";
     NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
     if ([decimalTest evaluateWithObject:self.phone.text]){
         if (YES == self.code.hidden){
@@ -156,9 +156,19 @@
     [self.loadingIndicator startAnimating];
     
     self.codeString = [self genRandStringLength:4];
+    NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+    [info setObject:self.codeString forKey:@"code"];
+    [info setObject:self.phone.text forKey:@"phone"];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&p=%@&code=%@", CODEURI, APPKEY, self.phone.text, self.codeString]];
+    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
+    NSString *dataString = [preJson stringWithObject:info];
+    [preJson release];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", CODEURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
+    [request setRequestMethod:@"POST"];
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -168,25 +178,21 @@
     // Use when fetching binary data
     
     if ([request responseStatusCode] == 200){
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        id data = [request responseData];
-        id result = [jsonParser objectWithData:data];
-        [jsonParser release];
-        
-        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
-        } else{
-            self.phone.enabled = NO;
-            self.codeLabel.hidden = NO;
-            self.code.hidden = NO;
-            if (nil != self.resendButton){
-                [self.resendButton removeFromSuperview];
-            }
-        } 
+
+        self.phone.enabled = NO;
+        self.codeLabel.hidden = NO;
+        self.code.hidden = NO;
+        if (nil != self.resendButton){
+            [self.resendButton removeFromSuperview];
+        }
+    }else if (400 == [request responseStatusCode]) {
+        [self warningNotification:@"参数错误"];
+    }else if (409 == [request responseStatusCode]) {
+        NSMutableAttributedString *attributedString;
+        attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
+        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+        [attributedString setTextColor:[UIColor redColor]];
+        self.errorLabel.attributedText = attributedString;
     } else{
         [self warningNotification:@"服务器异常返回"];
     }

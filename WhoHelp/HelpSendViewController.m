@@ -165,7 +165,6 @@
 
 - (IBAction)sendButtonPressed:(id)sender
 {
-    NSLog(@"help text is sending....");
     [self postHelpTextToRemoteServer];
 }
 
@@ -194,6 +193,7 @@
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"POST"];
     [request setDelegate:self];
@@ -203,23 +203,12 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"processing louds...");
-    //NSString *responseString = [request responseString];
-    NSData *responseData = [request responseData];
-    
-    // create the json parser 
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    id result = [jsonParser objectWithData:responseData];
-    [jsonParser release];
-    
 
-    if ([request responseStatusCode] == 200){
-        if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-            [self warningNotification:@"发送求助失败"];
-        } else{
-            [self dismissModalViewControllerAnimated:YES];
-        }
+    if ([request responseStatusCode] == 201){
+        [self dismissModalViewControllerAnimated:YES];
         
+    } else if (400 == [request responseStatusCode]) {
+        [self warningNotification:@"参数错误"];
     } else{
         [self warningNotification:@"请求服务出错"];
     }
@@ -234,8 +223,6 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSError *error = [request error];
-    NSLog(@"error: %@, %@", error, [error userInfo]);
     // notify the user
     [self.loadingIndicator stopAnimating];
     self.sendBarItem.enabled = YES;
@@ -245,7 +232,6 @@
 
 - (IBAction)addRewardButtonPressed:(id)sender
 {
-    NSLog(@"reward button be pressed");
     self.helpTextView.text = [NSString stringWithFormat:@"%@%@", self.helpTextView.text, @"$"];
 }
 
@@ -299,7 +285,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"Core locaiton can't get the fix error: %@, %@", error, [error localizedDescription]);
+    //NSLog(@"Core locaiton can't get the fix error: %@, %@", error, [error localizedDescription]);
     self.locationIsWork = NO;
     
     if ([error domain] == kCLErrorDomain) {
@@ -309,10 +295,10 @@
                 // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
                 // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
             case kCLErrorDenied:
-                NSLog(@"Core location denied");
+                [self warningNotification:@"Core location denied"];
                 break;
             case kCLErrorLocationUnknown:
-                NSLog(@"Core location unkown");
+                [self warningNotification:@"Core location unkown"];
                 break;
                 
             default:
@@ -335,7 +321,7 @@
 
 - (NSString *)getPlaceInfo:(MKPlacemark *)placemark
 {
-    NSLog(@"look at this");
+
     return [NSString stringWithFormat:@"%@ %@", 
                 placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
                 placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
@@ -344,7 +330,7 @@
 
 - (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
 {
-    NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
+    //NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
     [self.reverseGeocoder cancel];
     // stop loading status
     self.address = nil;

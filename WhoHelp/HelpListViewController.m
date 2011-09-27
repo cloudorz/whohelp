@@ -453,10 +453,8 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSError *error = [request error];
     // notify the user
     [self warningNotification:@"网络服务请求失败."];
-    NSLog(@"error: %@, %@", error, [error userInfo]);
 }
 
 //- (void)syncLoudList
