@@ -11,6 +11,7 @@
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
 #import "Config.h"
+#import "Utils.h"
 #import "LoginViewController.h"
 
 @implementation DeleteAccountViewController
@@ -104,14 +105,11 @@
         
         return;
     }
-    NSMutableDictionary *passwordInfo = [[NSMutableDictionary alloc] init];
-    [passwordInfo setObject:self.password.text forKey:@"password"];
     
     [self.loadingIndicator startAnimating];
-    [self  delAccount:passwordInfo];
+    [self  delAccount2];
     [self.loadingIndicator stopAnimating];
     
-    [passwordInfo release];
 }
 
 - (IBAction)doneEditing:(id)sender
@@ -120,45 +118,11 @@
 }
 
 #pragma mark - get the images
-- (void)delAccount: (NSMutableDictionary *)passwordInfo
-{
-
-//    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
-//    NSString *dataString = [preJson stringWithObject:passwordInfo];
-//    [preJson release];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@&tk=%@&pw=%@", USERURI, self.profile.phone, APPKEY, self.profile.token, [passwordInfo objectForKey:@"password"]]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            
-            [self delAccount2];
-            
-        } else if (406 == [request responseStatusCode]){
-            
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码或手机号错误"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
-            
-        }else{
-            [self warningNotification:@"服务器异常返回"];
-        }
-        
-    }else{
-        [self warningNotification:@"请求服务错误"];
-    }
-}
 
 - (void)delAccount2
 {
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@&pw=%@", USERURI, self.profile.phone, APPKEY, self.profile.token, self.password.text]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setRequestMethod:@"DELETE"];
     [request startSynchronous];
@@ -170,7 +134,7 @@
             [self.managedObjectContext deleteObject:self.profile];
             NSError *error = nil;
             if (![self.managedObjectContext save:&error]) { 
-                [self warningNotification:@"数据存储失败."];
+                [Utils warningNotification:@"数据存储失败."];
             }else{
                 self.profile = nil;
                 [self.navigationController popViewControllerAnimated:NO];
@@ -184,12 +148,18 @@
             [attributedString setTextColor:[UIColor redColor]];
             self.errorLabel.attributedText = attributedString;
             
+        } else if (412 == [request responseStatusCode]){
+            NSMutableAttributedString *attributedString;
+            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码错误"];
+            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+            [attributedString setTextColor:[UIColor redColor]];
+            self.errorLabel.attributedText = attributedString;
         }else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
 }
 

@@ -30,10 +30,4 @@
 - (void)postUserInfo: (NSMutableDictionary *)userInfo;
 - (NSManagedObject *)getProfileByPhone:(NSNumber *)phone;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-
-- (void)warningNotification:(NSString *)message;
-
-- (void)errorNotification:(NSString *)message;
-
 @end

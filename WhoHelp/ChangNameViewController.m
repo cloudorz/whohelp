@@ -10,6 +10,7 @@
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
 #import "Config.h"
+#import "Utils.h"
 #import "WhoHelpAppDelegate.h"
 
 @implementation ChangNameViewController
@@ -135,38 +136,20 @@
             self.profile.name = [nameInfo objectForKey:@"name"];
             NSError *error = nil;
             if (![self.managedObjectContext save:&error]) { 
-                [self warningNotification:@"数据存储失败."];
+                [Utils warningNotification:@"数据存储失败."];
             }else{
                 [self.navigationController popViewControllerAnimated:NO];
             }
             
         } else if (403 == [request responseStatusCode]){
-            [self warningNotification:@"非法操作"];
+            [Utils warningNotification:@"非法操作"];
         } else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
 - (void)dealloc

@@ -8,6 +8,7 @@
 
 #import "LoudManageViewController.h"
 #import "Config.h"
+#import "Utils.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
@@ -54,12 +55,12 @@
     
     [self remove3Buttons];
     self.buttons = [[NSMutableArray alloc] init];
-    for (NSInteger i=0; i<3 && i<[self.louds count]; i++) {
+    for (NSInteger i=0; i<[self.louds count]; i++) {
         NSDictionary *loud = [self.louds objectAtIndex:i];
         
         UIButton *entryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         entryButton.frame = CGRectMake(10, 90+47*i, 300, 37);
-        entryButton.tag = [[loud objectForKey:@"pk"] integerValue];
+        entryButton.tag = i;
         
         entryButton.titleLabel.font = [UIFont systemFontOfSize: 14.0];
         entryButton.titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
@@ -80,6 +81,8 @@
 {
     [super viewDidLoad];
     [self.loadingIndicator stopAnimating];
+    // init data from remote server
+    [self show3Louds];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -99,7 +102,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self show3Louds];
 
 }
 
@@ -117,7 +119,7 @@
 #pragma mark - get the three 
 - (void)fetch3Louds
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", LOUD3URI, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", LOUD3URI, APPKEY, self.profile.token, self.profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request startSynchronous];
     
@@ -128,13 +130,15 @@
             id data = [request responseData];
             id result = [jsonParser objectWithData:data];
             [jsonParser release];
-            self.louds = result;
-        } else {
-            [self warningNotification:@"非常规返回"];
+            self.louds = [result objectForKey:@"louds"];
+        } else if (400 == [request responseStatusCode]) {
+            [Utils warningNotification:@"参数错误"];
+        }else {
+            [Utils warningNotification:@"非常规返回"];
         }
 
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
 }
 
@@ -149,7 +153,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex){
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%d?ak=%@&tk=%@", SENDURI, actionSheet.tag, APPKEY, self.profile.token]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", [[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"], APPKEY, self.profile.token]];
         ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
         [request setRequestMethod:@"DELETE"];
         [request startSynchronous];
@@ -164,17 +168,17 @@
                 self.louds = result;
                 
                 if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                    [self warningNotification:@"错误操作"];
+                    [Utils warningNotification:@"错误操作"];
                 } else{
                     [self show3Louds];
                 }
                 
             } else {
-                [self warningNotification:@"非常规返回"];
+                [Utils warningNotification:@"非常规返回"];
             }
             
         }else{
-            [self warningNotification:@"请求服务错误"];
+            [Utils warningNotification:@"请求服务错误"];
         }
     }
 }
@@ -184,24 +188,6 @@
 - (IBAction)cancelButtonPressed:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
     

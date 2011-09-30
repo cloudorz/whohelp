@@ -10,6 +10,7 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
+#import "Utils.h"
 #import "Signup2ViewController.h"
 #import "LoginViewController.h"
 #import "WhoHelpAppDelegate.h"
@@ -186,7 +187,7 @@
             [self.resendButton removeFromSuperview];
         }
     }else if (400 == [request responseStatusCode]) {
-        [self warningNotification:@"参数错误"];
+        [Utils warningNotification:@"参数错误"];
     }else if (409 == [request responseStatusCode]) {
         NSMutableAttributedString *attributedString;
         attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
@@ -194,7 +195,7 @@
         [attributedString setTextColor:[UIColor redColor]];
         self.errorLabel.attributedText = attributedString;
     } else{
-        [self warningNotification:@"服务器异常返回"];
+        [Utils warningNotification:@"服务器异常返回"];
     }
    
 }
@@ -202,7 +203,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     //NSError *error = [request error];
-    [self warningNotification:@"请求服务错误"];
+    [Utils warningNotification:@"请求服务错误"];
 }
 
 #pragma mark - handling errors

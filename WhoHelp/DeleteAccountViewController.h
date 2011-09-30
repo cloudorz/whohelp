@@ -28,11 +28,6 @@
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) Profile *profile;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
-
-- (void)delAccount: (NSMutableDictionary *)passwordInfo;
 - (void)delAccount2;
 
 - (IBAction)cancelButtonPressed:(id)sender;

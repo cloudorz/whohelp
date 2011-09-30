@@ -10,6 +10,7 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
+#import "Utils.h"
 
 @implementation ResetPasswordViewController
 
@@ -90,9 +91,9 @@
 {
     [self.loadingIndicator startAnimating];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@", USERURI, phone, APPKEY]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@", RESETURI, phone, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"PUT"];
     [request setDelegate:self];
     [request startAsynchronous];
     
@@ -111,31 +112,13 @@
         [attributedString setTextColor:[UIColor redColor]];
         self.errorLabel.attributedText = attributedString;
     } else{
-        [self warningNotification:@"服务器异常返回"];
+        [Utils warningNotification:@"服务器异常返回"];
     }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-   [self warningNotification:@"请求服务错误"];
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
+   [Utils warningNotification:@"请求服务错误"];
 }
 
 - (void)dealloc

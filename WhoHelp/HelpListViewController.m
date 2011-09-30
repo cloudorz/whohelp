@@ -7,7 +7,6 @@
 //
 
 #import "HelpListViewController.h"
-#import "Loud.h"
 #import "HelpDetailViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
@@ -43,24 +42,15 @@
 
 @interface HelpListViewController (Private)
 - (void)fetchLoudList;
-- (void)addLouds;
-- (void)deleteLouds;
-- (void)syncLoudList;
-- (NSManagedObject *)getLoudByLid:(NSNumber *)lid;
-- (NSData *)fetchImage: (NSString *)partURI;
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)errorNotification:(NSString *)message;
-- (void)warningNotification:(NSString *)message;
 @end
 
 
 @implementation HelpListViewController
 
 @synthesize profiles=profiles_;
-@synthesize newLouds=newLouds_;
-@synthesize discardLouds=discardLouds_;
 @synthesize louds=louds_;
 @synthesize locationIsWork=locationIsWork_;
+@synthesize curCollection=curCollection_;
 
 - (CLLocationManager *) locationManager
 {
@@ -130,39 +120,6 @@
     return profile_;
 }
 
-- (void)updateLouds
-{
-    
-    // This must be the request for our results controller. We don't have one yet
-    // so we need to build it.
-    
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"captured == YES"];
-    //[request setPredicate:predicate];
-
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-    
-    if (mutableFetchResults == nil) {
-        // Handle the error.
-        NSLog(@"update the louds error: %@, %@", error, [error userInfo]);
-    } else {
-        self.louds = mutableFetchResults;
-        [self.tableView reloadData];
-    }
-}
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -186,8 +143,9 @@
 {
     [super viewDidLoad];
     
-    // Get the data
-    [self updateLouds];
+    // load remote data and init tableview
+    [self reloadTableViewDataSource];
+    [self doneLoadingTableViewData];
     
  	if (_refreshHeaderView == nil) {
 		
@@ -220,11 +178,6 @@
     self.view.backgroundColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
     [self.locationManager startUpdatingLocation];
     
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -264,14 +217,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Loud *loud = [self.louds objectAtIndex:indexPath.row];
+    NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier;
-    CellIdentifier = [NSString stringWithFormat:@"helpEntry%d", loud.lid];
+    CellIdentifier = [NSString stringWithFormat:@"helpEntry%d", [loud objectForKey:@"id"]];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    CGSize theSize= [loud.content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 
     UIImageView *avatarImage, *arrowImage;
     UILabel *nameLabel, *timeLabel, *distanceLabel;
@@ -333,16 +286,19 @@
         cellText.opaque = YES;
         [cell addSubview:cellText];
         
-        avatarImage.image = [UIImage imageWithData:loud.userAvatar];
-        nameLabel.text = loud.userName;
+        if (nil == [[loud objectForKey:@"user"] objectForKey:@"avatarData"]){
+            [[loud objectForKey:@"user"] setObject:[Utils fetchImage:[[loud objectForKey:@"user"] objectForKey:@"avatar_link"]] forKey:@"avatarData"];
+        }
+        avatarImage.image = [UIImage imageWithData:[[loud objectForKey:@"user"] objectForKey:@"avatarData"]];
+        nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
         
-        NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:loud.content];
+        NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[loud objectForKey:@"content"]];
         [attributedString setFont:[UIFont systemFontOfSize:TEXTFONTSIZE]];
         [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
         
-        NSRange rang = [loud.content rangeOfString:@"$" options:NSBackwardsSearch];
+        NSRange rang = [[loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
         if (NSNotFound != rang.location){
-            [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, loud.content.length-rang.location)];
+            [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[loud objectForKey:@"content"] length] - rang.location)];
         }
         cellText.attributedText =attributedString;
         
@@ -377,9 +333,9 @@
     [cell addSubview:timeLabel];
 
     
-    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[loud.lat doubleValue] longitude:[loud.lon doubleValue]] autorelease]]];
+    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
     
-    timeLabel.text = [self descriptionForTime:loud.created];
+    timeLabel.text = [Utils descriptionForTime:[Utils stringToTime:[loud objectForKey:@"created"]]];
     
     return cell;
 }
@@ -387,9 +343,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //return [indexPath row] * 20;
-    Loud *loud = [self.louds objectAtIndex:indexPath.row];
+    NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
 
-    CGSize theSize= [loud.content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
     return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN;
 }
 
@@ -401,12 +357,13 @@
     
      HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
      // ...
-    Loud *loud= [self.louds objectAtIndex:indexPath.row];
+    NSDictionary *loud= [self.louds objectAtIndex:indexPath.row];
     detailViewController.loud = loud;
-    detailViewController.distance = [self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[loud.lat doubleValue] longitude:[loud.lon doubleValue]] autorelease]];
+    detailViewController.distance = [self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]];
      // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
+     
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
      
 }
 
@@ -415,8 +372,7 @@
 {
     NSLog(@"%@", @"fetching louds....");
     CLLocationCoordinate2D curloc = self.curLocation.coordinate;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@&lat=%f&lon=%f",
-                                       SYNCURI, self.profile.token, APPKEY, curloc.latitude, curloc.longitude]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=30&ak=%@&tk=%@", LOUD3URI, curloc.latitude, curloc.longitude, APPKEY, self.profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -426,27 +382,23 @@
 {
     NSLog(@"Got louds then processing louds...");
     //NSString *responseString = [request responseString];
-    NSData *responseData = [request responseData];
-    
-    // create the json parser 
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
 
-    id result = [jsonParser objectWithData:responseData];
-    [jsonParser release];
-    
-
-        if ([request responseStatusCode] == 200){
-          
-            self.newLouds = [result objectForKey:@"add"];
-            self.discardLouds = [result objectForKey:@"del"];
-            
-            [self addLouds]; // save data to database
-            [self deleteLouds]; // del the no use louds
-            [self updateLouds]; // update the MO data
-            
-        } else{
-            [self warningNotification:@"请求服务出错"];
-        }
+    if ([request responseStatusCode] == 200){
+        NSData *responseData = [request responseData];
+        
+        // create the json parser 
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        
+        NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
+        [jsonParser release];
+        self.curCollection = collection;
+        self.louds = [collection objectForKey:@"louds"];
+        [self.tableView reloadData];
+    } else if (400 == [request responseStatusCode]) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"请求服务出错"];
+    }
 
 }
 
@@ -454,157 +406,10 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     // notify the user
-    [self warningNotification:@"网络服务请求失败."];
-}
-
-//- (void)syncLoudList
-//{
-//#warning TODO instead of the fetch method.
-//    // TODO instead of the fetch method.
-//}
-
-#pragma mark - get the images
-- (NSData *)fetchImage: (NSString *)partURI
-{
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", IMGURI, partURI]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request startSynchronous];
-    NSError *error = [request error];
-    if (!error) {
-        //NSString *response = [request responseString];
-        return [request responseData];
-    }else{
-        NSLog(@"fetch images error");
-        return nil;
-    }
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
-
-#pragma mark - CRUD Loud and Profile
-
-- (void)addLouds
-{
-    if (self.newLouds == nil || [self.newLouds count] <= 0){
-        return;
-    }
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    //[dateFormatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN_POSIX"] autorelease]];
-    
-    for (int i=0, count=[self.newLouds count]; i < count; i++) {
-
-        
-        NSMutableDictionary *newLoud = [self.newLouds objectAtIndex:i];
-        if ([self getLoudByLid:[newLoud valueForKey:@"id"]] == nil){
-            Loud *loud = (Loud *)[NSEntityDescription insertNewObjectForEntityForName:@"Loud" inManagedObjectContext:self.managedObjectContext];
-            loud.content = [newLoud valueForKey:@"content"];
-            loud.lid = [newLoud valueForKey:@"id"];
-            loud.grade = [newLoud valueForKey:@"grade"];
-            loud.lat = [newLoud valueForKey:@"lat"];
-            loud.lon = [newLoud valueForKey:@"lon"];
-            if ([newLoud valueForKey:@"address"] == [NSNull null]) {
-                loud.address = nil;
-            } else {
-                loud.address = [newLoud valueForKey:@"address"];                
-            }
-             
-            loud.created = [dateFormatter dateFromString:[newLoud objectForKey:@"created"]];
-            NSMutableDictionary *loudUser = [newLoud valueForKey:@"user"];
-            loud.userName = [loudUser valueForKey:@"name"];
-            loud.userAvatar = [self fetchImage:[loudUser objectForKey:@"avatar"]];
-            loud.userPhone = [loudUser valueForKey:@"phone"];
-            
-
-        }
-        
-    }
-    
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        // Handle the error. 
-        [self warningNotification:@"数据存储失败."];
-        NSLog(@"save data error: %@, %@", error, [error userInfo]);
-    }
-    
-    [dateFormatter release];
+    [Utils warningNotification:@"网络服务请求失败."];
 }
 
 
-- (void) deleteLouds
-{
-    
-    if (self.discardLouds == nil || [self.discardLouds count] <= 0){
-        return;
-    }
-    
-    for (int i=0, count=[self.discardLouds count]; i < count; i++) {
-        NSManagedObject *loudToDelete = [self getLoudByLid:[self.discardLouds objectAtIndex:i]];
-        if (nil != loudToDelete){
-            [self.managedObjectContext deleteObject:loudToDelete];
-        }
-    }
-    // Commit the change.
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        // Handle the error.
-        [self warningNotification:@"数据存储失败."];
-        NSLog(@"save data error: %@, %@", error, [error userInfo]);
-    }    
-   
-}
-
-- (NSManagedObject *)getLoudByLid:(NSNumber *)lid
-{
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Loud"  inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"lid == %@", lid]];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-
-    if (error == nil) {
-        if ([mutableFetchResults count] > 0) {
-            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-            [mutableFetchResults release];
-            return res;
-        }
-
-    } else {
-        // Handle the error FIXME
-        NSLog(@"get by lid error: %@, %@", error, [error userInfo]);
-    }
-    [mutableFetchResults release];
-    return nil;
-    
-}
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -696,34 +501,6 @@
     }   
 
 }
-#pragma mark - date formate to human readable
-- (NSString *)descriptionForTime:(NSDate *)date
-{
-    // convert the time formate to human reading. 
-    NSInteger timePassed = abs([date timeIntervalSinceNow]);
-    
-    NSString *dateString = nil;
-    if (timePassed < 60){
-        dateString = [NSString stringWithFormat:@"%d秒前", timePassed];
-    }else{
-        if (timePassed < 60*60){
-            dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
-        }else{
-            NSDateFormatter *dateFormat = [NSDateFormatter alloc];
-            [dateFormat setLocale:[NSLocale currentLocale]];
-            NSString *dateFormatString = nil;
-            
-            if (timePassed < 24*60*60){
-                dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
-            }else{
-                dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
-            }
-            [dateFormat setDateFormat:dateFormatString];
-            dateString = [dateFormat stringFromDate:date];
-        }
-    }
-    return dateString;
-}
 
 #pragma mark - dealloc 
 - (void)dealloc
@@ -731,11 +508,10 @@
     [profiles_ release];
     [louds_ release];
     //[managedObjectContext_ release];
-    [newLouds_ release];
     [profile_ release];
-    [discardLouds_ release];
     [_refreshHeaderView release];
     [locationManager_ release];
+    [curCollection_ release];
     [super dealloc];
 }
 

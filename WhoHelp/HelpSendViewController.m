@@ -11,12 +11,8 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
+#import "Utils.h"
 
-@interface HelpSendViewController (Private)
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)errorNotification:(NSString *)message;
-- (void)warningNotification:(NSString *)message;
-@end
 
 @implementation HelpSendViewController
 
@@ -208,9 +204,9 @@
         [self dismissModalViewControllerAnimated:YES];
         
     } else if (400 == [request responseStatusCode]) {
-        [self warningNotification:@"参数错误"];
+        [Utils warningNotification:@"参数错误"];
     } else{
-        [self warningNotification:@"请求服务出错"];
+        [Utils warningNotification:@"请求服务出错"];
     }
 
     // send ok cancel
@@ -226,7 +222,7 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
     self.sendBarItem.enabled = YES;
-    [self warningNotification:@"网络服务请求失败."];
+    [Utils warningNotification:@"网络服务请求失败."];
 
 }
 
@@ -258,23 +254,6 @@
     return YES;
 }
 
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
 
 #pragma mark - locationmananger delegate methods
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
@@ -295,10 +274,10 @@
                 // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
                 // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
             case kCLErrorDenied:
-                [self warningNotification:@"Core location denied"];
+                [Utils warningNotification:@"Core location denied"];
                 break;
             case kCLErrorLocationUnknown:
-                [self warningNotification:@"Core location unkown"];
+                [Utils warningNotification:@"Core location unkown"];
                 break;
                 
             default:

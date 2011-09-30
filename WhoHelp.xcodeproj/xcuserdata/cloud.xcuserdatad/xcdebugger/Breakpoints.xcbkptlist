@@ -8,26 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
-         filePath = "WhoHelp/HelpListViewController.m"
-         timestampString = "338832173.209862"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "532"
-         endingLineNumber = "532"
-         landmarkName = "-addLouds"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
          filePath = "WhoHelp/HelpDetailViewController.m"
-         timestampString = "338482706.66744"
+         timestampString = "339087690.65435"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "147"
-         endingLineNumber = "147"
+         startingLineNumber = "117"
+         endingLineNumber = "117"
          landmarkName = "-tabBar:didSelectItem:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -37,11 +23,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "WhoHelp/HelpDetailViewController.m"
-         timestampString = "338482706.66744"
+         timestampString = "339087690.65435"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "133"
-         endingLineNumber = "133"
+         startingLineNumber = "103"
+         endingLineNumber = "103"
          landmarkName = "-tabBar:didSelectItem:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -57,6 +43,20 @@
          startingLineNumber = "65"
          endingLineNumber = "65"
          landmarkName = "-tabBarController:shouldSelectViewController:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "WhoHelp/HelpDetailViewController.m"
+         timestampString = "339090436.202113"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "96"
+         endingLineNumber = "96"
+         landmarkName = "-tabBar:didSelectItem:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

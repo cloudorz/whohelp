@@ -15,6 +15,7 @@
 #import "LoginViewController.h"
 #import "ASIFormDataRequest.h"
 #import "Config.h"
+#import "Utils.h"
 #import "SBJson.h"
 
 @implementation HelpSettingViewController
@@ -340,7 +341,7 @@
                 NSError *error = nil;
                 if (![self.managedObjectContext save:&error]) {
                     // Handle the error. 
-                    [self warningNotification:@"数据存储失败."];
+                    [Utils warningNotification:@"数据存储失败."];
                 }else{
                     LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
                     [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
@@ -375,14 +376,14 @@
             [jsonParser release];
             
             if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [self warningNotification:@"上传头像失败"];
+                [Utils warningNotification:@"上传头像失败"];
             }
         } else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
     
     [self dismissModalViewControllerAnimated:YES];

@@ -13,6 +13,7 @@
 #import "Profile.h"
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
+#import "Utils.h"
 
 @interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, OHAttributedLabelDelegate>
 {
@@ -20,9 +21,6 @@
     NSMutableArray *louds_;
     NSMutableArray *profiles_;
     NSManagedObjectContext *managedObjectContext_;
-    
-    NSArray *newLouds_;
-    NSArray *discardLouds_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
@@ -32,20 +30,20 @@
     
     Profile *profile_;
     
+    NSMutableDictionary *curCollection_;
+
 }
 
 @property (nonatomic, retain) NSMutableArray *louds;
 @property (nonatomic, retain) NSMutableArray *profiles;
-@property (nonatomic, retain) NSArray *newLouds;
-@property (nonatomic, retain) NSArray *discardLouds;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 @property (nonatomic, readonly) CLLocation *curLocation;
 @property (nonatomic, retain, readonly) Profile *profile;
+@property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property BOOL locationIsWork;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
-- (NSString *)descriptionForTime:(NSDate *)date;
 
 @end

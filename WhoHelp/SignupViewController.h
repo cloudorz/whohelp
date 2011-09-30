@@ -33,9 +33,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *codeLabel;
 @property (nonatomic) BOOL checked;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
+
 - (void)sendSignupCode;
 - (NSString *)genRandStringLength:(int)len;
 

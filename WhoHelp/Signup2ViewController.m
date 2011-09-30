@@ -11,6 +11,7 @@
 #import "ASIFormDataRequest.h"
 #import "SBJson.h"
 #import "Config.h"
+#import "Utils.h"
 
 @implementation Signup2ViewController
 
@@ -139,13 +140,13 @@
             [self dismissModalViewControllerAnimated:YES];
             
         } else if (400 == [request responseStatusCode]) {
-            [self warningNotification:@"参数错误"];
+            [Utils warningNotification:@"参数错误"];
         }else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
 }
 

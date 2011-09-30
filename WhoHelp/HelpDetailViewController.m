@@ -8,6 +8,7 @@
 
 #import "HelpDetailViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Utils.h"
 
 @implementation HelpDetailViewController
 
@@ -56,30 +57,30 @@
     [super viewWillAppear:animated];
     
 
-    if (self.loud.userAvatar != nil){
-        self.avatarImage.image = [UIImage imageWithData:self.loud.userAvatar];
+    if ([[self.loud objectForKey:@"user"] objectForKey:@"avatarData"] != nil){
+        self.avatarImage.image = [UIImage imageWithData:[[self.loud objectForKey:@"user"] objectForKey:@"avatarData"]];
         self.avatarImage.opaque = YES;
         self.avatarImage.layer.borderWidth = 1.0;
         self.avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
     }
-    self.nameLabel.text = self.loud.userName;
+    self.nameLabel.text = [[self.loud objectForKey:@"user"] objectForKey:@"name"];
     
-    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:self.loud.content];
+    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[self.loud objectForKey:@"content"]];
     [attributedString setFont:[UIFont systemFontOfSize:14.0]];
     [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
     
-    NSRange rang = [self.loud.content rangeOfString:@"$" options:NSBackwardsSearch];
+    NSRange rang = [[self.loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
     if (NSNotFound != rang.location){
-        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, self.loud.content.length-rang.location)];
+        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[self.loud objectForKey:@"content"] length] - rang.location)];
     }
     self.contentTextLabel.attributedText = attributedString;
     // get the geocoder address 
-    if (nil == self.loud.address){
+    if (nil == [self.loud objectForKey:@"address"]){
         self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
     }else{
-        self.locationLabel.text = [NSString stringWithFormat:@"%@(%.0f米)", self.loud.address, self.distance];
+        self.locationLabel.text = [NSString stringWithFormat:@"%@(%.0f米)", [self.loud objectForKey:@"address"], self.distance];
     }
-    self.timeLabel.text = [self descriptionForTime:self.loud.created];
+    self.timeLabel.text = [Utils descriptionForTime:[Utils stringToTime:[self.loud objectForKey:@"created"]]];
     
 }
 
@@ -88,37 +89,6 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
-
-- (NSString *)descriptionForTime:(NSDate *)date
-{
-    // convert the time formate to human reading. 
-    // FIXME 24hours maybe two days.
-    NSInteger timePassed = abs([date timeIntervalSinceNow]);
-    
-    NSString *dateString = nil;
-    if (timePassed < 60){
-        dateString = [NSString stringWithFormat:@"%d秒前", timePassed];
-    }else{
-        if (timePassed < 60*60){
-            dateString = [NSString stringWithFormat:@"%d分前", timePassed/60];
-        }else{
-            NSDateFormatter *dateFormat = [NSDateFormatter alloc];
-            [dateFormat setLocale:[NSLocale currentLocale]];
-            NSString *dateFormatString = nil;
-            
-            if (timePassed < 24*60*60){
-                dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
-            }else{
-                dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"MM-dd HH:mm" options:0 locale:[NSLocale currentLocale]];
-            }
-            [dateFormat setDateFormat:dateFormatString];
-            dateString = [dateFormat stringFromDate:date];
-        }
-    }
-    return dateString;
-}
-
 
 #pragma mark - the tab bar operation
 
@@ -137,7 +107,7 @@
         }
         case 3:
         {
-            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%d", item.tag == 2 ? @"tel" : @"sms", self.loud.userPhone]];
+            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", item.tag == 2 ? @"tel" : @"sms", [[self.loud objectForKey:@"user"] objectForKey:@"phone"]]];
             UIDevice *device = [UIDevice currentDevice];
             if ([[device model] isEqualToString:@"iPhone"] ) {
                 [[UIApplication sharedApplication] openURL:callURL];

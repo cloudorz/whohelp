@@ -23,9 +23,6 @@
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSData *image;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
 - (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;
 
 @end

@@ -35,9 +35,6 @@
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)doneEditing:(id)sender;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
 - (void)postPasswordInfo: (NSMutableDictionary *)passwordInfo;
 
 @end

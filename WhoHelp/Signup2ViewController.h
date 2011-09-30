@@ -37,9 +37,6 @@
 - (IBAction)doneEditing:(id)sender;
 - (IBAction)takePhoto:(id)sender;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
 - (void)postUserInfo;
 
 @end

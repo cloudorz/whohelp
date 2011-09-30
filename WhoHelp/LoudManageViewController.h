@@ -31,9 +31,6 @@
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)entryButtonPressed:(id)sender;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
 - (void)fetch3Louds;
 
 @end

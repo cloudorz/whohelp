@@ -11,6 +11,7 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
+#import "Utils.h"
 #import "Profile.h"
 #import "ResetPasswordViewController.h"
 #import "SignupViewController.h"
@@ -99,7 +100,7 @@
         [self postUserInfo:data];
         [data release];
     }else{
-        [self warningNotification:@"手机号(11位数字)与密码不能为空"];
+        [Utils warningNotification:@"手机号(11位数字)与密码不能为空"];
     }
 
     [sender setEnabled: YES];
@@ -132,24 +133,6 @@
 }
 
 
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
-
 #pragma mark - get the images
 - (void)postUserInfo: (NSMutableDictionary *)userInfo
 {
@@ -178,15 +161,15 @@
             [self dismissModalViewControllerAnimated:YES];
             
         } else if (406 == [request responseStatusCode]) {
-            [self warningNotification:@"登录失败请输入正确的手机号和密码"];
+            [Utils warningNotification:@"登录失败请输入正确的手机号和密码"];
         } else if (400 == [request responseStatusCode]) {
-            [self warningNotification:@"参数不正确"];
+            [Utils warningNotification:@"参数不正确"];
         }else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
     [self.loadingIndicator stopAnimating];
 }
@@ -213,8 +196,7 @@
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         // Handle the error. 
-        [self warningNotification:@"数据存储失败."];
-        NSLog(@"save data error: %@, %@", error, [error userInfo]);
+        [Utils warningNotification:@"数据存储失败."];
     }
     
     [dateFormatter release];

@@ -23,10 +23,6 @@
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *phone;
 
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
-- (void)warningNotification:(NSString *)message;
-- (void)errorNotification:(NSString *)message;
-
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
 - (void)resetPasswordInfo: (NSString *)phone;

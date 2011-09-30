@@ -47,7 +47,6 @@
 		615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 615E6A7F141F478900400B60 /* QuartzCore.framework */; };
 		615E6A841420785200400B60 /* HelpSendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A821420785100400B60 /* HelpSendViewController.m */; };
 		615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A831420785200400B60 /* HelpSendViewController.xib */; };
-		615E6A8F1423090200400B60 /* Loud.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A8E1423090200400B60 /* Loud.m */; };
 		615E6AE61424E05800400B60 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6AE41424E05700400B60 /* LoginViewController.m */; };
 		615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AE51424E05700400B60 /* LoginViewController.xib */; };
 		615E6AEB1425BA6200400B60 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AE91425BA6200400B60 /* button.png */; };
@@ -90,6 +89,7 @@
 		617E3AA0141B9B1600441135 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9A141B9B1500441135 /* mail.png */; };
 		617E3AA1141B9B1600441135 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9B141B9B1600441135 /* settings.png */; };
 		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
+		619B96A6143602A80017DE0D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 619B96A5143602A70017DE0D /* Utils.m */; };
 		61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B1342D1428D27C0067AF09 /* list_arrow.png */; };
 		61B1343E142A12BA0067AF09 /* ChangPassswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */; };
 		61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */; };
@@ -190,8 +190,6 @@
 		615E6A811420785100400B60 /* HelpSendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSendViewController.h; sourceTree = "<group>"; };
 		615E6A821420785100400B60 /* HelpSendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSendViewController.m; sourceTree = "<group>"; };
 		615E6A831420785200400B60 /* HelpSendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSendViewController.xib; sourceTree = "<group>"; };
-		615E6A8D1423090200400B60 /* Loud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Loud.h; sourceTree = "<group>"; };
-		615E6A8E1423090200400B60 /* Loud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Loud.m; sourceTree = "<group>"; };
 		615E6AE31424E05600400B60 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		615E6AE41424E05700400B60 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		615E6AE51424E05700400B60 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -242,6 +240,8 @@
 		617E3A9A141B9B1500441135 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
 		617E3A9B141B9B1600441135 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		617E3A9C141B9B1600441135 /* type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = type.png; sourceTree = "<group>"; };
+		619B96A4143602A70017DE0D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		619B96A5143602A70017DE0D /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		61B1342D1428D27C0067AF09 /* list_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_arrow.png; sourceTree = "<group>"; };
 		61B1343B142A12B90067AF09 /* ChangPassswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangPassswordViewController.h; sourceTree = "<group>"; };
 		61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangPassswordViewController.m; sourceTree = "<group>"; };
@@ -431,6 +431,8 @@
 				614E3EDF141E01DC00418314 /* JSON */,
 				614E3EDC141DE4CC00418314 /* RESTful */,
 				615E6AED1425E41B00400B60 /* Config.h */,
+				619B96A4143602A70017DE0D /* Utils.h */,
+				619B96A5143602A70017DE0D /* Utils.m */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
@@ -485,8 +487,6 @@
 				617E3A43141B584F00441135 /* InfoPlist.strings */,
 				617E3A46141B584F00441135 /* main.m */,
 				617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */,
-				615E6A8D1423090200400B60 /* Loud.h */,
-				615E6A8E1423090200400B60 /* Loud.m */,
 				615E6AEE1426066400400B60 /* Profile.h */,
 				615E6AEF1426066400400B60 /* Profile.m */,
 			);
@@ -714,7 +714,6 @@
 				614E3F04141E026300418314 /* SBJsonWriter.m in Sources */,
 				615E6A7A141F41B800400B60 /* EGORefreshTableHeaderView.m in Sources */,
 				615E6A841420785200400B60 /* HelpSendViewController.m in Sources */,
-				615E6A8F1423090200400B60 /* Loud.m in Sources */,
 				615E6AE61424E05800400B60 /* LoginViewController.m in Sources */,
 				615E6AF01426066400400B60 /* Profile.m in Sources */,
 				6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */,
@@ -726,6 +725,7 @@
 				61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */,
 				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,
 				61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */,
+				619B96A6143602A80017DE0D /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,6 +780,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -795,7 +796,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Debug;
 		};
@@ -804,6 +807,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -813,6 +817,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

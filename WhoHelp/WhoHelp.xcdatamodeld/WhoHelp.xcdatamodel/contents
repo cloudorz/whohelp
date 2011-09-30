@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="562" systemVersion="11B26" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="iOS 4.3">
-    <entity name="Loud" representedClassName="Loud">
-        <attribute name="address" optional="YES" attributeType="String"/>
-        <attribute name="content" attributeType="String"/>
-        <attribute name="created" attributeType="Date"/>
-        <attribute name="grade" attributeType="Integer 16" defaultValueString="0"/>
-        <attribute name="lat" attributeType="Double" defaultValueString="0"/>
-        <attribute name="lid" attributeType="Integer 32" defaultValueString="0"/>
-        <attribute name="lon" attributeType="Double" defaultValueString="0"/>
-        <attribute name="userAvatar" optional="YES" attributeType="Binary"/>
-        <attribute name="userName" attributeType="String"/>
-        <attribute name="userPhone" attributeType="Integer 64" defaultValueString="0"/>
-    </entity>
     <entity name="Profile" representedClassName="Profile">
         <attribute name="isLogin" optional="YES" attributeType="Boolean"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -20,7 +8,6 @@
         <attribute name="updated" optional="YES" attributeType="Date"/>
     </entity>
     <elements>
-        <element name="Loud" positionX="-47" positionY="150" width="128" height="195"/>
         <element name="Profile" positionX="160" positionY="117" width="128" height="120"/>
     </elements>
 </model>

@@ -10,6 +10,7 @@
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
 #import "Config.h"
+#import "Utils.h"
 #import "LoginViewController.h"
 #import "WhoHelpAppDelegate.h"
 
@@ -155,7 +156,7 @@
     NSString *dataString = [preJson stringWithObject:passwordInfo];
     [preJson release];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@/passwd?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
@@ -170,12 +171,12 @@
             self.profile.isLogin = NO;
             NSError *error = nil;
             if (![self.managedObjectContext save:&error]) { 
-                [self warningNotification:@"数据存储失败."];
+                [Utils warningNotification:@"数据存储失败."];
             }else{
                 [self.navigationController popViewControllerAnimated:NO];
             }  
             
-        } else if (406 == [request responseStatusCode]){
+        } else if (412 == [request responseStatusCode]){
             
             NSMutableAttributedString *attributedString;
             attributedString = [NSMutableAttributedString attributedStringWithString:@"密码不正确"];
@@ -183,34 +184,17 @@
             [attributedString setTextColor:[UIColor redColor]];
             self.errorLabel.attributedText = attributedString;
 
-        } else if (400 == [request responseStatusCode]) {
-            [self warningNotification:@"参数不正确"];
+        } else if (403 == [request responseStatusCode]) {
+            [Utils warningNotification:@"手机号禁止修改"];
         } else{
-            [self warningNotification:@"服务器异常返回"];
+            [Utils warningNotification:@"服务器异常返回"];
         }
         
     }else{
-        [self warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"请求服务错误"];
     }
 }
 
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
 
 #pragma mark - dealloc
 - (void)dealloc
