@@ -18,13 +18,11 @@
     UIActivityIndicatorView *loadingIndicator_;
     UITextField *newName_;
     Profile *profile_;
-    NSManagedObjectContext *managedObjectContext_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *newName;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) Profile *profile;
 
 

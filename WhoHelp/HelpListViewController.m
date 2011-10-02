@@ -11,113 +11,32 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
-
-// fix the get location bug
-@implementation CLLocationManager (TemporaryHack)
-
-- (void)hackLocationFix
-{
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:42 longitude:-50];
-    [[self delegate] locationManager:self didUpdateToLocation:location fromLocation:nil];
-}
-
-- (void)startUpdatingLocation
-{
-    [self performSelector:@selector(hackLocationFix) withObject:nil afterDelay:0.1];
-}
-
-- (void)hackHeadingFix
-{
-    NSString *heading = [NSString stringWithString:@"Somewhere that direction-ish!"];
-    [[self delegate] locationManager:self didUpdateHeading:(id)heading];
-}
-
-- (void)startUpdatingHeading
-{
-    [self performSelector:@selector(hackHeadingFix) withObject:nil afterDelay:0.1];
-}
-
-@end
-
-
-@interface HelpListViewController (Private)
-- (void)fetchLoudList;
-@end
-
+#import "Utils.h"
+#import "LocationController.h"
+#import "ProfileManager.h"
 
 @implementation HelpListViewController
 
-@synthesize profiles=profiles_;
 @synthesize louds=louds_;
-@synthesize locationIsWork=locationIsWork_;
 @synthesize curCollection=curCollection_;
+@synthesize etag=etag_;
 
-- (CLLocationManager *) locationManager
-{
-    if (locationManager_ == nil){
-        locationManager_ = [[CLLocationManager alloc] init];
-        locationManager_.desiredAccuracy = kCLLocationAccuracyBest;
-        locationManager_.delegate = self;
-    }
-    return locationManager_;
-}
-
-- (CLLocation *)curLocation
-{
-    if (self.locationIsWork){
-        //return self.locationManager.location;
-        // FIXME now is simulator
-        return [[[CLLocation alloc] initWithLatitude:30.293461 longitude:120.160904] autorelease];
-    }
-    // default location the center of Hangzhou
-    return [[[CLLocation alloc] initWithLatitude:30.293461 longitude:120.160904] autorelease];
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext_ == nil){
-        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-        managedObjectContext_ = appDelegate.managedObjectContext;
-    }
-  
-    return managedObjectContext_;
-}
 
 - (Profile *)profile
 {
-    
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-    
-    if (error == nil) {
-        if ([mutableFetchResults count] > 0) {
-            
-            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-            profile_ = (Profile *)res;
-        }
-        
-    } else {
-        // Handle the error FIXME
-        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    if (nil == profile_){
+        profile_ = [[ProfileManager sharedInstance] profile];
     }
     
-    [mutableFetchResults release];
-    
     return profile_;
+}
+
+- (NSMutableDictionary *)photoCache
+{
+    if (nil == photoCache_){
+        photoCache_ = [[NSMutableDictionary alloc] init];
+    }
+    return photoCache_;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -142,11 +61,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // load remote data and init tableview
-    [self reloadTableViewDataSource];
-    [self doneLoadingTableViewData];
-    
  	if (_refreshHeaderView == nil) {
 		
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
@@ -156,9 +70,11 @@
 		[view release];
 		
 	}
-	
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
+    
+    // load remote data and init tableview
+    [self fakeFetchLoudList];
 
 }
 
@@ -170,26 +86,25 @@
     // e.g. self.myOutlet = nil;
 }
 
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.locationIsWork = NO;
     self.tableView.separatorStyle = NO;
     self.view.backgroundColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
-    [self.locationManager startUpdatingLocation];
+    //[[LocationController sharedInstance].locationManager startUpdatingLocation];
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"%@", @"Shutting down core  location.");
-    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    //[[LocationController sharedInstance].locationManager stopUpdatingLocation];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -217,10 +132,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+    NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier;
-    CellIdentifier = [NSString stringWithFormat:@"helpEntry%d", [loud objectForKey:@"id"]];
+    CellIdentifier = [NSString stringWithFormat:@"helpEntry%@", [loud objectForKey:@"id"]];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -286,10 +201,7 @@
         cellText.opaque = YES;
         [cell addSubview:cellText];
         
-        if (nil == [[loud objectForKey:@"user"] objectForKey:@"avatarData"]){
-            [[loud objectForKey:@"user"] setObject:[Utils fetchImage:[[loud objectForKey:@"user"] objectForKey:@"avatar_link"]] forKey:@"avatarData"];
-        }
-        avatarImage.image = [UIImage imageWithData:[[loud objectForKey:@"user"] objectForKey:@"avatarData"]];
+        avatarImage.image = [UIImage imageWithData:[self photoFromUser:[loud objectForKey:@"user"]]];
         nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
         
         NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[loud objectForKey:@"content"]];
@@ -332,10 +244,13 @@
     //timeLabel.backgroundColor = bgGray;
     [cell addSubview:timeLabel];
 
+    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[[LocationController sharedInstance].location distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
+    [loud setObject:distanceLabel.text forKey:@"distanceInfo"];
     
-    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
-    
-    timeLabel.text = [Utils descriptionForTime:[Utils stringToTime:[loud objectForKey:@"created"]]];
+    if (nil == [loud objectForKey:@"createdTime"]){
+        [loud setObject:[Utils stringToTime:[loud objectForKey:@"created"]] forKey:@"createdTime"];
+    }
+    timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
     
     return cell;
 }
@@ -355,12 +270,12 @@
 {
     // Navigation logic may go here. Create and push another view controller.
     
-     HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
-     // ...
+    HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
+    
     NSDictionary *loud= [self.louds objectAtIndex:indexPath.row];
     detailViewController.loud = loud;
-    detailViewController.distance = [self.curLocation distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]];
-     // Pass the selected object to the new view controller.
+    detailViewController.avatarData = [[self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]] objectForKey:@"photoData"];
+    // Pass the selected object to the new view controller.
      
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
@@ -368,36 +283,56 @@
 }
 
 #pragma mark - RESTful request
+- (void)fakeFetchLoudList
+{
+    [[LocationController sharedInstance].locationManager startUpdatingLocation];
+    [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];
+}
+
 - (void)fetchLoudList
 {
-    NSLog(@"%@", @"fetching louds....");
-    CLLocationCoordinate2D curloc = self.curLocation.coordinate;
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=30&ak=%@&tk=%@", LOUD3URI, curloc.latitude, curloc.longitude, APPKEY, self.profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, self.profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+  
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
     [request setDelegate:self];
     [request startAsynchronous];
 }
 
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"Got louds then processing louds...");
+
     //NSString *responseString = [request responseString];
 
     if ([request responseStatusCode] == 200){
         NSData *responseData = [request responseData];
-        
+
         // create the json parser 
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        
         NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
         [jsonParser release];
+        
         self.curCollection = collection;
         self.louds = [collection objectForKey:@"louds"];
+        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+        
+        // reload the tableview data
         [self.tableView reloadData];
+        
     } else if (400 == [request responseStatusCode]) {
         [Utils warningNotification:@"参数错误"];
-    } else{
-        [Utils warningNotification:@"请求服务出错"];
+    } else if (304 == [request responseStatusCode]) {
+        // do Nothing now.
+        //NSLog(@"the louds list not modified.");
+    }else{
+        [Utils warningNotification:@"服务器异常返回"];
     }
 
 }
@@ -410,6 +345,43 @@
 }
 
 
+- (void)fetchNextLoudList
+{
+    if (nil == self.louds || nil == [self.curCollection objectForKey:@"next"]){
+        return;
+    }
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", APPKEY, self.profile.token]]];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            
+            NSData *responseData = [request responseData];
+            // create the json parser 
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
+            [jsonParser release];
+            
+            self.curCollection = collection;
+            [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
+    
+            // reload the tableview data
+            [self.tableView reloadData];
+ 
+        } else if (400 == [request responseStatusCode]) {
+            [Utils warningNotification:@"参数错误"];
+        } else{
+            [Utils warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [Utils warningNotification:@"请求服务错误"];
+    }
+    
+}
+
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -417,7 +389,7 @@
 - (void)reloadTableViewDataSource{
     
     //  should be calling your tableviews data source model to reload
-    [self fetchLoudList];
+    [self fakeFetchLoudList]; // may be go
     // some more actions here TODO
     _reloading = YES;
     
@@ -446,6 +418,27 @@
     
 }
 
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == [self.louds count] - 1) {
+        
+        UIView *footSpinnerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+        UIActivityIndicatorView *loadView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        loadView.hidesWhenStopped = YES;
+        [loadView stopAnimating];
+        [footSpinnerView addSubview:loadView];
+        loadView.center = CGPointMake(160, 15);
+        [loadView release];
+        [self.tableView.tableFooterView addSubview:footSpinnerView];
+        
+        [self fetchNextLoudList];
+        
+    } else {
+        self.tableView.tableFooterView = nil;
+    }
+}
+
 #pragma mark -
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
@@ -468,49 +461,54 @@
     
 }
 
-#pragma mark - locationmananger delegate methods
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+#pragma mark - get photo from cahce or remote
+- (NSData *)photoFromUser: (NSDictionary *)user
 {
-    NSLog(@"%@", @"Core location claims to have a position.");
-    self.locationIsWork = YES;
-}
+    NSMutableDictionary *info = [self.photoCache objectForKey:[user objectForKey:@"id"]];
+    if (nil == info){
+        info = [[[NSMutableDictionary alloc] init] autorelease];
+    }
+    
+    if (nil != [info objectForKey:@"expir"] && abs([[info objectForKey:@"expir"] timeIntervalSinceNow]) < 6*60){
+        return [info objectForKey:@"photoData"];
+    }
+    
+    NSURL *url = [NSURL URLWithString:[user objectForKey:@"avatar_link"]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != [info objectForKey:@"last"]){
+        [request addRequestHeader:@"If-Modified-Since" value:[info objectForKey:@"last"]];
+    }
+    [request startSynchronous];
 
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"Core locaiton can't get the fix error: %@, %@", error, [error localizedDescription]);
-    self.locationIsWork = NO;
 
-    if ([error domain] == kCLErrorDomain) {
+    NSError *error = [request error];
+    if (!error){
+        [info setObject:[[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
+        [info setObject:[NSDate date] forKey:@"expir"];
+        if (200 == [request responseStatusCode]) {
+            
+            [info setObject:[request responseData] forKey:@"photoData"];
+        } 
         
-        // We handle CoreLocation-related errors here
-        switch ([error code]) {
-                // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
-                // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
-            case kCLErrorDenied:
-                NSLog(@"Core location denied");
-                break;
-            case kCLErrorLocationUnknown:
-                NSLog(@"Core location unkown");
-                break;
-                
-            default:
-                break;
-        }   
+        [self.photoCache setObject:info forKey:[user objectForKey:@"id"]];
+        
+        return [info objectForKey:@"photoData"];
     } else {
-        // We handle all non-CoreLocation errors here
-    }   
+        [Utils warningNotification:@"网络链接错误"];
+    }
 
+    return nil;
+    
 }
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
-    [profiles_ release];
     [louds_ release];
-    //[managedObjectContext_ release];
     [profile_ release];
     [_refreshHeaderView release];
-    [locationManager_ release];
+    [etag_ release];
+    [photoCache_ release];
     [curCollection_ release];
     [super dealloc];
 }

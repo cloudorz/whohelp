@@ -19,13 +19,11 @@
     
     UITextField *password_;
     Profile *profile_;
-    NSManagedObjectContext *managedObjectContext_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *password;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) Profile *profile;
 
 - (void)delAccount2;

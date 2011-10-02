@@ -11,12 +11,12 @@
 #import "ChangNameViewController.h"
 #import "LoudManageViewController.h"
 #import "DeleteAccountViewController.h"
-#import "WhoHelpAppDelegate.h"
 #import "LoginViewController.h"
 #import "ASIFormDataRequest.h"
 #import "Config.h"
 #import "Utils.h"
 #import "SBJson.h"
+#import "ProfileManager.h"
 
 @implementation HelpSettingViewController
 @synthesize image=image_;
@@ -50,49 +50,11 @@
     return menu_;
 }
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext_ == nil){
-        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-        managedObjectContext_ = appDelegate.managedObjectContext;
-    }
-    
-    return managedObjectContext_;
-}
-
 - (Profile *)profile
 {
-    
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-    
-    if (error == nil) {
-        if ([mutableFetchResults count] > 0) {
-            
-            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-            profile_ = (Profile *)res;
-        }
-        
-    } else {
-        // Handle the error FIXME
-        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    if (nil == profile_){
+        profile_ = [[ProfileManager sharedInstance] profile];
     }
-    
-    [mutableFetchResults release];
     
     return profile_;
 }
@@ -337,16 +299,12 @@
     } else if (2 == actionSheet.tag) {
         switch (buttonIndex) {
             case 0:
-                self.profile.isLogin = NO;
-                NSError *error = nil;
-                if (![self.managedObjectContext save:&error]) {
-                    // Handle the error. 
-                    [Utils warningNotification:@"数据存储失败."];
-                }else{
-                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
-                    [helpLoginVC release];
-                }
+                [[ProfileManager sharedInstance] logout];
+
+                LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+                [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
+                [helpLoginVC release];
+                
                 break;
                 
         }

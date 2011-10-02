@@ -21,6 +21,7 @@
     UIImageView *avatarImage_;
     OHAttributedLabel *contentTextLabel_;
     double distance_;
+    NSData *avatarData_;
     
 }
 
@@ -30,6 +31,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *contentTextLabel;
+@property (nonatomic, retain) NSData *avatarData;
 @property double distance;
 
 - (BOOL)hidesBottomBarWhenPushed;

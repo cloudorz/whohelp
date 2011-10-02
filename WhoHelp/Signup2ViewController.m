@@ -156,7 +156,7 @@
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
         UIActionSheet *photoSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照", @"从相册中选取", nil];
         photoSheet.tag = 1;
-        [photoSheet showFromTabBar:self.tabBarController.tabBar];
+        [photoSheet showInView:self.view];
         [photoSheet release];
     } else {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];

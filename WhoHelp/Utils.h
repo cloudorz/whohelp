@@ -18,4 +18,6 @@
 + (NSDate *)stringToTime:(NSString *)stringTime;
 + (NSData *)fetchImage: (NSString *)imageURI;
 
++ (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;
+
 @end

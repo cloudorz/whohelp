@@ -96,4 +96,27 @@
     return nil;
 }
 
+#pragma makr link the part uri with query string
++ (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query
+{
+   
+    NSString *fill = [[NSString alloc] init];
+    
+    NSRange rang = [uri rangeOfString:@"?" options:NSBackwardsSearch];
+    if (rang.location != NSNotFound){
+        if (rang.location == ([uri length] - 1)){
+            fill = @"";
+        } else {
+            fill = @"&";
+        }
+    } else{
+        fill = @"?";
+    }
+    
+    NSURL *fullURI = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", uri, fill, query]];
+    [fill release];
+    
+    return fullURI;
+}
+
 @end

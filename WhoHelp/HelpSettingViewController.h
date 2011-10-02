@@ -14,13 +14,11 @@
 @private
     NSMutableArray *menu_;
     Profile *profile_;
-    NSManagedObjectContext *managedObjectContext_;
     NSData *image_;
 }
 
 @property (nonatomic, retain, readonly) NSMutableArray *menu;
-@property (nonatomic, retain, readonly) Profile *profile;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) NSData *image;
 
 - (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;

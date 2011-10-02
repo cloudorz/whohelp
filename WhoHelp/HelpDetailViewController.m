@@ -19,6 +19,7 @@
 @synthesize avatarImage=avatarImage_;
 @synthesize contentTextLabel=contentTextLabel_;
 @synthesize distance=distance_;
+@synthesize avatarData=avatarData_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,12 +58,12 @@
     [super viewWillAppear:animated];
     
 
-    if ([[self.loud objectForKey:@"user"] objectForKey:@"avatarData"] != nil){
-        self.avatarImage.image = [UIImage imageWithData:[[self.loud objectForKey:@"user"] objectForKey:@"avatarData"]];
+    //if ([[self.loud objectForKey:@"user"] objectForKey:@"avatarData"] != nil){
+        self.avatarImage.image = [UIImage imageWithData:self.avatarData];
         self.avatarImage.opaque = YES;
         self.avatarImage.layer.borderWidth = 1.0;
         self.avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
-    }
+    //}
     self.nameLabel.text = [[self.loud objectForKey:@"user"] objectForKey:@"name"];
     
     NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[self.loud objectForKey:@"content"]];
@@ -75,12 +76,12 @@
     }
     self.contentTextLabel.attributedText = attributedString;
     // get the geocoder address 
-    if (nil == [self.loud objectForKey:@"address"]){
-        self.locationLabel.text = [NSString stringWithFormat:@"%.0f米", self.distance];
+    if ([[self.loud objectForKey:@"address"] isEqual:[NSNull null]]){
+        self.locationLabel.text = [self.loud objectForKey:@"distanceInfo"];
     }else{
-        self.locationLabel.text = [NSString stringWithFormat:@"%@(%.0f米)", [self.loud objectForKey:@"address"], self.distance];
+        self.locationLabel.text = [NSString stringWithFormat:@"%@(%@)", [self.loud objectForKey:@"address"], [self.loud objectForKey:@"distanceInfo"]];
     }
-    self.timeLabel.text = [Utils descriptionForTime:[Utils stringToTime:[self.loud objectForKey:@"created"]]];
+    self.timeLabel.text = [Utils descriptionForTime:[self.loud objectForKey:@"createdTime"]];
     
 }
 
@@ -139,6 +140,7 @@
     [timeLabel_ release];
     [contentTextLabel_ release];
     [avatarImage_ release];
+    [avatarData_ release];
     [super dealloc];
 }
 

@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6102B21914376FC1007F728C /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6102B21814376FC0007F728C /* LocationController.m */; };
+		6102B21D143773F6007F728C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21B143773F6007F728C /* icon.png */; };
+		6102B21E143773F6007F728C /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21C143773F6007F728C /* icon@2x.png */; };
+		6102B2211437740E007F728C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21F1437740E007F728C /* Default.png */; };
+		6102B2221437740E007F728C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B2201437740E007F728C /* Default@2x.png */; };
 		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
 		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
 		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
+		6149FE57143894BD0093814A /* ProfileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6149FE56143894BC0093814A /* ProfileManager.m */; };
 		614E3E9C141DDD9200418314 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9B141DDD9200418314 /* CFNetwork.framework */; };
 		614E3E9E141DDDA200418314 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9D141DDDA200418314 /* SystemConfiguration.framework */; };
 		614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */; };
@@ -105,8 +111,6 @@
 		61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13467142F18290067AF09 /* SignupViewController.xib */; };
 		61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1346B142F43DA0067AF09 /* Signup2ViewController.m */; };
 		61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */; };
-		61B134791430CF360067AF09 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B134771430CF350067AF09 /* icon.png */; };
-		61B1347A1430CF360067AF09 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B134781430CF350067AF09 /* icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,11 +124,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6102B21714376FC0007F728C /* LocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationController.h; sourceTree = "<group>"; };
+		6102B21814376FC0007F728C /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
+		6102B21B143773F6007F728C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		6102B21C143773F6007F728C /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		6102B21F1437740E007F728C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6102B2201437740E007F728C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
 		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
 		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
 		6145385214288F7600BA2C34 /* OHAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHAttributedLabel.h; sourceTree = "<group>"; };
 		614538551428930B00BA2C34 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		6149FE55143894BC0093814A /* ProfileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileManager.h; sourceTree = "<group>"; };
+		6149FE56143894BC0093814A /* ProfileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileManager.m; sourceTree = "<group>"; };
 		614E3E9B141DDD9200418314 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		614E3E9D141DDDA200418314 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
@@ -198,6 +210,9 @@
 		615E6AED1425E41B00400B60 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		615E6AEE1426066400400B60 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
 		615E6AEF1426066400400B60 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
+		617D773D1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelpTests/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		617D773E1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelp/zh-Hans.lproj/MainWindow.xib"; sourceTree = "<absolute>"; };
+		617D773F1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelp/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		617E3A34141B584F00441135 /* WhoHelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhoHelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A38141B584F00441135 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -264,8 +279,6 @@
 		61B1346A142F43D80067AF09 /* Signup2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Signup2ViewController.h; sourceTree = "<group>"; };
 		61B1346B142F43DA0067AF09 /* Signup2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Signup2ViewController.m; sourceTree = "<group>"; };
 		61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Signup2ViewController.xib; sourceTree = "<group>"; };
-		61B134771430CF350067AF09 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		61B134781430CF350067AF09 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,6 +446,10 @@
 				615E6AED1425E41B00400B60 /* Config.h */,
 				619B96A4143602A70017DE0D /* Utils.h */,
 				619B96A5143602A70017DE0D /* Utils.m */,
+				6149FE55143894BC0093814A /* ProfileManager.h */,
+				6149FE56143894BC0093814A /* ProfileManager.m */,
+				6102B21714376FC0007F728C /* LocationController.h */,
+				6102B21814376FC0007F728C /* LocationController.m */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
@@ -458,8 +475,10 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				61B134771430CF350067AF09 /* icon.png */,
-				61B134781430CF350067AF09 /* icon@2x.png */,
+				6102B21F1437740E007F728C /* Default.png */,
+				6102B2201437740E007F728C /* Default@2x.png */,
+				6102B21B143773F6007F728C /* icon.png */,
+				6102B21C143773F6007F728C /* icon@2x.png */,
 				61B1342D1428D27C0067AF09 /* list_arrow.png */,
 				615E6AE91425BA6200400B60 /* button.png */,
 				615E6AEA1425BA6200400B60 /* button@2x.png */,
@@ -648,8 +667,10 @@
 				61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */,
 				61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */,
 				61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */,
-				61B134791430CF360067AF09 /* icon.png in Resources */,
-				61B1347A1430CF360067AF09 /* icon@2x.png in Resources */,
+				6102B21D143773F6007F728C /* icon.png in Resources */,
+				6102B21E143773F6007F728C /* icon@2x.png in Resources */,
+				6102B2211437740E007F728C /* Default.png in Resources */,
+				6102B2221437740E007F728C /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,6 +747,8 @@
 				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,
 				61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */,
 				619B96A6143602A80017DE0D /* Utils.m in Sources */,
+				6102B21914376FC1007F728C /* LocationController.m in Sources */,
+				6149FE57143894BD0093814A /* ProfileManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +775,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				617E3A44141B584F00441135 /* en */,
+				617D773F1437435300552059 /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -760,6 +784,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				617E3A4D141B584F00441135 /* en */,
+				617D773E1437435300552059 /* zh-Hans */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -768,6 +793,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				617E3A64141B584F00441135 /* en */,
+				617D773D1437435300552059 /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

@@ -20,15 +20,6 @@
 @synthesize newName=newName_;
 @synthesize profile=profile_;
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext_ == nil){
-        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-        managedObjectContext_ = appDelegate.managedObjectContext;
-    }
-    
-    return managedObjectContext_;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -134,12 +125,7 @@
         if ([request responseStatusCode] == 200){
 
             self.profile.name = [nameInfo objectForKey:@"name"];
-            NSError *error = nil;
-            if (![self.managedObjectContext save:&error]) { 
-                [Utils warningNotification:@"数据存储失败."];
-            }else{
-                [self.navigationController popViewControllerAnimated:NO];
-            }
+            [self.navigationController popViewControllerAnimated:YES];
             
         } else if (403 == [request responseStatusCode]){
             [Utils warningNotification:@"非法操作"];
@@ -148,7 +134,7 @@
         }
         
     }else{
-        [Utils warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"网络链接错误"];
     }
 }
 

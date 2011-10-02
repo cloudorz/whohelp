@@ -7,43 +7,39 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreLocation/CoreLocation.h>
 #import "EGORefreshTableHeaderView.h"
-#import "WhoHelpAppDelegate.h"
 #import "Profile.h"
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
-#import "Utils.h"
 
-@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, OHAttributedLabelDelegate>
+@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
 {
 @private
     NSMutableArray *louds_;
-    NSMutableArray *profiles_;
-    NSManagedObjectContext *managedObjectContext_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     
-    CLLocationManager *locationManager_;
-    BOOL locationIsWork_;
-    
     Profile *profile_;
     
     NSMutableDictionary *curCollection_;
+    NSMutableDictionary *photoCache_;
+    NSString *etag_;
 
 }
 
 @property (nonatomic, retain) NSMutableArray *louds;
-@property (nonatomic, retain) NSMutableArray *profiles;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, readonly) CLLocationManager *locationManager;
-@property (nonatomic, readonly) CLLocation *curLocation;
-@property (nonatomic, retain, readonly) Profile *profile;
+@property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property BOOL locationIsWork;
+@property (nonatomic, readonly) NSMutableDictionary *photoCache;
+@property (nonatomic, retain) NSString *etag;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
+
+- (void)fetchLoudList;
+- (void)fetchNextLoudList;
+- (void)fakeFetchLoudList;
+- (NSData *)photoFromUser: (NSDictionary *)user;
 
 @end

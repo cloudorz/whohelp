@@ -81,8 +81,6 @@
 {
     [super viewDidLoad];
     [self.loadingIndicator stopAnimating];
-    // init data from remote server
-    [self show3Louds];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -102,6 +100,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    // init data from remote server
+    [self show3Louds];
+
 
 }
 
@@ -119,7 +120,7 @@
 #pragma mark - get the three 
 - (void)fetch3Louds
 {
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", LOUD3URI, APPKEY, self.profile.token, self.profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", SURI, APPKEY, self.profile.token, self.profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request startSynchronous];
     

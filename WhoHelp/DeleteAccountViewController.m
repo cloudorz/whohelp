@@ -13,6 +13,7 @@
 #import "Config.h"
 #import "Utils.h"
 #import "LoginViewController.h"
+#import "ProfileManager.h"
 
 @implementation DeleteAccountViewController
 
@@ -20,16 +21,6 @@
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize password=password_;
 @synthesize profile=profile_;
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext_ == nil){
-        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-        managedObjectContext_ = appDelegate.managedObjectContext;
-    }
-    
-    return managedObjectContext_;
-}
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -131,15 +122,10 @@
     if (!error) {
         if ([request responseStatusCode] == 200){
    
-            [self.managedObjectContext deleteObject:self.profile];
-            NSError *error = nil;
-            if (![self.managedObjectContext save:&error]) { 
-                [Utils warningNotification:@"数据存储失败."];
-            }else{
-                self.profile = nil;
-                [self.navigationController popViewControllerAnimated:NO];
-            }
-            
+            [[ProfileManager sharedInstance] del];
+
+            [self.navigationController popViewControllerAnimated:NO];
+
         } else if (403 == [request responseStatusCode]) {
             
             NSMutableAttributedString *attributedString;

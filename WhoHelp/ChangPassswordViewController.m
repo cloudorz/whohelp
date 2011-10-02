@@ -13,6 +13,7 @@
 #import "Utils.h"
 #import "LoginViewController.h"
 #import "WhoHelpAppDelegate.h"
+#import "ProfileManager.h"
 
 @implementation ChangPassswordViewController
 
@@ -23,15 +24,6 @@
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize profile=profile_;
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext_ == nil){
-        WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
-        managedObjectContext_ = appDelegate.managedObjectContext;
-    }
-    
-    return managedObjectContext_;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -168,13 +160,9 @@
     if (!error) {
         if ([request responseStatusCode] == 200){
        
-            self.profile.isLogin = NO;
-            NSError *error = nil;
-            if (![self.managedObjectContext save:&error]) { 
-                [Utils warningNotification:@"数据存储失败."];
-            }else{
-                [self.navigationController popViewControllerAnimated:NO];
-            }  
+            [[ProfileManager sharedInstance] logout];
+
+            [self.navigationController popViewControllerAnimated:NO];
             
         } else if (412 == [request responseStatusCode]){
             

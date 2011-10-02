@@ -17,7 +17,7 @@
 #define USERURI @"http://rest.whohelp.me/u/"
 #define UPLOADURI @"http://rest.whohelp.me/upload"
 #define RESETURI @"http://rest.whohelp.me/reset/"
-#define LOUD3URI @"http://rest.whohelp.me/s/"
+#define SURI @"http://rest.whohelp.me/s"
 #define CODEURI @"http://rest.whohelp.me/code"
 
 #define CELLAVATAR 5

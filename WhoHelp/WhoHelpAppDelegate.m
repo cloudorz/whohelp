@@ -9,6 +9,8 @@
 #import "WhoHelpAppDelegate.h"
 #import "HelpSendViewController.h"
 #import "LoginViewController.h"
+#import "LocationController.h"
+#import "ProfileManager.h"
 
 @interface WhoHelpAppDelegate (Private) 
 - (void) createEditableCopyOfDatabaseIfNeeded;
@@ -25,37 +27,9 @@
 
 - (Profile *)profile
 {
-
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-    
-    if (error == nil) {
-        if ([mutableFetchResults count] > 0) {
-            
-            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-            profile_ = (Profile *)res;
-        }
-        
-    } else {
-        // Handle the error FIXME
-        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+    if (nil == profile_){
+        profile_ = [[ProfileManager sharedInstance] profile];
     }
-    
-    [mutableFetchResults release];
     
     return profile_;
 }
@@ -63,6 +37,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    //[[[LocationController sharedInstance] locationManager] startUpdatingLocation];
     self.window.rootViewController = self.tabBarController;
     self.tabBarController.delegate = self;
     [self createEditableCopyOfDatabaseIfNeeded];
@@ -84,6 +59,7 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    [self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
