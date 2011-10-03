@@ -23,16 +23,6 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize tabBarController=tabBarController_;
-@synthesize profile=profile_;
-
-- (Profile *)profile
-{
-    if (nil == profile_){
-        profile_ = [[ProfileManager sharedInstance] profile];
-    }
-    
-    return profile_;
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -89,7 +79,6 @@
     [__managedObjectContext release];
     [__managedObjectModel release];
     [__persistentStoreCoordinator release];
-    [profile_ release];
     [tabBarController_ release];
     [super dealloc];
 }
@@ -230,7 +219,7 @@
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if (nil == self.profile){
+    if (nil == [ProfileManager sharedInstance].profile){
         LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [self.tabBarController presentModalViewController:helpLoginVC animated:NO];
         [helpLoginVC release];

@@ -19,5 +19,6 @@
 + (NSData *)fetchImage: (NSString *)imageURI;
 
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;
++ (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone;
 
 @end

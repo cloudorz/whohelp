@@ -24,8 +24,6 @@
     MKReverseGeocoder *reverseGeocoder_;
     NSString *address_;
     
-    Profile *profile_;
-    
 }
 
 @property (nonatomic, retain) UITabBarController *helpTabBarController;
@@ -33,7 +31,6 @@
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) IBOutlet UIBarItem *sendBarItem;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
 @property (nonatomic, retain) NSString *address;
 

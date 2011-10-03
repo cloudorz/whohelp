@@ -19,7 +19,7 @@
     UITextField *repeatPassword_;
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
-    Profile *profile_;
+
 }
 
 @property (nonatomic ,retain) IBOutlet UITextField *oldPassword;
@@ -27,7 +27,7 @@
 @property (nonatomic ,retain) IBOutlet UITextField *repeatPassword;
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) Profile *profile;
+
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;

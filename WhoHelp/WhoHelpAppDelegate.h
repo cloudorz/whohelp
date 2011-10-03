@@ -13,12 +13,10 @@
 {
 @private
     UITabBarController *tabBarController_;
-    Profile *profile_;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-@property (nonatomic, readonly) Profile *profile;
 
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;

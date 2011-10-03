@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import "EGORefreshTableHeaderView.h"
 #import "Profile.h"
 #import "OHAttributedLabel.h"
@@ -19,12 +20,15 @@
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
-    
-    Profile *profile_;
+    BOOL _sing;
     
     NSMutableDictionary *curCollection_;
     NSMutableDictionary *photoCache_;
     NSString *etag_;
+    UITableViewCell *moreCell_;
+    
+    SystemSoundID soudObject_;
+    CFURLRef soundFileURLRef;
 
 }
 
@@ -33,6 +37,8 @@
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, readonly) NSMutableDictionary *photoCache;
 @property (nonatomic, retain) NSString *etag;
+@property (nonatomic, retain) UITableViewCell *moreCell;
+@property (readonly) SystemSoundID soudObject;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;

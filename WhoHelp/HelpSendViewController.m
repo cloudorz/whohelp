@@ -25,16 +25,6 @@
 @synthesize address=address_;
 
 
-- (Profile *)profile
-{
-    if (nil == profile_){
-        profile_ = [[ProfileManager sharedInstance] profile];
-    }
-    
-    return profile_;
-}
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -129,7 +119,7 @@
     [self.loadingIndicator startAnimating];
     self.sendBarItem.enabled = NO;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, self.profile.token, APPKEY]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, [ProfileManager sharedInstance].profile.token, APPKEY]];
     
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;

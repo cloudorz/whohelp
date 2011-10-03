@@ -8,6 +8,7 @@
 
 #import "Utils.h"
 #import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
 #import "Config.h"
 
 @implementation Utils
@@ -80,7 +81,7 @@
     return date;
 }
 
-#pragma mark - get the images
+#pragma mark - get upload the images
 + (NSData *)fetchImage: (NSString *)imageURI
 {
     NSURL *url = [NSURL URLWithString:imageURI];
@@ -94,6 +95,27 @@
     }
     
     return nil;
+}
+
++ (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@", UPLOADURI, APPKEY]]];
+    [request setData:avatarData withFileName:[NSString stringWithFormat:@"%@.jpg", phone] andContentType:@"image/jpg" forKey:@"photo"];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+             // Nothing
+        } else if (400 == [request responseStatusCode]){
+            [self warningNotification:@"上传头像失败"];
+        } else{
+            [self warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [self warningNotification:@"请求服务错误"];
+    }
 }
 
 #pragma makr link the part uri with query string

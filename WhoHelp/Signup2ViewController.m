@@ -189,24 +189,6 @@
     
 }
 
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
-
 #pragma mark - actionsheetp delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -221,6 +203,11 @@
     switch (buttonIndex) {
         case 0:
             picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]){
+                picker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+            } else {
+                picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+            }
             break;
         case 1:
             picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -235,24 +222,8 @@
     
     self.avatarData = UIImageJPEGRepresentation([self thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
     self.avatar.image = [UIImage imageWithData:self.avatarData];
-    
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@", UPLOADURI, APPKEY]]];
-    [request setData:self.avatarData withFileName:[NSString stringWithFormat:@"%@.jpg", self.phone] andContentType:@"image/jpg" forKey:@"photo"];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            // Nothing
-        } else if (400 == [request responseStatusCode]){
-            [self warningNotification:@"上传头像失败"];
-        } else{
-            [self warningNotification:@"服务器异常返回"];
-        }
-        
-    }else{
-        [self warningNotification:@"请求服务错误"];
-    }
+
+    [Utils uploadImageFromData:self.avatarData phone:self.phone];
     
     [self dismissModalViewControllerAnimated:YES];
     [picker release];

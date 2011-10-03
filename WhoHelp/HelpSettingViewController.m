@@ -45,6 +45,11 @@
         [tmp addObject:@"注销帐号"];
         [menu_ addObject:tmp];
         [tmp release];
+        
+        tmp = [[NSMutableArray alloc] init];
+        [tmp addObject:@"免责声明"];
+        [menu_ addObject:tmp];
+        [tmp release];
     }
     
     return menu_;
@@ -52,11 +57,8 @@
 
 - (Profile *)profile
 {
-    if (nil == profile_){
-        profile_ = [[ProfileManager sharedInstance] profile];
-    }
-    
-    return profile_;
+   return [[ProfileManager sharedInstance] profile];
+
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -128,7 +130,7 @@
 {
 
     // Return the number of sections.
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -141,6 +143,8 @@
         return 3;
     } else if (2 == section){
         return 2;
+    } else if (3 == section){
+        return 1;
     }
     return 0;
 }
@@ -175,45 +179,6 @@
     return 10.0f;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -223,14 +188,12 @@
     
     if (0 == indexPath.section && 0 == indexPath.row){
         LoudManageViewController *loudVC = [[LoudManageViewController alloc] initWithNibName:@"LoudManageViewController" bundle:nil];
-        loudVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:loudVC animated:YES];
         [loudVC release];
 
     } else if(1 == indexPath.section && 0 == indexPath.row){
         ChangNameViewController *changNameVC = [[ChangNameViewController alloc] initWithNibName:@"ChangNameViewController" bundle:nil];
-        changNameVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changNameVC animated:YES];
         [changNameVC release];
@@ -249,14 +212,12 @@
         }
     } else if (1 == indexPath.section && 2 == indexPath.row){
         ChangPassswordViewController *changPassVC = [[ChangPassswordViewController alloc] initWithNibName:@"ChangPassswordViewController" bundle:nil];
-        changPassVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changPassVC animated:YES];
         [changPassVC release];
 
     } else if(2 == indexPath.section && 1 == indexPath.row){
         DeleteAccountViewController *deleteAccountVC = [[DeleteAccountViewController alloc] initWithNibName:@"DeleteAccountViewController" bundle:nil];
-        deleteAccountVC.profile = self.profile;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:deleteAccountVC animated:YES];
         [deleteAccountVC release];
@@ -289,6 +250,12 @@
         switch (buttonIndex) {
             case 0:
                 picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]){
+                    picker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+                } else {
+                    picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+                }
+                
                 break;
             case 1:
                 picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -300,11 +267,11 @@
         switch (buttonIndex) {
             case 0:
                 [[ProfileManager sharedInstance] logout];
-
-                LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-                [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
-                [helpLoginVC release];
-                
+                if ([ProfileManager sharedInstance].profile.isLogin == NO){
+                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
+                    [helpLoginVC release];
+                }
                 break;
                 
         }
@@ -322,27 +289,8 @@
 {
 
     self.image = UIImageJPEGRepresentation([self thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@", UPLOADURI, APPKEY, self.profile.token]]];
-    [request setData:self.image withFileName:[NSString stringWithFormat:@"%@.jpg", self.profile.phone] andContentType:@"image/jpg" forKey:@"photo"];
-    [request startSynchronous];
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-                [Utils warningNotification:@"上传头像失败"];
-            }
-        } else{
-            [Utils warningNotification:@"服务器异常返回"];
-        }
-        
-    }else{
-        [Utils warningNotification:@"请求服务错误"];
-    }
+
+    [Utils uploadImageFromData:self.image phone:[self.profile.phone stringValue]];
     
     [self dismissModalViewControllerAnimated:YES];
     [picker release];

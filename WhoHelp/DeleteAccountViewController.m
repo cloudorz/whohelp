@@ -20,7 +20,6 @@
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize password=password_;
-@synthesize profile=profile_;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -59,7 +58,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    if (nil == self.profile){
+    if (nil == [ProfileManager sharedInstance].profile){
         WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
         LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [appDelegate.tabBarController presentModalViewController:helpLoginVC animated:YES];
@@ -113,7 +112,7 @@
 - (void)delAccount2
 {
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@&pw=%@", USERURI, self.profile.phone, APPKEY, self.profile.token, self.password.text]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@&pw=%@", USERURI, [ProfileManager sharedInstance].profile.phone, APPKEY, [ProfileManager sharedInstance].profile.token, self.password.text]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setRequestMethod:@"DELETE"];
     [request startSynchronous];

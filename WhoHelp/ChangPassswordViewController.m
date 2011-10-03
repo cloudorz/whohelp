@@ -22,7 +22,6 @@
 @synthesize repeatPassword=repeatPassword_;
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize profile=profile_;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -61,7 +60,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    if (self.profile.isLogin == NO){
+    if ([ProfileManager sharedInstance].profile.isLogin == NO){
         WhoHelpAppDelegate *appDelegate = (WhoHelpAppDelegate *)[[UIApplication sharedApplication] delegate];
         LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [appDelegate.tabBarController presentModalViewController:helpLoginVC animated:YES];
@@ -148,7 +147,7 @@
     NSString *dataString = [preJson stringWithObject:passwordInfo];
     [preJson release];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, self.profile.phone, APPKEY, self.profile.token]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, [ProfileManager sharedInstance].profile.phone, APPKEY, [ProfileManager sharedInstance].profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];

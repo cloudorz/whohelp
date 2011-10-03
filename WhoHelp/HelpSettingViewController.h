@@ -13,7 +13,6 @@
 {
 @private
     NSMutableArray *menu_;
-    Profile *profile_;
     NSData *image_;
 }
 

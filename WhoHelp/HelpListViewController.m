@@ -20,15 +20,24 @@
 @synthesize louds=louds_;
 @synthesize curCollection=curCollection_;
 @synthesize etag=etag_;
+@synthesize moreCell=moreCell_;
 
 
 - (Profile *)profile
 {
-    if (nil == profile_){
-        profile_ = [[ProfileManager sharedInstance] profile];
+
+    return [[ProfileManager sharedInstance] profile];
+
+}
+
+- (SystemSoundID) soudObject
+{
+    if (0 == soudObject_){
+        CFBundleRef mainBundle = CFBundleGetMainBundle();
+        soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("bird"), CFSTR("aif"), NULL);
+        AudioServicesCreateSystemSoundID(soundFileURLRef, &soudObject_);
     }
-    
-    return profile_;
+    return soudObject_;
 }
 
 - (NSMutableDictionary *)photoCache
@@ -61,7 +70,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 	if (_refreshHeaderView == nil) {
+ 	
+    if (_refreshHeaderView == nil) {
 		
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
 		view.delegate = self;
@@ -70,12 +80,13 @@
 		[view release];
 		
 	}
+    
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
     
     // load remote data and init tableview
     [self fakeFetchLoudList];
-
+    
 }
 
 - (void)viewDidUnload
@@ -126,11 +137,37 @@
 {
 
     // Return the number of rows in the section.
-    return [self.louds count];
+    return [self.louds count] + 1;
 }
-    
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+	
+	UITableViewCell *cell = [[UITableViewCell alloc] 
+							 initWithStyle:UITableViewCellStyleDefault 
+							 reuseIdentifier:@"moretag"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
+
+	if (nil == self.curCollection){
+        labelNumber.text = @"正在加载...";
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
+        labelNumber.text = @"";
+    } else {
+        labelNumber.text = @"获取更多";
+    }
+    
+	[labelNumber setTag:1];
+	labelNumber.backgroundColor = [UIColor clearColor];
+	labelNumber.font = [UIFont boldSystemFontOfSize:14];
+	[cell.contentView addSubview:labelNumber];
+	[labelNumber release];
+	self.moreCell = cell;
+	[cell release];
+    return self.moreCell;	
+}
+
+- (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
@@ -255,13 +292,28 @@
     return cell;
 }
 
+// Customize the appearance of table view cells.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == [self.louds count]) {
+		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //return [indexPath row] * 20;
-    NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+    if (indexPath.row < [self.louds count]){
+        NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
 
-    CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-    return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN;
+        CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+        return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN;
+    } else{
+        return 40.0f;
+    }
 }
 
 #pragma mark - Table view delegate
@@ -269,16 +321,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    
-    HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
-    
-    NSDictionary *loud= [self.louds objectAtIndex:indexPath.row];
-    detailViewController.loud = loud;
-    detailViewController.avatarData = [[self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]] objectForKey:@"photoData"];
-    // Pass the selected object to the new view controller.
-     
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
+    if (indexPath.row < [self.louds count]){
+        HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
+        
+        NSDictionary *loud= [self.louds objectAtIndex:indexPath.row];
+        detailViewController.loud = loud;
+        detailViewController.avatarData = [[self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]] objectForKey:@"photoData"];
+        // Pass the selected object to the new view controller.
+         
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+    }
      
 }
 
@@ -301,47 +354,46 @@
     if (nil != self.etag){
         [request addRequestHeader:@"If-None-Match" value:self.etag];
     }
-    [request setDelegate:self];
-    [request startAsynchronous];
-}
-
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-
-    //NSString *responseString = [request responseString];
-
-    if ([request responseStatusCode] == 200){
-        NSData *responseData = [request responseData];
-
-        // create the json parser 
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
-        [jsonParser release];
-        
-        self.curCollection = collection;
-        self.louds = [collection objectForKey:@"louds"];
-        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
-        
-        // reload the tableview data
-        [self.tableView reloadData];
-        
-    } else if (400 == [request responseStatusCode]) {
-        [Utils warningNotification:@"参数错误"];
-    } else if (304 == [request responseStatusCode]) {
-        // do Nothing now.
-        //NSLog(@"the louds list not modified.");
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            NSData *responseData = [request responseData];
+            
+            // create the json parser 
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
+            [jsonParser release];
+            
+            if (nil != self.curCollection){
+                // beep bo
+                _sing = YES;
+            }
+            
+            self.curCollection = collection;
+            self.louds = [collection objectForKey:@"louds"];
+            self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+            
+            // reload the tableview data
+            [self.tableView reloadData];
+            
+            
+        } else if (400 == [request responseStatusCode]) {
+            
+            [Utils warningNotification:@"参数错误"];
+            
+        } else if (304 == [request responseStatusCode]) {
+            // do Nothing now.
+            //NSLog(@"the louds list not modified.");
+        }else{
+            
+            [Utils warningNotification:@"服务器异常返回"];
+            
+        }
     }else{
-        [Utils warningNotification:@"服务器异常返回"];
+        [Utils warningNotification:@"网络链接错误"];
     }
-
-}
-
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    // notify the user
-    [Utils warningNotification:@"网络服务请求失败."];
 }
 
 
@@ -366,7 +418,7 @@
             
             self.curCollection = collection;
             [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
-    
+
             // reload the tableview data
             [self.tableView reloadData];
  
@@ -377,7 +429,7 @@
         }
         
     }else{
-        [Utils warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"网络链接错误"];
     }
     
 }
@@ -401,6 +453,11 @@
     _reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     
+    if (_sing){
+        AudioServicesPlaySystemSound(self.soudObject);
+        _sing = NO;
+    }
+    
 }
 
 #pragma mark -
@@ -421,21 +478,17 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == [self.louds count] - 1) {
+    if (nil != self.curCollection && 
+        indexPath.row == [self.louds count] && 
+        nil != [self.curCollection objectForKey:@"next"]) 
+    {
         
-        UIView *footSpinnerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-        UIActivityIndicatorView *loadView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        loadView.hidesWhenStopped = YES;
-        [loadView stopAnimating];
-        [footSpinnerView addSubview:loadView];
-        loadView.center = CGPointMake(160, 15);
-        [loadView release];
-        [self.tableView.tableFooterView addSubview:footSpinnerView];
-        
+        UILabel *label = (UILabel*)[self.moreCell viewWithTag:1];
+        label.text = @"正在加载...";
+        //[self performSelectorInBackground:@selector(fetchNextLoudList) withObject:nil];
+        //[tableView deselectRowAtIndexPath:indexPath animated:YES];
         [self fetchNextLoudList];
-        
-    } else {
-        self.tableView.tableFooterView = nil;
+
     }
 }
 
@@ -505,11 +558,13 @@
 - (void)dealloc
 {
     [louds_ release];
-    [profile_ release];
     [_refreshHeaderView release];
     [etag_ release];
     [photoCache_ release];
     [curCollection_ release];
+    [moreCell_ release];
+    AudioServicesDisposeSystemSoundID(soudObject_);
+    CFRelease(soundFileURLRef);
     [super dealloc];
 }
 

@@ -17,13 +17,12 @@
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
     UITextField *newName_;
-    Profile *profile_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *newName;
-@property (nonatomic, retain) Profile *profile;
+@property (nonatomic, readonly) Profile *profile;
 
 
 - (IBAction)cancelButtonPressed:(id)sender;

@@ -11,12 +11,12 @@
 #import "Utils.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
+#import "ProfileManager.h"
 
 @implementation LoudManageViewController
 
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize profile=profile_;
 @synthesize louds=louds_;
 @synthesize buttons=buttons_;
 
@@ -120,7 +120,7 @@
 #pragma mark - get the three 
 - (void)fetch3Louds
 {
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", SURI, APPKEY, self.profile.token, self.profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", SURI, APPKEY, [ProfileManager sharedInstance].profile.token, [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request startSynchronous];
     
@@ -154,7 +154,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex){
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", [[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"], APPKEY, self.profile.token]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", [[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"], APPKEY, [ProfileManager sharedInstance].profile.token]];
         ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
         [request setRequestMethod:@"DELETE"];
         [request startSynchronous];

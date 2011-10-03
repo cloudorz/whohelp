@@ -17,14 +17,12 @@
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
     
-    Profile *profile_;
     NSArray *louds_;
     NSMutableArray *buttons_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) Profile *profile;
 @property (nonatomic, retain) NSArray *louds;
 @property (nonatomic, retain) NSMutableArray *buttons;
 

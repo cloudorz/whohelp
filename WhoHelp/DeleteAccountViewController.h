@@ -18,13 +18,11 @@
     UIActivityIndicatorView *loadingIndicator_;
     
     UITextField *password_;
-    Profile *profile_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UITextField *password;
-@property (nonatomic, retain) Profile *profile;
 
 - (void)delAccount2;
 

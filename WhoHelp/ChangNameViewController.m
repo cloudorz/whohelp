@@ -12,14 +12,18 @@
 #import "Config.h"
 #import "Utils.h"
 #import "WhoHelpAppDelegate.h"
+#import "ProfileManager.h"
 
 @implementation ChangNameViewController
 
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize newName=newName_;
-@synthesize profile=profile_;
 
+- (Profile *)profile
+{
+    return [[ProfileManager sharedInstance] profile];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
