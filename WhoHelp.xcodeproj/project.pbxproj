@@ -13,6 +13,9 @@
 		6102B2211437740E007F728C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21F1437740E007F728C /* Default.png */; };
 		6102B2221437740E007F728C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B2201437740E007F728C /* Default@2x.png */; };
 		611FD7921439F2A100398709 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611FD7911439F2A100398709 /* AudioToolbox.framework */; };
+		611FD79A143B20F100398709 /* LoudTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD799143B20F100398709 /* LoudTableCell.m */; };
+		611FD79F143B4CD300398709 /* LawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD79D143B4CD100398709 /* LawViewController.m */; };
+		611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 611FD79E143B4CD200398709 /* LawViewController.xib */; };
 		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
 		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
 		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
@@ -133,6 +136,11 @@
 		6102B21F1437740E007F728C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		6102B2201437740E007F728C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		611FD7911439F2A100398709 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		611FD798143B20F100398709 /* LoudTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoudTableCell.h; sourceTree = "<group>"; };
+		611FD799143B20F100398709 /* LoudTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoudTableCell.m; sourceTree = "<group>"; };
+		611FD79C143B4CD000398709 /* LawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LawViewController.h; sourceTree = "<group>"; };
+		611FD79D143B4CD100398709 /* LawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LawViewController.m; sourceTree = "<group>"; };
+		611FD79E143B4CD200398709 /* LawViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LawViewController.xib; sourceTree = "<group>"; };
 		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
 		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
 		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
@@ -456,6 +464,8 @@
 				6149FE56143894BC0093814A /* ProfileManager.m */,
 				6102B21714376FC0007F728C /* LocationController.h */,
 				6102B21814376FC0007F728C /* LocationController.m */,
+				611FD798143B20F100398709 /* LoudTableCell.h */,
+				611FD799143B20F100398709 /* LoudTableCell.m */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
@@ -565,6 +575,9 @@
 				61B1346A142F43D80067AF09 /* Signup2ViewController.h */,
 				61B1346B142F43DA0067AF09 /* Signup2ViewController.m */,
 				61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */,
+				611FD79C143B4CD000398709 /* LawViewController.h */,
+				611FD79D143B4CD100398709 /* LawViewController.m */,
+				611FD79E143B4CD200398709 /* LawViewController.xib */,
 			);
 			name = Setting;
 			sourceTree = "<group>";
@@ -679,6 +692,7 @@
 				6102B2211437740E007F728C /* Default.png in Resources */,
 				6102B2221437740E007F728C /* Default@2x.png in Resources */,
 				6149FE641439EDA00093814A /* bird.aif in Resources */,
+				611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -757,6 +771,8 @@
 				619B96A6143602A80017DE0D /* Utils.m in Sources */,
 				6102B21914376FC1007F728C /* LocationController.m in Sources */,
 				6149FE57143894BD0093814A /* ProfileManager.m in Sources */,
+				611FD79A143B20F100398709 /* LoudTableCell.m in Sources */,
+				611FD79F143B4CD300398709 /* LawViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

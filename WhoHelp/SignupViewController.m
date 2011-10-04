@@ -96,10 +96,8 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
     
-    [self.loadingIndicator startAnimating];
     [sender setEnabled:NO];
     
-    NSMutableAttributedString *attributedString;
     NSString *decimalRegex = @"^1[358][0-9]{9}$";
     NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
     if ([decimalTest evaluateWithObject:self.phone.text]){
@@ -111,10 +109,8 @@
                 [self dismissModalViewControllerAnimated:NO];
              
             }else{
-                attributedString = [NSMutableAttributedString attributedStringWithString:@"验证码不正确"];
-                [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-                [attributedString setTextColor:[UIColor redColor]];
-                self.errorLabel.attributedText = attributedString;
+
+                self.errorLabel.attributedText = [Utils wrongInfoString:@"验证码不正确"];
                 
                 UIButton *entryButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 entryButton.frame = CGRectMake(184, 161, 60, 20);
@@ -133,10 +129,8 @@
         }
 
     }else{
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"请输入正确的手机号(11位)"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"请输入正确的手机号(11位)"];
     }
     
     [self.loadingIndicator stopAnimating];
@@ -148,15 +142,14 @@
 {
     [self.loadingIndicator startAnimating];
     [self sendSignupCode];
-    [self.loadingIndicator stopAnimating];
+    
 }
 
 #pragma mark - get the images
 - (void)sendSignupCode
 {
-    [self.loadingIndicator startAnimating];
     
-    self.codeString = [self genRandStringLength:4];
+    self.codeString = [Utils genRandStringLength:4];
     NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
     [info setObject:self.codeString forKey:@"code"];
     [info setObject:self.phone.text forKey:@"phone"];
@@ -164,9 +157,11 @@
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:info];
     [preJson release];
+    [info release];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", CODEURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     [request setRequestMethod:@"POST"];
@@ -189,56 +184,19 @@
     }else if (400 == [request responseStatusCode]) {
         [Utils warningNotification:@"参数错误"];
     }else if (409 == [request responseStatusCode]) {
-        NSMutableAttributedString *attributedString;
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号已注册"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"手机号已注册"];
     } else{
         [Utils warningNotification:@"服务器异常返回"];
     }
-   
+   [self.loadingIndicator stopAnimating];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     //NSError *error = [request error];
     [Utils warningNotification:@"请求服务错误"];
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
-
-#pragma mark - random number
-
-- (NSString *)genRandStringLength:(int)len 
-{
-    //NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    NSString *letters = @"0123456789";
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%c", [letters characterAtIndex: arc4random()%[letters length]]];
-         }
-         
-    return randomString;
-         
+    [self.loadingIndicator stopAnimating];
 }
 
 - (void)dealloc

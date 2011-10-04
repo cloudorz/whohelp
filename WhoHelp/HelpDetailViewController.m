@@ -58,12 +58,12 @@
     [super viewWillAppear:animated];
     
 
-    //if ([[self.loud objectForKey:@"user"] objectForKey:@"avatarData"] != nil){
-        self.avatarImage.image = [UIImage imageWithData:self.avatarData];
-        self.avatarImage.opaque = YES;
-        self.avatarImage.layer.borderWidth = 1.0;
-        self.avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
-    //}
+
+    self.avatarImage.image = [UIImage imageWithData:self.avatarData];
+    self.avatarImage.opaque = YES;
+    self.avatarImage.layer.borderWidth = 1.0;
+    self.avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+
     self.nameLabel.text = [[self.loud objectForKey:@"user"] objectForKey:@"name"];
     
     NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[self.loud objectForKey:@"content"]];

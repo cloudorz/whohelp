@@ -66,22 +66,20 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
     
-    [self.loadingIndicator startAnimating];
     [sender setEnabled:NO];
     
-    NSMutableAttributedString *attributedString;
     NSString *decimalRegex = @"^1[358][0-9]{9}$";
     NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
     if ([decimalTest evaluateWithObject:self.phone.text]){
+        [self.loadingIndicator startAnimating];
         [self resetPasswordInfo:self.phone.text];
+
     }else{
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"请输入正确的手机号(11位)"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"请输入正确的手机号(11位)"];
     }
     
-    [self.loadingIndicator stopAnimating];
+    
     [sender setEnabled:YES];
     
 }
@@ -102,23 +100,22 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     if ([request responseStatusCode] == 200){
-
+        
         [self dismissModalViewControllerAnimated:YES];
         
     } else if (404 == [request responseStatusCode]) {
-        NSMutableAttributedString *attributedString;
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"手机号未注册"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+  
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"手机号未注册"];
     } else{
         [Utils warningNotification:@"服务器异常返回"];
     }
+    [self.loadingIndicator stopAnimating];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-   [Utils warningNotification:@"请求服务错误"];
+    [Utils warningNotification:@"网络链接错误"];
+    [self.loadingIndicator stopAnimating];
 }
 
 - (void)dealloc

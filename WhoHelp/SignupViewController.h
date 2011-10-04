@@ -35,7 +35,6 @@
 
 
 - (void)sendSignupCode;
-- (NSString *)genRandStringLength:(int)len;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;

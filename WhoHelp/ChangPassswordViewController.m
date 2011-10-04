@@ -88,24 +88,19 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
     
-    NSMutableAttributedString *attributedString;
     if ([self.oldPassword.text isEqual:@""] || 
         [self.newPassword.text isEqual:@""] || 
         [self.repeatPassword.text isEqual:@""]
         ){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"下面三项必须填写"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+        
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"下面三项必须填写"];
         
         return;
     }
     
     if (![self.newPassword.text isEqual:self.repeatPassword.text]){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"新密码输入不一致"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"新密码输入不一致"];
         
         return;
     }
@@ -122,17 +117,6 @@
     [passwords release];
 }
 
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    NSLog(@"%d", textField.tag);
-//    return YES;
-//}
-//
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-//{
-//    NSLog(@"FUCK FUCK");
-//    return YES;
-//}
 
 - (IBAction)doneEditing:(id)sender
 {
@@ -142,13 +126,14 @@
 #pragma mark - get the images
 - (void)postPasswordInfo: (NSMutableDictionary *)passwordInfo
 {
-    [self.loadingIndicator startAnimating];
+
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:passwordInfo];
     [preJson release];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@&tk=%@", USERURI, [ProfileManager sharedInstance].profile.phone, APPKEY, [ProfileManager sharedInstance].profile.token]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
@@ -165,11 +150,7 @@
             
         } else if (412 == [request responseStatusCode]){
             
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码不正确"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
+            self.errorLabel.attributedText = [Utils wrongInfoString:@"密码不正确"];
 
         } else if (403 == [request responseStatusCode]) {
             [Utils warningNotification:@"手机号禁止修改"];
@@ -178,7 +159,7 @@
         }
         
     }else{
-        [Utils warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"网络链接错误"];
     }
 }
 

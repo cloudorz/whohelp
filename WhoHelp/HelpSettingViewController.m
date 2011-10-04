@@ -12,6 +12,7 @@
 #import "LoudManageViewController.h"
 #import "DeleteAccountViewController.h"
 #import "LoginViewController.h"
+#import "LawViewController.h"
 #import "ASIFormDataRequest.h"
 #import "Config.h"
 #import "Utils.h"
@@ -28,28 +29,25 @@
         
         NSMutableArray *tmp;
         
-        tmp = [[NSMutableArray alloc] init];
+        tmp = [[[NSMutableArray alloc] init] autorelease];
         [tmp addObject:@"我的求助"];
         [menu_ addObject:tmp];
-        [tmp release];
         
-        tmp = [[NSMutableArray alloc] init];
+        tmp = [[[NSMutableArray alloc] init] autorelease];
         [tmp addObject:@"修改昵称"];
         [tmp addObject:@"修改头像"];
         [tmp addObject:@"修改密码"];
         [menu_ addObject:tmp];
-        [tmp release];
         
-        tmp = [[NSMutableArray alloc] init];
+        tmp = [[[NSMutableArray alloc] init] autorelease];
         [tmp addObject:@"退出登录"];
         [tmp addObject:@"注销帐号"];
         [menu_ addObject:tmp];
-        [tmp release];
         
-        tmp = [[NSMutableArray alloc] init];
+        tmp = [[[NSMutableArray alloc] init] autorelease];
         [tmp addObject:@"免责声明"];
         [menu_ addObject:tmp];
-        [tmp release];
+
     }
     
     return menu_;
@@ -226,6 +224,10 @@
         logoutSheet.tag = 2;
         [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         [logoutSheet release];
+    } else if (3 == indexPath.section && 0 == indexPath.row){
+        LawViewController *lawVC = [[LawViewController alloc] initWithNibName:@"LawViewController" bundle:nil];
+        [self.navigationController pushViewController:lawVC animated:YES];
+        [lawVC release];
     }
      
 }
@@ -288,7 +290,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 
-    self.image = UIImageJPEGRepresentation([self thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
+    self.image = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
 
     [Utils uploadImageFromData:self.image phone:[self.profile.phone stringValue]];
     
@@ -297,45 +299,6 @@
     
 }
 
-
-- (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize
-{
-    
-    UIImage *newimage;
-
-    if (nil == image) {        
-        newimage = nil;
-    }
-    else{
-        UIGraphicsBeginImageContext(asize);
-        
-        [image drawInRect:CGRectMake(0, 0, asize.width, asize.height)];
-        newimage = UIGraphicsGetImageFromCurrentImageContext();
-        
-        UIGraphicsEndImageContext();
-    }
-    
-    return newimage;
-    
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
-}
 
 - (void)dealloc
 {

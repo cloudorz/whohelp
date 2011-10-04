@@ -72,6 +72,7 @@
 {
     [sender setEnabled: NO];
     
+    
     NSString *inputPhone = self.phone.text;
     NSString *inputPass = self.pass.text;
     NSString *decimalRegex = @"^[0-9]{11}$";
@@ -83,13 +84,17 @@
         [data setObject:inputPhone forKey:@"phone"];
         [data setObject:inputPass forKey:@"password"];
         
+        [self.loadingIndicator startAnimating];
         [self postUserInfo:data];
+        [self.loadingIndicator stopAnimating];
+        
         [data release];
     }else{
         [Utils warningNotification:@"手机号(11位数字)与密码不能为空"];
     }
 
     [sender setEnabled: YES];
+
 }
 
 - (IBAction)forgotPasswordButtonPressed:(id)sender
@@ -122,13 +127,14 @@
 #pragma mark - get the images
 - (void)postUserInfo: (NSMutableDictionary *)userInfo
 {
-    [self.loadingIndicator startAnimating];
+    
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:userInfo];
     [preJson release];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", AUTHURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
@@ -147,6 +153,7 @@
             [self dismissModalViewControllerAnimated:YES];
             
         } else if (406 == [request responseStatusCode]) {
+            
             [Utils warningNotification:@"登录失败请输入正确的手机号和密码"];
         } else if (400 == [request responseStatusCode]) {
             [Utils warningNotification:@"参数不正确"];
@@ -155,9 +162,9 @@
         }
         
     }else{
-        [Utils warningNotification:@"请求服务错误"];
+        [Utils warningNotification:@"网络链接错误"];
     }
-    [self.loadingIndicator stopAnimating];
+
 }
 
 #pragma mark - dealloc

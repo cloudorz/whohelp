@@ -77,30 +77,23 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
     
-    [self.loadingIndicator startAnimating];
     [sender setEnabled:NO];
     
-    NSMutableAttributedString *attributedString;
     if ([self.name.text isEqualToString:@""]){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"昵称不能为空"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"昵称不能为空"];
     } else if ([self.password.text isEqualToString:@""]) {
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"请设置密码"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"请设置密码"];
     } else if (nil == self.avatarData){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"请设置头像"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"请设置头像"];
     }else{
+        [self.loadingIndicator startAnimating];
         [self postUserInfo];
+        [self.loadingIndicator stopAnimating];
     }
     
-    [self.loadingIndicator stopAnimating];
     [sender setEnabled:YES];
     
 }
@@ -116,7 +109,10 @@
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     NSNumberFormatter *fn = [[NSNumberFormatter alloc] init];
     [fn setNumberStyle:NSNumberFormatterNoStyle];
+    
     [userInfo setObject:[fn numberFromString:self.phone] forKey:@"phone"];
+    [fn release];
+    
     [userInfo setObject:self.name.text forKey:@"name"];
     [userInfo setObject:self.password.text forKey:@"password"];
     
@@ -127,6 +123,7 @@
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@", USERURI, APPKEY]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
     // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
@@ -168,27 +165,6 @@
     
 }
 
-- (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize
-{
-    
-    UIImage *newimage;
-    
-    if (nil == image) {        
-        newimage = nil;
-    }
-    else{
-        UIGraphicsBeginImageContext(asize);
-        
-        [image drawInRect:CGRectMake(0, 0, asize.width, asize.height)];
-        newimage = UIGraphicsGetImageFromCurrentImageContext();
-        
-        UIGraphicsEndImageContext();
-    }
-    
-    return newimage;
-    
-}
-
 #pragma mark - actionsheetp delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -217,10 +193,15 @@
     
 }
 
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [self dismissModalViewControllerAnimated:YES];
+    [picker release];
+}
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     
-    self.avatarData = UIImageJPEGRepresentation([self thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
+    self.avatarData = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
     self.avatar.image = [UIImage imageWithData:self.avatarData];
 
     [Utils uploadImageFromData:self.avatarData phone:self.phone];

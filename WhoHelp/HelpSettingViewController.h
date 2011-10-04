@@ -20,6 +20,5 @@
 @property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) NSData *image;
 
-- (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;
 
 @end

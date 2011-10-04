@@ -54,7 +54,7 @@
     [self fetch3Louds];
     
     [self remove3Buttons];
-    self.buttons = [[NSMutableArray alloc] init];
+    self.buttons = [[[NSMutableArray alloc] init] autorelease];
     for (NSInteger i=0; i<[self.louds count]; i++) {
         NSDictionary *loud = [self.louds objectAtIndex:i];
         
@@ -154,8 +154,8 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex){
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?ak=%@&tk=%@", [[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"], APPKEY, [ProfileManager sharedInstance].profile.token]];
-        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+
+        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"] queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
         [request setRequestMethod:@"DELETE"];
         [request startSynchronous];
         

@@ -83,12 +83,10 @@
 
 - (IBAction)doneButtonPressed:(id)sender
 {
-    NSMutableAttributedString *attributedString;
+
     if ([self.newName.text isEqualToString:@""]){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"名字不能为空"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"名字不能为空"];
         
         return;
     }
@@ -111,7 +109,7 @@
 #pragma mark - get the images
 - (void)postNameInfo: (NSMutableDictionary *)nameInfo
 {
-    [self.loadingIndicator startAnimating];
+
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:nameInfo];
     [preJson release];

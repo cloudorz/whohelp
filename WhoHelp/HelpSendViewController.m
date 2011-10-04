@@ -156,7 +156,7 @@
     } else if (400 == [request responseStatusCode]) {
         [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"请求服务出错"];
+        [Utils warningNotification:@"非正常返回"];
     }
 
     // send ok cancel
@@ -172,7 +172,7 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
     self.sendBarItem.enabled = YES;
-    [Utils warningNotification:@"网络服务请求失败."];
+    [Utils warningNotification:@"网络链接错误"];
 
 }
 
@@ -210,14 +210,14 @@
 {
 
     [[LocationController sharedInstance].locationManager startUpdatingLocation];
-    [self performSelector:@selector(parsePosition) withObject:nil afterDelay:1.5];
+    [self performSelector:@selector(parsePosition) withObject:nil afterDelay:3.0];
         
 }
 
 - (void)parsePosition
 {
     // Reverse geocode
-    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:[LocationController sharedInstance].location.coordinate];
+    self.reverseGeocoder = [[[MKReverseGeocoder alloc] initWithCoordinate:[LocationController sharedInstance].location.coordinate] autorelease];
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];
     
     self.reverseGeocoder.delegate = self;

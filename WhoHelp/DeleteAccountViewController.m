@@ -86,12 +86,10 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
 
-    NSMutableAttributedString *attributedString;
+
     if ([self.password.text isEqualToString:@""]){
-        attributedString = [NSMutableAttributedString attributedStringWithString:@"密码不能为空"];
-        [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-        [attributedString setTextColor:[UIColor redColor]];
-        self.errorLabel.attributedText = attributedString;
+
+        self.errorLabel.attributedText = [Utils wrongInfoString:@"密码不能为空"];
         
         return;
     }
@@ -127,18 +125,10 @@
 
         } else if (403 == [request responseStatusCode]) {
             
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"非法操作"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
+            self.errorLabel.attributedText = [Utils wrongInfoString:@"非法操作"];
             
         } else if (412 == [request responseStatusCode]){
-            NSMutableAttributedString *attributedString;
-            attributedString = [NSMutableAttributedString attributedStringWithString:@"密码错误"];
-            [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-            [attributedString setTextColor:[UIColor redColor]];
-            self.errorLabel.attributedText = attributedString;
+            self.errorLabel.attributedText = [Utils wrongInfoString:@"密码错误"];
         }else{
             [Utils warningNotification:@"服务器异常返回"];
         }
@@ -146,24 +136,6 @@
     }else{
         [Utils warningNotification:@"请求服务错误"];
     }
-}
-
-#pragma mark - handling errors
-- (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message
-{
-    UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-    [Notpermitted show];
-    [Notpermitted release];
-}
-
-- (void)warningNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"警告" forMessage:message];
-}
-
-- (void)errorNotification:(NSString *)message
-{
-    [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
 - (void)dealloc

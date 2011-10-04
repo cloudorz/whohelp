@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Profile.h"
 
 @interface WhoHelpAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate>
 {

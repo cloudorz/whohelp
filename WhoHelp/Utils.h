@@ -20,5 +20,8 @@
 
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;
 + (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone;
++ (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;
++ (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString;
++ (NSString *)genRandStringLength:(int)len;
 
 @end

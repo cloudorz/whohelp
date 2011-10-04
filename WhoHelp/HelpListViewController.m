@@ -14,6 +14,7 @@
 #import "Utils.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
+#import "LoudTableCell.h"
 
 @implementation HelpListViewController
 
@@ -101,9 +102,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
     self.tableView.separatorStyle = NO;
-    self.view.backgroundColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
-    //[[LocationController sharedInstance].locationManager startUpdatingLocation];
     
 }
 
@@ -115,7 +115,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    //[[LocationController sharedInstance].locationManager stopUpdatingLocation];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -140,11 +139,11 @@
     return [self.louds count] + 1;
 }
 
--(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	
-	UITableViewCell *cell = [[UITableViewCell alloc] 
-							 initWithStyle:UITableViewCellStyleDefault 
-							 reuseIdentifier:@"moretag"];
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moretag"] autorelease];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
@@ -162,138 +161,63 @@
 	labelNumber.font = [UIFont boldSystemFontOfSize:14];
 	[cell.contentView addSubview:labelNumber];
 	[labelNumber release];
-	self.moreCell = cell;
-	[cell release];
+	
+    self.moreCell = cell;
+    
     return self.moreCell;	
 }
+
 
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier;
-    CellIdentifier = [NSString stringWithFormat:@"helpEntry%@", [loud objectForKey:@"id"]];
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height;
 
-    UIImageView *avatarImage, *arrowImage;
-    UILabel *nameLabel, *timeLabel, *distanceLabel;
-    OHAttributedLabel *cellText;
-    UIButton *bgButton;
-    UIColor *bgGray = self.view.backgroundColor;
+    CellIdentifier = [NSString stringWithFormat:@"helpEntry:%.0f", contentHeight];
+    
+    LoudTableCell *cell = (LoudTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
     
     if (cell == nil) {
-
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.backgroundColor = bgGray;
-        cell.contentView.backgroundColor = bgGray;
         
+        cell = [[[LoudTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier height:contentHeight] autorelease];
         
-        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT, 5, IMGSIZE, IMGSIZE)] autorelease];
-        avatarImage.tag = CELLAVATAR;
-        avatarImage.opaque = YES;
-        avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        avatarImage.layer.borderWidth = 1;
-        avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
-        avatarImage.backgroundColor = bgGray;
-        [cell addSubview:avatarImage];
-        
-        bgButton = [[[UIButton alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE, 5, TEXTWIDTH+TEXTMLEFTARGIN+TEXTMARGIN+2, theSize.height + BOTTOMSPACE + 10 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN)] autorelease];
-        bgButton.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-        bgButton.tag = CELLBG;
-        bgButton.layer.borderWidth = 1;
-        bgButton.layer.borderColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0].CGColor;
-        bgButton.layer.cornerRadius = 4;
-        bgButton.autoresizingMask = UIViewAutoresizingNone;
-        bgButton.enabled = NO;
-        [cell addSubview:bgButton];
-        
-        arrowImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+2, 5+5+1, 10, 15)] autorelease];
-        arrowImage.tag = CELLARROW;
-        arrowImage.opaque = YES;
-        arrowImage.autoresizingMask = UIViewAutoresizingNone;
-        arrowImage.backgroundColor = bgGray;
-        arrowImage.image = [UIImage imageNamed:@"list_arrow.png"];
-        [cell addSubview:arrowImage];
-        
-        nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TOPSPACE+TEXTMARGIN, 75, NAMEFONTSIZE+2)] autorelease];
-        nameLabel.tag = CELLNAME;
-        nameLabel.opaque = YES;
-        nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
-        nameLabel.textAlignment = UITextAlignmentLeft;
-        nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-        nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        [cell addSubview:nameLabel];
-        
-
-        cellText = [[[OHAttributedLabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN,  TOPSPACE+NAMEFONTSIZE+10+TEXTMARGIN, TEXTWIDTH, theSize.height)] autorelease];
-        cellText.tag = CELLTEXT;
-        cellText.textAlignment = UITextAlignmentLeft;
-        cellText.lineBreakMode = UILineBreakModeWordWrap;
-        cellText.numberOfLines = 0;
-        cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        cellText.opaque = YES;
-        [cell addSubview:cellText];
-        
-        avatarImage.image = [UIImage imageWithData:[self photoFromUser:[loud objectForKey:@"user"]]];
-        nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
-        
-        NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[loud objectForKey:@"content"]];
-        [attributedString setFont:[UIFont systemFontOfSize:TEXTFONTSIZE]];
-        [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
-        
-        NSRange rang = [[loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
-        if (NSNotFound != rang.location){
-            [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[loud objectForKey:@"content"] length] - rang.location)];
-        }
-        cellText.attributedText =attributedString;
-        
-        
-    } else {
-        distanceLabel = (UILabel *)[cell.contentView viewWithTag:CELLDISTANCE];
-        timeLabel = (UILabel *)[cell.contentView viewWithTag:CELLTIME];
-        [distanceLabel removeFromSuperview];
-        [timeLabel removeFromSuperview];
-        
+    } 
+    // avatar
+    cell.avatarImage.image = [UIImage imageWithData:[self photoFromUser:[loud objectForKey:@"user"]]];
+    // name
+    cell.nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
+    
+    // content
+    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[loud objectForKey:@"content"]];
+    [attributedString setFont:[UIFont systemFontOfSize:TEXTFONTSIZE]];
+    [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
+    
+    NSRange rang = [[loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
+    if (NSNotFound != rang.location){
+        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[loud objectForKey:@"content"] length] - rang.location)];
     }
     
-    // Configure the cell...
-    distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+15, 75, SMALLFONTSIZE)] autorelease];
-    distanceLabel.tag = CELLDISTANCE;
-    distanceLabel.opaque = YES;
-    distanceLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
-    distanceLabel.textAlignment = UITextAlignmentLeft;
-    distanceLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
-    distanceLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-    //distanceLabel.backgroundColor = bgGray;
-    [cell addSubview:distanceLabel]; 
+    cell.cellText.attributedText = attributedString;
     
-    timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(IMGLEFT+IMGSIZE+LEFTSPACE+75+90, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+theSize.height+15, TIMELENGTH, SMALLFONTSIZE)] autorelease];
-    timeLabel.tag = CELLTIME;
-    timeLabel.opaque = YES;
-    timeLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
-    timeLabel.textAlignment = UITextAlignmentRight;
-    timeLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
-    timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-    //timeLabel.backgroundColor = bgGray;
-    [cell addSubview:timeLabel];
-
-    distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[[LocationController sharedInstance].location distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
-    [loud setObject:distanceLabel.text forKey:@"distanceInfo"];
+    // distnace
+    cell.distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[[LocationController sharedInstance].location distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
+    [loud setObject:cell.distanceLabel.text forKey:@"distanceInfo"];
     
     if (nil == [loud objectForKey:@"createdTime"]){
         [loud setObject:[Utils stringToTime:[loud objectForKey:@"created"]] forKey:@"createdTime"];
     }
-    timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
+    // date time
+    cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
     
     return cell;
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
     
     if (indexPath.row == [self.louds count]) {
 		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
@@ -310,8 +234,10 @@
         NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
 
         CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-        return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE+2*TEXTMARGIN;
+        
+        return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE + 2*TEXTMARGIN;
     } else{
+        
         return 40.0f;
     }
 }
@@ -338,8 +264,13 @@
 #pragma mark - RESTful request
 - (void)fakeFetchLoudList
 {
-    [[LocationController sharedInstance].locationManager startUpdatingLocation];
-    [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];
+    } else{
+        [Utils warningNotification:@"定位服务未开启, 无法请求数据"];
+    }
+
 }
 
 - (void)fetchLoudList
@@ -347,6 +278,7 @@
 
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
     NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, self.profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
   
@@ -441,7 +373,7 @@
 - (void)reloadTableViewDataSource{
     
     //  should be calling your tableviews data source model to reload
-    [self fakeFetchLoudList]; // may be go
+    [self fakeFetchLoudList];
     // some more actions here TODO
     _reloading = YES;
     

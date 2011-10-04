@@ -9,6 +9,7 @@
 #import "Utils.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
+#import "NSAttributedString+Attributes.h"
 #import "Config.h"
 
 @implementation Utils
@@ -56,9 +57,13 @@
         }else{
             NSDateFormatter *dateFormat = [NSDateFormatter alloc];
             [dateFormat setLocale:[NSLocale currentLocale]];
+            
             NSString *dateFormatString = nil;
+            
+            // compare the now and then time.
             NSDateComponents *curDateComp = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:[NSDate date]];
             NSDateComponents *dateComp = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:date];
+            
             if (timePassed < 24*60*60 && curDateComp.day == dateComp.day ){
                 dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
             }else{
@@ -66,6 +71,8 @@
             }
             [dateFormat setDateFormat:dateFormatString];
             dateString = [dateFormat stringFromDate:date];
+            
+            [dateFormat release];
         }
     }
     return dateString;
@@ -76,8 +83,10 @@
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    
     NSDate * date = [dateFormatter dateFromString:stringTime];
     [dateFormatter release];
+    
     return date;
 }
 
@@ -139,6 +148,54 @@
     [fill release];
     
     return fullURI;
+}
+
+#pragma mark - thumbnail image
++ (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize
+{
+    
+    UIImage *newimage;
+    
+    if (nil == image) {        
+        newimage = nil;
+    }
+    else{
+        UIGraphicsBeginImageContext(asize);
+        
+        [image drawInRect:CGRectMake(0, 0, asize.width, asize.height)];
+        newimage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+    }
+    
+    return newimage;
+    
+}
+
+#pragma mark - wrong notify
++ (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString
+{
+    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:rawString];
+    [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+    [attributedString setTextColor:[UIColor redColor]];
+    return attributedString;
+}
+
+#pragma mark - random number
+
++ (NSString *)genRandStringLength:(int)len 
+{
+    //NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSString *letters = @"0123456789";
+    
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%c", [letters characterAtIndex: arc4random()%[letters length]]];
+    }
+    
+    return randomString;
+    
 }
 
 @end

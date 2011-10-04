@@ -26,9 +26,10 @@ static LocationController* sharedCLDelegate = nil;
 
 - (void)dealloc
 {
-    [super dealloc];
+    [delegate release];
     [location release];
     [locationManager release];
+    [super dealloc];
     
 }
 

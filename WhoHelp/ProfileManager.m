@@ -132,12 +132,11 @@ static ProfileManager *sharedProfileManager = nil;
     NSMutableArray *mutableFetchResults = [[self.moc executeFetchRequest:request error:&error] mutableCopy];
     [request release];
     
+    NSManagedObject *res = nil;
     if (error == nil) {
         if ([mutableFetchResults count] > 0) {
             
-            NSManagedObject *res = [mutableFetchResults objectAtIndex:0];
-            [mutableFetchResults release];
-            return res;
+            res = [mutableFetchResults objectAtIndex:0];
         }
         
     } else {
@@ -146,7 +145,7 @@ static ProfileManager *sharedProfileManager = nil;
     }
     
     [mutableFetchResults release];
-    return nil;
+    return res;
     
 }
 
@@ -188,6 +187,14 @@ static ProfileManager *sharedProfileManager = nil;
 - (oneway void)release
 {
     //do nothing
+}
+
+- (void)dealloc
+{
+    [moc_ release];
+    [profile_ release];
+    [super dealloc];
+    
 }
 
 - (id)autorelease
