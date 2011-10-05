@@ -7,7 +7,6 @@
 //
 
 #import "HelpListViewController.h"
-#import "HelpDetailViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "Config.h"
@@ -23,7 +22,8 @@
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
-
+@synthesize tapLoudLink=tapLoudLink_;
+@synthesize tapIndexPath=tapIndexPath_;
 
 - (SystemSoundID) soudObject
 {
@@ -235,7 +235,8 @@
     // Navigation logic may go here. Create and push another view controller.
     if (indexPath.row < [self.louds count]){
         
-        NSDictionary *user= [[self.louds objectAtIndex:indexPath.row] objectForKey:@"user"];
+        NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+        NSDictionary *user= [loud objectForKey:@"user"];
         
         if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:[user objectForKey:@"phone"]]){
             // del the user loud 
@@ -249,6 +250,10 @@
             delLoudSheet.tag = 2;
             [delLoudSheet showFromTabBar:self.tabBarController.tabBar];
             [delLoudSheet release];
+            
+            self.tapLoudLink = [loud objectForKey:@"link"];
+            self.tapIndexPath = indexPath;
+
         } else{
             // contact the loud's owner.
             UIActionSheet *contactSheet = [[UIActionSheet alloc] 
@@ -526,34 +531,25 @@
         
     } else if (2 == actionSheet.tag) {
         if (buttonIndex == actionSheet.destructiveButtonIndex){
-//            
-//            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"] queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
-//            [request setRequestMethod:@"DELETE"];
-//            [request startSynchronous];
-//            
-//            NSError *error = [request error];
-//            if (!error) {
-//                if ([request responseStatusCode] == 200){
-//                    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//                    id data = [request responseData];
-//                    id result = [jsonParser objectWithData:data];
-//                    [jsonParser release];
-//                    self.louds = result;
-//                    
-//                    if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
-//                        [Utils warningNotification:@"错误操作"];
-//                    } else{
-//                        //[self show3Louds];
-//                    }
-//                    
-//                } else {
-//                    [Utils warningNotification:@"非常规返回"];
-//                }
-//                
-//            }else{
-//                [Utils warningNotification:@"请求服务错误"];
-//            }
-            NSLog(@"del loud request...");
+            
+            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+            [request setRequestMethod:@"DELETE"];
+            [request startSynchronous];
+            
+            NSError *error = [request error];
+            if (!error) {
+                if ([request responseStatusCode] == 200){
+                    [self.louds removeObjectAtIndex:self.tapIndexPath.row];
+                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.tapIndexPath] withRowAnimation:  UITableViewRowAnimationRight];
+                    
+                } else {
+                    [Utils warningNotification:@"非常规返回"];
+                }
+                
+            }else{
+                [Utils warningNotification:@"网络链接错误"];
+            }
+
         }  
         
     }
@@ -570,6 +566,8 @@
     [curCollection_ release];
     [moreCell_ release];
     [tapUser_ release];
+    [tapLoudLink_ release];
+    [tapIndexPath_ release];
     AudioServicesDisposeSystemSoundID(soudObject_);
     CFRelease(soundFileURLRef);
     [super dealloc];

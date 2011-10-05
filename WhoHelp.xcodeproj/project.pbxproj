@@ -84,8 +84,6 @@
 		617E3A75141B588300441135 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A74141B588300441135 /* MapKit.framework */; };
 		617E3A79141B69D300441135 /* HelpListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A77141B69D300441135 /* HelpListViewController.m */; };
 		617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A78141B69D300441135 /* HelpListViewController.xib */; };
-		617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A7D141B820300441135 /* HelpDetailViewController.m */; };
-		617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A7E141B820300441135 /* HelpDetailViewController.xib */; };
 		617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A87141B8D7400441135 /* HelpSettingViewController.m */; };
 		617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A88141B8D7400441135 /* HelpSettingViewController.xib */; };
 		617E3A91141B956200441135 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8B141B956200441135 /* back@2x.png */; };
@@ -106,8 +104,6 @@
 		61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */; };
 		61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13442142A249E0067AF09 /* ChangNameViewController.m */; };
 		61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13443142A249E0067AF09 /* ChangNameViewController.xib */; };
-		61B13453142A26630067AF09 /* LoudManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13451142A26620067AF09 /* LoudManageViewController.m */; };
-		61B13454142A26630067AF09 /* LoudManageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13452142A26620067AF09 /* LoudManageViewController.xib */; };
 		61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */; };
 		61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */; };
 		61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13461142DC0640067AF09 /* ResetPasswordViewController.m */; };
@@ -249,9 +245,6 @@
 		617E3A76141B69D300441135 /* HelpListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpListViewController.h; sourceTree = "<group>"; };
 		617E3A77141B69D300441135 /* HelpListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpListViewController.m; sourceTree = "<group>"; };
 		617E3A78141B69D300441135 /* HelpListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpListViewController.xib; sourceTree = "<group>"; };
-		617E3A7C141B820300441135 /* HelpDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpDetailViewController.h; sourceTree = "<group>"; };
-		617E3A7D141B820300441135 /* HelpDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpDetailViewController.m; sourceTree = "<group>"; };
-		617E3A7E141B820300441135 /* HelpDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpDetailViewController.xib; sourceTree = "<group>"; };
 		617E3A86141B8D7400441135 /* HelpSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSettingViewController.h; sourceTree = "<group>"; };
 		617E3A87141B8D7400441135 /* HelpSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSettingViewController.m; sourceTree = "<group>"; };
 		617E3A88141B8D7400441135 /* HelpSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSettingViewController.xib; sourceTree = "<group>"; };
@@ -276,9 +269,6 @@
 		61B13441142A249D0067AF09 /* ChangNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangNameViewController.h; sourceTree = "<group>"; };
 		61B13442142A249E0067AF09 /* ChangNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangNameViewController.m; sourceTree = "<group>"; };
 		61B13443142A249E0067AF09 /* ChangNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangNameViewController.xib; sourceTree = "<group>"; };
-		61B13450142A26620067AF09 /* LoudManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoudManageViewController.h; sourceTree = "<group>"; };
-		61B13451142A26620067AF09 /* LoudManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoudManageViewController.m; sourceTree = "<group>"; };
-		61B13452142A26620067AF09 /* LoudManageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoudManageViewController.xib; sourceTree = "<group>"; };
 		61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAccountViewController.h; sourceTree = "<group>"; };
 		61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAccountViewController.m; sourceTree = "<group>"; };
 		61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeleteAccountViewController.xib; sourceTree = "<group>"; };
@@ -475,9 +465,6 @@
 				617E3A86141B8D7400441135 /* HelpSettingViewController.h */,
 				617E3A87141B8D7400441135 /* HelpSettingViewController.m */,
 				617E3A88141B8D7400441135 /* HelpSettingViewController.xib */,
-				617E3A7C141B820300441135 /* HelpDetailViewController.h */,
-				617E3A7D141B820300441135 /* HelpDetailViewController.m */,
-				617E3A7E141B820300441135 /* HelpDetailViewController.xib */,
 				615E6A811420785100400B60 /* HelpSendViewController.h */,
 				615E6A821420785100400B60 /* HelpSendViewController.m */,
 				615E6A831420785200400B60 /* HelpSendViewController.xib */,
@@ -560,9 +547,6 @@
 				61B13441142A249D0067AF09 /* ChangNameViewController.h */,
 				61B13442142A249E0067AF09 /* ChangNameViewController.m */,
 				61B13443142A249E0067AF09 /* ChangNameViewController.xib */,
-				61B13450142A26620067AF09 /* LoudManageViewController.h */,
-				61B13451142A26620067AF09 /* LoudManageViewController.m */,
-				61B13452142A26620067AF09 /* LoudManageViewController.xib */,
 				61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */,
 				61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */,
 				61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */,
@@ -656,7 +640,6 @@
 				617E3A45141B584F00441135 /* InfoPlist.strings in Resources */,
 				617E3A4E141B584F00441135 /* MainWindow.xib in Resources */,
 				617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */,
-				617E3A80141B820300441135 /* HelpDetailViewController.xib in Resources */,
 				617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */,
 				617E3A91141B956200441135 /* back@2x.png in Resources */,
 				617E3A92141B956200441135 /* call@2x.png in Resources */,
@@ -685,7 +668,6 @@
 				61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */,
 				61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */,
 				61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */,
-				61B13454142A26630067AF09 /* LoudManageViewController.xib in Resources */,
 				61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */,
 				61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */,
 				61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */,
@@ -735,7 +717,6 @@
 				617E3A4B141B584F00441135 /* WhoHelpAppDelegate.m in Sources */,
 				617E3A51141B584F00441135 /* WhoHelp.xcdatamodeld in Sources */,
 				617E3A79141B69D300441135 /* HelpListViewController.m in Sources */,
-				617E3A7F141B820300441135 /* HelpDetailViewController.m in Sources */,
 				617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */,
 				614E3ED1141DE49D00418314 /* ASIAuthenticationDialog.m in Sources */,
 				614E3ED2141DE49D00418314 /* ASIDataCompressor.m in Sources */,
@@ -766,7 +747,6 @@
 				6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */,
 				61B1343E142A12BA0067AF09 /* ChangPassswordViewController.m in Sources */,
 				61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */,
-				61B13453142A26630067AF09 /* LoudManageViewController.m in Sources */,
 				61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */,
 				61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */,
 				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,

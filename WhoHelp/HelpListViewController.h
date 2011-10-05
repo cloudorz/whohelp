@@ -31,6 +31,9 @@
     CFURLRef soundFileURLRef;
     
     NSDictionary *tapUser_;
+    NSString *tapLoudLink_;
+    NSIndexPath *tapIndexPath_;
+    
 
 }
 
@@ -40,6 +43,8 @@
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSDictionary *tapUser;
+@property (nonatomic, retain) NSIndexPath *tapIndexPath;
+@property (nonatomic, retain) NSString *tapLoudLink;
 @property (readonly) SystemSoundID soudObject;
 
 - (void)reloadTableViewDataSource;
