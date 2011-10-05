@@ -22,6 +22,7 @@
 @synthesize curCollection=curCollection_;
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
+@synthesize tapUser=tapUser_;
 
 
 - (SystemSoundID) soudObject
@@ -157,7 +158,7 @@
 	
     self.moreCell = cell;
     
-    return self.moreCell;	
+    return self.moreCell;
 }
 
 
@@ -184,20 +185,11 @@
     cell.nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
     
     // content
-    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[loud objectForKey:@"content"]];
-    [attributedString setFont:[UIFont systemFontOfSize:TEXTFONTSIZE]];
-    [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
-    
-    NSRange rang = [[loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
-    if (NSNotFound != rang.location){
-        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[loud objectForKey:@"content"] length] - rang.location)];
-    }
-    
-    cell.cellText.attributedText = attributedString;
+    cell.cellText.attributedText = [Utils colorContent:[loud objectForKey:@"content"]];
     
     // distnace
-    cell.distanceLabel.text = [NSString stringWithFormat:@"%.0f米",[[LocationController sharedInstance].location distanceFromLocation:[[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]];
-    [loud setObject:cell.distanceLabel.text forKey:@"distanceInfo"];
+    cell.distanceLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
+    //[loud setObject:cell.distanceLabel.text forKey:@"distanceInfo"]; something worng
     
     if (nil == [loud objectForKey:@"createdTime"]){
         [loud setObject:[Utils stringToTime:[loud objectForKey:@"created"]] forKey:@"createdTime"];
@@ -239,17 +231,40 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     // Navigation logic may go here. Create and push another view controller.
     if (indexPath.row < [self.louds count]){
-        HelpDetailViewController *detailViewController = [[HelpDetailViewController alloc] initWithNibName:@"HelpDetailViewController" bundle:nil];
         
-        NSDictionary *loud= [self.louds objectAtIndex:indexPath.row];
-        detailViewController.loud = loud;
-        detailViewController.avatarData = [[self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]] objectForKey:@"photoData"];
-        // Pass the selected object to the new view controller.
-         
-        [self.navigationController pushViewController:detailViewController animated:YES];
-        [detailViewController release];
+        NSDictionary *user= [[self.louds objectAtIndex:indexPath.row] objectForKey:@"user"];
+        
+        if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:[user objectForKey:@"phone"]]){
+            // del the user loud 
+            UIActionSheet *delLoudSheet = [[UIActionSheet alloc] 
+                                           initWithTitle:nil 
+                                           delegate:self 
+                                           cancelButtonTitle:@"取消" 
+                                           destructiveButtonTitle:@"删除求助" 
+                                           otherButtonTitles:nil];
+            
+            delLoudSheet.tag = 2;
+            [delLoudSheet showFromTabBar:self.tabBarController.tabBar];
+            [delLoudSheet release];
+        } else{
+            // contact the loud's owner.
+            UIActionSheet *contactSheet = [[UIActionSheet alloc] 
+                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]] 
+                                           delegate:self 
+                                           cancelButtonTitle:@"取消" 
+                                           destructiveButtonTitle:nil 
+                                           otherButtonTitles:@"电话", @"短信", nil];
+            
+            contactSheet.tag = 1;
+            [contactSheet showFromTabBar:self.tabBarController.tabBar];
+            [contactSheet release];
+
+            self.tapUser = user;
+        }
+
     }
      
 }
@@ -483,6 +498,68 @@
     
 }
 
+#pragma mark - actionsheetp delegate
+//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    NSLog(@"click the button on action sheet");
+//}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex){
+        return;
+    }
+    
+    if (1 == actionSheet.tag) {
+    
+        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", buttonIndex == 0 ? @"tel" : @"sms", [self.tapUser objectForKey:@"phone"]]];
+       
+        UIDevice *device = [UIDevice currentDevice];
+        
+        if ([[device model] isEqualToString:@"iPhone"] ) {
+
+            [[UIApplication sharedApplication] openURL:callURL];
+        } else {
+            
+            [Utils wrongInfoString:@"你的设备不支持这项功能"];
+        }
+        
+    } else if (2 == actionSheet.tag) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex){
+//            
+//            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[[self.louds objectAtIndex:actionSheet.tag] objectForKey:@"link"] queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+//            [request setRequestMethod:@"DELETE"];
+//            [request startSynchronous];
+//            
+//            NSError *error = [request error];
+//            if (!error) {
+//                if ([request responseStatusCode] == 200){
+//                    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//                    id data = [request responseData];
+//                    id result = [jsonParser objectWithData:data];
+//                    [jsonParser release];
+//                    self.louds = result;
+//                    
+//                    if ([[result objectForKey:@"status"] isEqualToString:@"Fail"]){
+//                        [Utils warningNotification:@"错误操作"];
+//                    } else{
+//                        //[self show3Louds];
+//                    }
+//                    
+//                } else {
+//                    [Utils warningNotification:@"非常规返回"];
+//                }
+//                
+//            }else{
+//                [Utils warningNotification:@"请求服务错误"];
+//            }
+            NSLog(@"del loud request...");
+        }  
+        
+    }
+    
+}
+
 #pragma mark - dealloc 
 - (void)dealloc
 {
@@ -492,6 +569,7 @@
     [photoCache_ release];
     [curCollection_ release];
     [moreCell_ release];
+    [tapUser_ release];
     AudioServicesDisposeSystemSoundID(soudObject_);
     CFRelease(soundFileURLRef);
     [super dealloc];

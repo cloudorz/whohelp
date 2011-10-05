@@ -19,6 +19,7 @@
         
             self.selectionStyle = UITableViewCellSelectionStyleNone;
             self.contentView.backgroundColor = [UIColor clearColor];
+            self.selectionStyle = UITableViewCellSelectionStyleBlue;
             
             
             avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT, 5, IMGSIZE, IMGSIZE)] autorelease];
@@ -69,7 +70,7 @@
             
             
             // Configure the cell...
-            distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+contentHeight+15, 75, SMALLFONTSIZE)] autorelease];
+            distanceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TEXTMARGIN+TOPSPACE+NAMEFONTSIZE+contentHeight+15, 160, SMALLFONTSIZE)] autorelease];
             distanceLabel.tag = CELLDISTANCE;
             distanceLabel.opaque = YES;
             distanceLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];

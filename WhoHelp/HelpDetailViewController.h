@@ -22,6 +22,7 @@
     OHAttributedLabel *contentTextLabel_;
     double distance_;
     NSData *avatarData_;
+    UITabBarItem *tel_, *sms_;
     
 }
 
@@ -31,6 +32,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *contentTextLabel;
+@property (nonatomic, retain) IBOutlet UITabBarItem *tel, *sms;
 @property (nonatomic, retain) NSData *avatarData;
 @property double distance;
 

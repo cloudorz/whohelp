@@ -9,6 +9,8 @@
 #import "HelpDetailViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
+#import "ProfileManager.h"
+#import "WhoHelpAppDelegate.h"
 
 @implementation HelpDetailViewController
 
@@ -20,6 +22,8 @@
 @synthesize contentTextLabel=contentTextLabel_;
 @synthesize distance=distance_;
 @synthesize avatarData=avatarData_;
+@synthesize sms=sms_;
+@synthesize tel=tel_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,8 +61,6 @@
 {
     [super viewWillAppear:animated];
     
-
-
     self.avatarImage.image = [UIImage imageWithData:self.avatarData];
     self.avatarImage.opaque = YES;
     self.avatarImage.layer.borderWidth = 1.0;
@@ -66,15 +68,13 @@
 
     self.nameLabel.text = [[self.loud objectForKey:@"user"] objectForKey:@"name"];
     
-    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:[self.loud objectForKey:@"content"]];
-    [attributedString setFont:[UIFont systemFontOfSize:14.0]];
-    [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
-    
-    NSRange rang = [[self.loud objectForKey:@"content"] rangeOfString:@"$" options:NSBackwardsSearch];
-    if (NSNotFound != rang.location){
-        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [[self.loud objectForKey:@"content"] length] - rang.location)];
+    if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:
+         [[self.loud objectForKey:@"user"] objectForKey:@"phone"]]){
+        self.tel.enabled = NO;
+        self.sms.enabled = NO;
     }
-    self.contentTextLabel.attributedText = attributedString;
+    
+    self.contentTextLabel.attributedText = [Utils colorContent:[self.loud objectForKey:@"content"]];
     // get the geocoder address 
     if ([[self.loud objectForKey:@"address"] isEqual:[NSNull null]]){
         self.locationLabel.text = [self.loud objectForKey:@"distanceInfo"];
@@ -141,6 +141,8 @@
     [contentTextLabel_ release];
     [avatarImage_ release];
     [avatarData_ release];
+    [tel_ release];
+    [sms_ release];
     [super dealloc];
 }
 

@@ -13,7 +13,7 @@
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
 
-@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
+@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, OHAttributedLabelDelegate>
 {
 @private
     NSMutableArray *louds_;
@@ -29,6 +29,8 @@
     
     SystemSoundID soudObject_;
     CFURLRef soundFileURLRef;
+    
+    NSDictionary *tapUser_;
 
 }
 
@@ -37,6 +39,7 @@
 @property (nonatomic, readonly) NSMutableDictionary *photoCache;
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
+@property (nonatomic, retain) NSDictionary *tapUser;
 @property (readonly) SystemSoundID soudObject;
 
 - (void)reloadTableViewDataSource;

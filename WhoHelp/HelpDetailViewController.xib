@@ -582,6 +582,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">tel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="206798134"/>
+					</object>
+					<int key="connectionID">70</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sms</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="862317708"/>
+					</object>
+					<int key="connectionID">71</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="780779237"/>
 						<reference key="destination" ref="372490531"/>
@@ -825,7 +841,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">69</int>
+			<int key="maxID">71</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -841,6 +857,8 @@
 							<string>contentTextLabel</string>
 							<string>locationLabel</string>
 							<string>nameLabel</string>
+							<string>sms</string>
+							<string>tel</string>
 							<string>timeLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -849,6 +867,8 @@
 							<string>OHAttributedLabel</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
+							<string>UITabBarItem</string>
+							<string>UITabBarItem</string>
 							<string>UILabel</string>
 						</object>
 					</object>
@@ -860,6 +880,8 @@
 							<string>contentTextLabel</string>
 							<string>locationLabel</string>
 							<string>nameLabel</string>
+							<string>sms</string>
+							<string>tel</string>
 							<string>timeLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -879,6 +901,14 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">nameLabel</string>
 								<string key="candidateClassName">UILabel</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">sms</string>
+								<string key="candidateClassName">UITabBarItem</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">tel</string>
+								<string key="candidateClassName">UITabBarItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">timeLabel</string>

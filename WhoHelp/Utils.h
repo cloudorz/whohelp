@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface Utils : NSObject
 
@@ -22,6 +23,8 @@
 + (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone;
 + (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;
 + (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString;
++ (NSMutableAttributedString *)colorContent: (NSString *)rawString;
 + (NSString *)genRandStringLength:(int)len;
++ (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud;
 
 @end

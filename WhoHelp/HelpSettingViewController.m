@@ -30,10 +30,6 @@
         NSMutableArray *tmp;
         
         tmp = [[[NSMutableArray alloc] init] autorelease];
-        [tmp addObject:@"我的求助"];
-        [menu_ addObject:tmp];
-        
-        tmp = [[[NSMutableArray alloc] init] autorelease];
         [tmp addObject:@"修改昵称"];
         [tmp addObject:@"修改头像"];
         [tmp addObject:@"修改密码"];
@@ -130,14 +126,13 @@
 
     // Return the number of rows in the section.
     if (0 == section){
-        return 1;
-    } else if (1 == section){
         return 3;
-    } else if (2 == section){
+    } else if (1 == section){
         return 2;
-    } else if (3 == section){
+    } else if (2 == section){
         return 1;
-    }
+    } 
+    
     return 0;
 }
 
@@ -178,18 +173,12 @@
 
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     
-    if (0 == indexPath.section && 0 == indexPath.row){
-        LoudManageViewController *loudVC = [[LoudManageViewController alloc] initWithNibName:@"LoudManageViewController" bundle:nil];
-        // Pass the selected object to the new view controller.
-        [self.navigationController pushViewController:loudVC animated:YES];
-        [loudVC release];
-
-    } else if(1 == indexPath.section && 0 == indexPath.row){
+    if(0 == indexPath.section && 0 == indexPath.row){
         ChangNameViewController *changNameVC = [[ChangNameViewController alloc] initWithNibName:@"ChangNameViewController" bundle:nil];
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changNameVC animated:YES];
         [changNameVC release];
-    } else if(1 == indexPath.section && 1 == indexPath.row){
+    } else if(0 == indexPath.section && 1 == indexPath.row){
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             UIActionSheet *photoSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照", @"从相册中选取", nil];
             photoSheet.tag = 1;
@@ -202,23 +191,23 @@
             picker.allowsEditing = YES;
             [self presentModalViewController:picker animated:YES];
         }
-    } else if (1 == indexPath.section && 2 == indexPath.row){
+    } else if (0 == indexPath.section && 2 == indexPath.row){
         ChangPassswordViewController *changPassVC = [[ChangPassswordViewController alloc] initWithNibName:@"ChangPassswordViewController" bundle:nil];
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:changPassVC animated:YES];
         [changPassVC release];
 
-    } else if(2 == indexPath.section && 1 == indexPath.row){
+    } else if(1 == indexPath.section && 1 == indexPath.row){
         DeleteAccountViewController *deleteAccountVC = [[DeleteAccountViewController alloc] initWithNibName:@"DeleteAccountViewController" bundle:nil];
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:deleteAccountVC animated:YES];
         [deleteAccountVC release];
-    } else if(2 == indexPath.section && 0 == indexPath.row){
+    } else if(1 == indexPath.section && 0 == indexPath.row){
         UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"退出登录", nil];
         logoutSheet.tag = 2;
         [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         [logoutSheet release];
-    } else if (3 == indexPath.section && 0 == indexPath.row){
+    } else if (2 == indexPath.section && 0 == indexPath.row){
         LawViewController *lawVC = [[LawViewController alloc] initWithNibName:@"LawViewController" bundle:nil];
         [self.navigationController pushViewController:lawVC animated:YES];
         [lawVC release];

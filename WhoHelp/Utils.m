@@ -131,7 +131,7 @@
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query
 {
    
-    NSString *fill = [[NSString alloc] init];
+    NSString *fill;
     
     NSRange rang = [uri rangeOfString:@"?" options:NSBackwardsSearch];
     if (rang.location != NSNotFound){
@@ -172,12 +172,38 @@
     
 }
 
+#pragma mark - distance info
++ (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud
+{
+    
+    return [NSString stringWithFormat:@"%@ %.0f米",
+     [[loud objectForKey:@"address"] isEqual:[NSNull null]] ? @"" : 
+            [loud objectForKey:@"address"],
+     [curPos distanceFromLocation:
+      [[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]
+     ];
+    
+}
 #pragma mark - wrong notify
 + (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString
 {
     NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:rawString];
     [attributedString setFont:[UIFont systemFontOfSize:14.0]];
     [attributedString setTextColor:[UIColor redColor]];
+    return attributedString;
+}
+
+#pragma mark - color content
++ (NSMutableAttributedString *)colorContent: (NSString *)rawString
+{
+    NSMutableAttributedString *attributedString = [NSMutableAttributedString attributedStringWithString:rawString];
+    [attributedString setFont:[UIFont systemFontOfSize:14.0]];
+    [attributedString setTextColor:[UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0]];
+    
+    NSRange rang = [rawString rangeOfString:@"$" options:NSBackwardsSearch];
+    if (NSNotFound != rang.location){
+        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [rawString length] - rang.location)];
+    }
     return attributedString;
 }
 

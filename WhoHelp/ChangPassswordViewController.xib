@@ -326,14 +326,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">newPassword</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="352710688"/>
-					</object>
-					<int key="connectionID">27</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">repeatPassword</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="336170105"/>
@@ -355,6 +347,14 @@
 						<reference key="destination" ref="1031376584"/>
 					</object>
 					<int key="connectionID">37</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">password</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="352710688"/>
+					</object>
+					<int key="connectionID">41</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -592,7 +592,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">40</int>
+			<int key="maxID">41</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -645,8 +645,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>errorLabel</string>
 							<string>loadingIndicator</string>
-							<string>newPassword</string>
 							<string>oldPassword</string>
+							<string>password</string>
 							<string>repeatPassword</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -664,8 +664,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>errorLabel</string>
 							<string>loadingIndicator</string>
-							<string>newPassword</string>
 							<string>oldPassword</string>
+							<string>password</string>
 							<string>repeatPassword</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -679,11 +679,11 @@
 								<string key="candidateClassName">UIActivityIndicatorView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">newPassword</string>
+								<string key="name">oldPassword</string>
 								<string key="candidateClassName">UITextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">oldPassword</string>
+								<string key="name">password</string>
 								<string key="candidateClassName">UITextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">
