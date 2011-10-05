@@ -18,7 +18,7 @@
 @implementation ChangPassswordViewController
 
 @synthesize oldPassword=oldPassword_;
-@synthesize newPassword=newPassword_;
+@synthesize password=password_;
 @synthesize repeatPassword=repeatPassword_;
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
@@ -89,7 +89,7 @@
 {
     
     if ([self.oldPassword.text isEqual:@""] || 
-        [self.newPassword.text isEqual:@""] || 
+        [self.password.text isEqual:@""] || 
         [self.repeatPassword.text isEqual:@""]
         ){
         
@@ -98,7 +98,7 @@
         return;
     }
     
-    if (![self.newPassword.text isEqual:self.repeatPassword.text]){
+    if (![self.password.text isEqual:self.repeatPassword.text]){
 
         self.errorLabel.attributedText = [Utils wrongInfoString:@"新密码输入不一致"];
         
@@ -109,7 +109,7 @@
     
     NSMutableDictionary *passwords = [[NSMutableDictionary alloc] init];
     [passwords setObject:self.oldPassword.text forKey:@"old_password"];
-    [passwords setObject:self.newPassword.text forKey:@"password"];
+    [passwords setObject:self.password.text forKey:@"password"];
     
     [self.loadingIndicator startAnimating];
     [self postPasswordInfo:passwords];
@@ -168,7 +168,7 @@
 - (void)dealloc
 {
     [oldPassword_ release];
-    [newPassword_ release];
+    [password_ release];
     [repeatPassword_ release];
     [errorLabel_ release];
     [loadingIndicator_ release];

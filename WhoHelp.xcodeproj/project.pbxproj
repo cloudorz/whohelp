@@ -16,6 +16,7 @@
 		611FD79A143B20F100398709 /* LoudTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD799143B20F100398709 /* LoudTableCell.m */; };
 		611FD79F143B4CD300398709 /* LawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD79D143B4CD100398709 /* LawViewController.m */; };
 		611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 611FD79E143B4CD200398709 /* LawViewController.xib */; };
+		6130E39E143C1E0800D0C952 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6130E39D143C1E0800D0C952 /* libz.1.2.5.dylib */; };
 		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
 		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
 		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
@@ -23,7 +24,6 @@
 		6149FE641439EDA00093814A /* bird.aif in Resources */ = {isa = PBXBuildFile; fileRef = 6149FE631439ED9F0093814A /* bird.aif */; };
 		614E3E9C141DDD9200418314 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9B141DDD9200418314 /* CFNetwork.framework */; };
 		614E3E9E141DDDA200418314 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9D141DDDA200418314 /* SystemConfiguration.framework */; };
-		614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */; };
 		614E3ED1141DE49D00418314 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EBE141DE47F00418314 /* ASIAuthenticationDialog.m */; };
 		614E3ED2141DE49D00418314 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EC1141DE48000418314 /* ASIDataCompressor.m */; };
 		614E3ED3141DE49D00418314 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EC3141DE48200418314 /* ASIDataDecompressor.m */; };
@@ -141,6 +141,7 @@
 		611FD79C143B4CD000398709 /* LawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LawViewController.h; sourceTree = "<group>"; };
 		611FD79D143B4CD100398709 /* LawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LawViewController.m; sourceTree = "<group>"; };
 		611FD79E143B4CD200398709 /* LawViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LawViewController.xib; sourceTree = "<group>"; };
+		6130E39D143C1E0800D0C952 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
 		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
 		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
@@ -151,7 +152,6 @@
 		6149FE631439ED9F0093814A /* bird.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = bird.aif; sourceTree = "<group>"; };
 		614E3E9B141DDD9200418314 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		614E3E9D141DDDA200418314 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		614E3EBD141DE47F00418314 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		614E3EBE141DE47F00418314 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		614E3EBF141DE47F00418314 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -298,11 +298,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6130E39E143C1E0800D0C952 /* libz.1.2.5.dylib in Frameworks */,
 				611FD7921439F2A100398709 /* AudioToolbox.framework in Frameworks */,
 				614538561428930B00BA2C34 /* CoreText.framework in Frameworks */,
 				615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */,
 				614E3EDE141DE6DA00418314 /* MobileCoreServices.framework in Frameworks */,
-				614E3EA0141DDDB200418314 /* libz.1.2.3.dylib in Frameworks */,
 				614E3E9E141DDDA200418314 /* SystemConfiguration.framework in Frameworks */,
 				614E3E9C141DDD9200418314 /* CFNetwork.framework in Frameworks */,
 				617E3A75141B588300441135 /* MapKit.framework in Frameworks */,
@@ -431,11 +431,11 @@
 		617E3A37141B584F00441135 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6130E39D143C1E0800D0C952 /* libz.1.2.5.dylib */,
 				611FD7911439F2A100398709 /* AudioToolbox.framework */,
 				614538551428930B00BA2C34 /* CoreText.framework */,
 				615E6A7F141F478900400B60 /* QuartzCore.framework */,
 				614E3EDD141DE6DA00418314 /* MobileCoreServices.framework */,
-				614E3E9F141DDDB200418314 /* libz.1.2.3.dylib */,
 				614E3E9D141DDDA200418314 /* SystemConfiguration.framework */,
 				614E3E9B141DDD9200418314 /* CFNetwork.framework */,
 				617E3A74141B588300441135 /* MapKit.framework */,
@@ -626,6 +626,9 @@
 /* Begin PBXProject section */
 		617E3A2B141B584E00441135 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 617E3A2E141B584E00441135 /* Build configuration list for PBXProject "WhoHelp" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -876,10 +879,13 @@
 		617E3A6D141B584F00441135 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -887,10 +893,13 @@
 		617E3A6E141B584F00441135 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -905,6 +914,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelpTests/WhoHelpTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -922,6 +932,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelpTests/WhoHelpTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";

@@ -17,7 +17,6 @@
 }
 
 @property (nonatomic, retain, readonly) NSMutableArray *menu;
-@property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) NSData *image;
 
 

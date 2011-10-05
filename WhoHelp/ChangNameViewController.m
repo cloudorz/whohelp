@@ -18,7 +18,7 @@
 
 @synthesize errorLabel=errorLabel_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize newName=newName_;
+@synthesize userName=userName_;
 
 - (Profile *)profile
 {
@@ -61,7 +61,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.newName.text = self.profile.name;
+    self.userName.text = self.profile.name;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -84,7 +84,7 @@
 - (IBAction)doneButtonPressed:(id)sender
 {
 
-    if ([self.newName.text isEqualToString:@""]){
+    if ([self.userName.text isEqualToString:@""]){
 
         self.errorLabel.attributedText = [Utils wrongInfoString:@"名字不能为空"];
         
@@ -92,7 +92,7 @@
     }
     
     NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
-    [info setObject:self.newName.text forKey:@"name"];
+    [info setObject:self.userName.text forKey:@"name"];
     
     [self.loadingIndicator startAnimating];
     [self postNameInfo:info];
@@ -144,7 +144,7 @@
 {
     [loadingIndicator_ release];
     [errorLabel_ release];
-    [newName_ release];
+    [userName_ release];
     [super dealloc];
 }
 @end

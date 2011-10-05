@@ -33,7 +33,6 @@
 }
 
 @property (nonatomic, retain) NSMutableArray *louds;
-@property (nonatomic, readonly) Profile *profile;
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, readonly) NSMutableDictionary *photoCache;
 @property (nonatomic, retain) NSString *etag;

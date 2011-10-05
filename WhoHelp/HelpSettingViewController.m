@@ -53,12 +53,6 @@
     return menu_;
 }
 
-- (Profile *)profile
-{
-   return [[ProfileManager sharedInstance] profile];
-
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -292,7 +286,7 @@
 
     self.image = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
 
-    [Utils uploadImageFromData:self.image phone:[self.profile.phone stringValue]];
+    [Utils uploadImageFromData:self.image phone:[[ProfileManager sharedInstance].profile.phone stringValue]];
     
     [self dismissModalViewControllerAnimated:YES];
     [picker release];

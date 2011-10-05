@@ -15,7 +15,7 @@
 {
 @private
     UITextField *oldPassword_;
-    UITextField *newPassword_;
+    UITextField *password_;
     UITextField *repeatPassword_;
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
@@ -23,7 +23,7 @@
 }
 
 @property (nonatomic ,retain) IBOutlet UITextField *oldPassword;
-@property (nonatomic ,retain) IBOutlet UITextField *newPassword;
+@property (nonatomic ,retain) IBOutlet UITextField *password;
 @property (nonatomic ,retain) IBOutlet UITextField *repeatPassword;
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;

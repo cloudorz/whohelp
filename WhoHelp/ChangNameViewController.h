@@ -16,12 +16,12 @@
 @private
     OHAttributedLabel *errorLabel_;
     UIActivityIndicatorView *loadingIndicator_;
-    UITextField *newName_;
+    UITextField *userName_;
 }
 
 @property (nonatomic, retain) IBOutlet OHAttributedLabel *errorLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) IBOutlet UITextField *newName;
+@property (nonatomic, retain) IBOutlet UITextField *userName;
 @property (nonatomic, readonly) Profile *profile;
 
 

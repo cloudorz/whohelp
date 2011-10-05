@@ -24,13 +24,6 @@
 @synthesize moreCell=moreCell_;
 
 
-- (Profile *)profile
-{
-
-    return [[ProfileManager sharedInstance] profile];
-
-}
-
 - (SystemSoundID) soudObject
 {
     if (0 == soudObject_){
@@ -266,7 +259,7 @@
 {
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];
+        [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:2.0];
     } else{
         [Utils warningNotification:@"定位服务未开启, 无法请求数据"];
     }
@@ -279,7 +272,7 @@
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];
     
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, self.profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, [ProfileManager sharedInstance].profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
   
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -335,7 +328,7 @@
         return;
     }
     
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", APPKEY, self.profile.token]]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
     [request startSynchronous];
     
     NSError *error = [request error];
@@ -407,6 +400,15 @@
     
 }
 
+- (void)loadNextLoudList
+{
+    UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
+    label.text = @"正在加载..."; // bug no reload table not show it.
+
+    //[self performSelectorInBackground:@selector(fetchNextLoudList) withObject:nil];
+    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self fetchNextLoudList];
+}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -414,13 +416,8 @@
         indexPath.row == [self.louds count] && 
         nil != [self.curCollection objectForKey:@"next"]) 
     {
-        
-        UILabel *label = (UILabel*)[self.moreCell viewWithTag:1];
-        label.text = @"正在加载...";
-        //[self performSelectorInBackground:@selector(fetchNextLoudList) withObject:nil];
-        //[tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self fetchNextLoudList];
 
+        [self performSelector:@selector(loadNextLoudList) withObject:nil afterDelay:0.2];
     }
 }
 
