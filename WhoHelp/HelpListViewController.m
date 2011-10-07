@@ -18,12 +18,17 @@
 @implementation HelpListViewController
 
 @synthesize louds=louds_;
+@synthesize myLouds=myLouds_;
 @synthesize curCollection=curCollection_;
 @synthesize etag=etag_;
+@synthesize userEtag=userEtag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
 @synthesize tapLoudLink=tapLoudLink_;
 @synthesize tapIndexPath=tapIndexPath_;
+@synthesize tmpList=tmpList_;
+@synthesize lastUpdated=lastUpdated_;
+@synthesize timer=timer_;
 
 - (SystemSoundID) soudObject
 {
@@ -82,12 +87,23 @@
     // load remote data and init tableview
     [self fakeFetchLoudList];
     
+    // shake to my loud list
+    _mylist = YES;
+    
+    // timer
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
+                                                  target:self 
+                                                selector:@selector(fetchUpdatedInfo) 
+                                                userInfo:nil 
+                                                 repeats:YES];
+    
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     _refreshHeaderView=nil;
+    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -106,8 +122,15 @@
     [super viewWillDisappear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [self resignFirstResponder];
     [super viewDidDisappear:animated];
 }
 
@@ -144,7 +167,7 @@
 
 	if (nil == self.curCollection){
         labelNumber.text = @"正在加载...";
-    } else if (nil == [self.curCollection objectForKey:@"next"]){
+    } else if (nil == [self.curCollection objectForKey:@"next"] || NO == _mylist){
         labelNumber.text = @"";
     } else {
         labelNumber.text = @"获取更多";
@@ -244,7 +267,7 @@
                                            initWithTitle:nil 
                                            delegate:self 
                                            cancelButtonTitle:@"取消" 
-                                           destructiveButtonTitle:@"删除求助" 
+                                           destructiveButtonTitle:@"撤销求助" 
                                            otherButtonTitles:nil];
             
             delLoudSheet.tag = 2;
@@ -319,9 +342,13 @@
             self.curCollection = collection;
             self.louds = [collection objectForKey:@"louds"];
             self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
             
+            _mylist = YES;
             // reload the tableview data
             [self.tableView reloadData];
+            
+            [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
             
             
         } else if (400 == [request responseStatusCode]) {
@@ -329,7 +356,13 @@
             [Utils warningNotification:@"参数错误"];
             
         } else if (304 == [request responseStatusCode]) {
-            // do Nothing now.
+            if (NO == _mylist){
+                
+                self.louds = self.tmpList;
+                [self.tableView reloadData];
+            }
+            _mylist = YES;
+            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
             //NSLog(@"the louds list not modified.");
         }else{
             
@@ -539,9 +572,15 @@
             NSError *error = [request error];
             if (!error) {
                 if ([request responseStatusCode] == 200){
+                    
+                    if (_mylist == NO){
+                        id anObject = [self.louds objectAtIndex:self.tapIndexPath.row];
+                        [self.tmpList removeObject:anObject];
+                    }
+                    
                     [self.louds removeObjectAtIndex:self.tapIndexPath.row];
                     [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.tapIndexPath] withRowAnimation:  UITableViewRowAnimationRight];
-                    
+
                 } else {
                     [Utils warningNotification:@"非常规返回"];
                 }
@@ -556,18 +595,132 @@
     
 }
 
+#pragma mark - shake one
+-(BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+#pragma mark - get the three 
+- (void)fetch3Louds
+{
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", SURI, APPKEY, [ProfileManager sharedInstance].profile.token, [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            id data = [request responseData];
+            id result = [jsonParser objectWithData:data];
+            [jsonParser release];
+            
+            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
+            self.myLouds = [result objectForKey:@"louds"];
+            
+        } else if (304 == [request responseStatusCode]){
+            // done some thing
+        } else if (400 == [request responseStatusCode]) {
+            [Utils warningNotification:@"参数错误"];
+        }else {
+            [Utils warningNotification:@"非常规返回"];
+        }
+        
+    }else{
+        [Utils warningNotification:@"请求服务错误"];
+    }
+
+}
+
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+    {
+
+        if (_mylist){
+            
+            [self fetch3Louds];
+            
+            self.tmpList = self.louds;
+            self.louds = self.myLouds;
+
+            _mylist = NO;
+            
+        } else{
+            
+            self.louds = self.tmpList;
+            _mylist = YES;
+        }
+        
+        [self.tableView reloadData];
+    }
+}
+
+#pragma mark - get update info
+- (void)fetchUpdatedInfo
+{
+
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@&lat=%f&lon=%f", UPDATEURI, APPKEY, [ProfileManager sharedInstance].profile.token, curloc.latitude, curloc.longitude]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.lastUpdated){
+        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+    }
+    [request startSynchronous];
+    
+    
+    NSError *error = [request error];
+    if (!error){
+        
+        if (200 == [request responseStatusCode]) {
+            NSData *responseData = [request responseData];
+            // create the json parser 
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            NSDictionary *info = [jsonParser objectWithData:responseData];
+            [jsonParser release];
+            
+            NSInteger num = [[info objectForKey:@"count"] intValue];
+            if (num > 0 ){
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] 
+                 setBadgeValue:[NSString stringWithFormat:@"%d", num]];
+            } else{
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+            }
+     
+        } else{
+            NSLog(@"error: %@", @"非正常返回");
+        }
+        
+    } else {
+        [Utils warningNotification:@"网络链接错误"];
+    }
+    
+}
+
 #pragma mark - dealloc 
 - (void)dealloc
 {
     [louds_ release];
+    [myLouds_ release];
+    [tmpList_ release];
     [_refreshHeaderView release];
     [etag_ release];
+    [userEtag_ release];
     [photoCache_ release];
     [curCollection_ release];
     [moreCell_ release];
     [tapUser_ release];
     [tapLoudLink_ release];
     [tapIndexPath_ release];
+    [lastUpdated_ release];
+    [timer_ release];
     AudioServicesDisposeSystemSoundID(soudObject_);
     CFRelease(soundFileURLRef);
     [super dealloc];

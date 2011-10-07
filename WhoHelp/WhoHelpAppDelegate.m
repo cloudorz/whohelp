@@ -26,6 +26,7 @@
     // Override point for customization after application launch.
     self.window.rootViewController = self.tabBarController;
     self.tabBarController.delegate = self;
+    application.applicationSupportsShakeToEdit = YES;
     [self.window makeKeyAndVisible];
     
     return YES;

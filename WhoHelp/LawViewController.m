@@ -55,6 +55,11 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
+}
+
 - (void)dealloc
 {
     [content_ release];

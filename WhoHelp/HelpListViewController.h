@@ -16,15 +16,16 @@
 @interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, OHAttributedLabelDelegate>
 {
 @private
-    NSMutableArray *louds_;
+    NSMutableArray *louds_, *myLouds_, *tmpList_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     BOOL _sing;
+    BOOL _mylist;
     
     NSMutableDictionary *curCollection_;
     NSMutableDictionary *photoCache_;
-    NSString *etag_;
+    NSString *etag_, *userEtag_, *lastUpdated_;
     UITableViewCell *moreCell_;
     
     SystemSoundID soudObject_;
@@ -34,24 +35,28 @@
     NSString *tapLoudLink_;
     NSIndexPath *tapIndexPath_;
     
+    NSTimer *timer_;
 
 }
 
-@property (nonatomic, retain) NSMutableArray *louds;
+@property (nonatomic, retain) NSMutableArray *louds, *myLouds, *tmpList;
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, readonly) NSMutableDictionary *photoCache;
-@property (nonatomic, retain) NSString *etag;
+@property (nonatomic, retain) NSString *etag, *userEtag, *lastUpdated;
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSDictionary *tapUser;
 @property (nonatomic, retain) NSIndexPath *tapIndexPath;
 @property (nonatomic, retain) NSString *tapLoudLink;
+@property (nonatomic, retain) NSTimer *timer;
 @property (readonly) SystemSoundID soudObject;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
 
 - (void)fetchLoudList;
+- (void)fetch3Louds;
 - (void)fetchNextLoudList;
+- (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;
 - (NSData *)photoFromUser: (NSDictionary *)user;
 

@@ -19,6 +19,7 @@
 #define RESETURI @"http://rest.whohelp.me/reset/"
 #define SURI @"http://rest.whohelp.me/s"
 #define CODEURI @"http://rest.whohelp.me/code"
+#define UPDATEURI @"http://rest.whohelp.me/update"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

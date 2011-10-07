@@ -83,21 +83,15 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-  
-//    if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || 
-//        interfaceOrientation == UIInterfaceOrientationLandscapeRight)
-//    {
-//        CGRect frame = self.helpTextView.frame;
-//        frame.size.height = 80.0f;
-//        self.helpTextView.frame = frame;
-//        
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+//  
+//    if (interfaceOrientation == UIInterfaceOrientationPortrait){
+//        self.helpTextView.frame = CGRectMake(0.0, 44.0, 320.0, 164.0);
 //    } else{
-//        self.helpTextView.frame = self.curFrame;
-//        self.helpTextView.contentSize = self.curSize;
+//        self.helpTextView.frame = CGRectMake(0.0, 44.0, 480.0, 80.0);
 //    }
-    
-    return YES;
+//    
+//    return YES;
 }
 
 #pragma mark - modal actions
@@ -153,6 +147,8 @@
     if ([request responseStatusCode] == 201){
         [self dismissModalViewControllerAnimated:YES];
         
+    } else if (412 == [request responseStatusCode]){
+        [Utils warningNotification:@"每个用户最多可发三条求助信息，请先删除部分求助再发送"];
     } else if (400 == [request responseStatusCode]) {
         [Utils warningNotification:@"参数错误"];
     } else{
