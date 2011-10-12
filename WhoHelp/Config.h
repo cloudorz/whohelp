@@ -9,8 +9,8 @@
 #ifndef WhoHelp_Config_h
 #define WhoHelp_Config_h
 
-#define APPKEY @"12345678"
-#define APPSRT @"jkafldjaklfjda978-=-^**&"
+#define APPKEY @"20111007001"
+#define APPSRT @"9e6306f58b705e44d585d61e500d884d"
 #define SENDURI @"http://rest.whohelp.me/l/"
 #define IMGURI @"http://static.whohelp.me/"
 #define AUTHURI @"http://rest.whohelp.me/auth"

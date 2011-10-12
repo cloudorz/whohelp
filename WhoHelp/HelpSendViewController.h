@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "Profile.h"
 #import "LocationController.h"
+#import "SSTextView.h"
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate, MKReverseGeocoderDelegate>
 {

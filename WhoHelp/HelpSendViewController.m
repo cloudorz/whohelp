@@ -64,6 +64,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+//    self.helpTextView.placeholder = @"你需要的帮助$你提供的报酬";
+//    self.helpTextView.placeholderColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
     //[[LocationController sharedInstance].locationManager startUpdatingLocation];
 }
 

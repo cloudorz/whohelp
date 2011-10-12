@@ -664,7 +664,10 @@
 #pragma mark - get update info
 - (void)fetchUpdatedInfo
 {
-
+    if ([ProfileManager sharedInstance].profile.isLogin == NO){
+        return;
+    }
+    
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
 
@@ -694,7 +697,12 @@
                 [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
             }
      
-        } else{
+        } else if (304 == [request responseStatusCode]){
+            
+            // do nothing
+        } else if (401 == [request responseStatusCode]){
+            NSLog(@"error: %@", @"无权操作");
+        }else{
             NSLog(@"error: %@", @"非正常返回");
         }
         

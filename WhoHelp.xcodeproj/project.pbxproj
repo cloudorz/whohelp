@@ -46,6 +46,7 @@
 		614E3F02141E026300418314 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EE9141E026300418314 /* SBJsonTokeniser.m */; };
 		614E3F03141E026300418314 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEA141E026300418314 /* SBJsonUTF8Stream.m */; };
 		614E3F04141E026300418314 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEB141E026300418314 /* SBJsonWriter.m */; };
+		615E66F3144170E2002E36C3 /* SSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E66F2144170E2002E36C3 /* SSTextView.m */; };
 		615E6A6F141F418F00400B60 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A67141F418E00400B60 /* blackArrow.png */; };
 		615E6A70141F418F00400B60 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A68141F418E00400B60 /* blackArrow@2x.png */; };
 		615E6A71141F418F00400B60 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A69141F418E00400B60 /* blueArrow.png */; };
@@ -196,6 +197,8 @@
 		614E3EF6141E026300418314 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
 		614E3EF7141E026300418314 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		614E3EF8141E026300418314 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		615E66F1144170E1002E36C3 /* SSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTextView.h; sourceTree = "<group>"; };
+		615E66F2144170E2002E36C3 /* SSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTextView.m; sourceTree = "<group>"; };
 		615E6A67141F418E00400B60 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
 		615E6A68141F418E00400B60 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
 		615E6A69141F418E00400B60 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrow.png; sourceTree = "<group>"; };
@@ -456,6 +459,8 @@
 				6102B21814376FC0007F728C /* LocationController.m */,
 				611FD798143B20F100398709 /* LoudTableCell.h */,
 				611FD799143B20F100398709 /* LoudTableCell.m */,
+				615E66F1144170E1002E36C3 /* SSTextView.h */,
+				615E66F2144170E2002E36C3 /* SSTextView.m */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
@@ -756,6 +761,7 @@
 				6149FE57143894BD0093814A /* ProfileManager.m in Sources */,
 				611FD79A143B20F100398709 /* LoudTableCell.m in Sources */,
 				611FD79F143B4CD300398709 /* LawViewController.m in Sources */,
+				615E66F3144170E2002E36C3 /* SSTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -831,7 +837,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
+				VALIDATE_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -841,9 +847,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -851,7 +858,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -866,6 +875,7 @@
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -876,10 +886,13 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
