@@ -7,11 +7,12 @@
 //
 
 #import "LocationController.h"
+#import "Utils.h"
 
 static LocationController* sharedCLDelegate = nil;
 
 @implementation LocationController
-@synthesize locationManager, location, delegate;
+@synthesize locationManager, location, delegate, allow;
 
 - (id)init
 {
@@ -40,34 +41,31 @@ static LocationController* sharedCLDelegate = nil;
 		   fromLocation:(CLLocation*)oldLocation
 {
     self.location = self.locationManager.location;
+    self.allow = YES;
     //NSLog(@"%f,%f", self.location.coordinate.latitude, self.location.coordinate.longitude);
 }
 
 - (void)locationManager:(CLLocationManager*)manager
 	   didFailWithError:(NSError*)error
 {
-    NSLog(@"Core locaiton can't get the fix error: %@, %@", error, [error localizedDescription]);
-    
-    if ([error domain] == kCLErrorDomain) {
-        
-        // We handle CoreLocation-related errors here
-        switch ([error code]) {
-                // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
-                // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
-            case kCLErrorDenied:
-                NSLog(@"Core location denied");
-                break;
-            case kCLErrorLocationUnknown:
-                NSLog(@"Core location unkown");
-                break;
-                
-            default:
-                break;
-        }   
-    } else {
-        // We handle all non-CoreLocation errors here
-    } 
-    
+    [self.locationManager stopUpdatingLocation];
+    NSString *errorString;        
+    // We handle CoreLocation-related errors here
+    switch ([error code]) {
+            // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
+            // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
+        case kCLErrorDenied:
+            errorString = @"乐帮需要获取你位置信息的许可，以便提供给你周边的求助信息。";
+            break;
+        case kCLErrorLocationUnknown:
+            errorString = @"获取位置信息出现未知错误";
+            break;
+            
+        default:
+            break;
+    }
+    self.allow = NO;
+    [Utils tellNotification:errorString];
 }
 
 #pragma mark -

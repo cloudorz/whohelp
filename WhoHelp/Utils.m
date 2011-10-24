@@ -42,6 +42,11 @@
     [self helpNotificationForTitle:@"错误" forMessage:message];  
 }
 
++ (void)tellNotification:(NSString *)message
+{
+    [self helpNotificationForTitle:nil forMessage:message];  
+}
+
 #pragma mark - date formate to human readable
 + (NSString *)descriptionForTime:(NSDate *)date
 {

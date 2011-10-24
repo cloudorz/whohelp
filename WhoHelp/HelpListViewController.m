@@ -84,9 +84,6 @@
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
     
-    // load remote data and init tableview
-    [self fakeFetchLoudList];
-    
     // shake to my loud list
     _mylist = YES;
     
@@ -126,6 +123,8 @@
 {
     [super viewDidAppear:animated];
     [self becomeFirstResponder];
+    // load remote data and init tableview
+    [self fakeFetchLoudList];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -301,11 +300,14 @@
 - (void)fakeFetchLoudList
 {
     if ([CLLocationManager locationServicesEnabled]){
-        [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:2.0];
+        if (nil != [ProfileManager sharedInstance].profile){
+            [[LocationController sharedInstance].locationManager startUpdatingLocation];
+            [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:2.0];        
+        }
+
     } else{
-        [Utils warningNotification:@"定位服务未开启, 无法请求数据"];
-    }
+        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
+    } 
 
 }
 
@@ -314,6 +316,10 @@
 
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
+    if (NO == [LocationController sharedInstance].allow){
+        return;
+    }
     
     NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, [ProfileManager sharedInstance].profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
@@ -364,7 +370,9 @@
             _mylist = YES;
             self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
             //NSLog(@"the louds list not modified.");
-        }else{
+        } else if (401 == [request responseStatusCode]){
+            [Utils warningNotification:@"授权失败"];
+        } else{
             
             [Utils warningNotification:@"服务器异常返回"];
             
@@ -518,18 +526,21 @@
 
     NSError *error = [request error];
     if (!error){
-        [info setObject:[[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
-        [info setObject:[NSDate date] forKey:@"expir"];
-        if (200 == [request responseStatusCode]) {
+        if (304 == [request responseStatusCode] || 200 == [request responseStatusCode]){
+            [info setObject:[[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
+            [info setObject:[NSDate date] forKey:@"expir"];
+            if (200 == [request responseStatusCode]) {
+                
+                [info setObject:[request responseData] forKey:@"photoData"];
+            } 
             
-            [info setObject:[request responseData] forKey:@"photoData"];
-        } 
-        
-        [self.photoCache setObject:info forKey:[user objectForKey:@"id"]];
-        
-        return [info objectForKey:@"photoData"];
+            [self.photoCache setObject:info forKey:[user objectForKey:@"id"]];
+            
+            return [info objectForKey:@"photoData"];
+        }
+   
     } else {
-        [Utils warningNotification:@"网络链接错误"];
+        //[Utils warningNotification:@"网络链接错误"]; 
     }
 
     return nil;
@@ -664,7 +675,7 @@
 #pragma mark - get update info
 - (void)fetchUpdatedInfo
 {
-    if ([ProfileManager sharedInstance].profile.isLogin == NO){
+    if ([ProfileManager sharedInstance].profile.isLogin == NO || [LocationController sharedInstance].allow == NO){
         return;
     }
     

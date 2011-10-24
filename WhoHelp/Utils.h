@@ -14,6 +14,7 @@
 + (void)helpNotificationForTitle: (NSString *)title forMessage: (NSString *)message;
 + (void)errorNotification:(NSString *)message;
 + (void)warningNotification:(NSString *)message;
++ (void)tellNotification:(NSString *)message;
 
 + (NSString *)descriptionForTime:(NSDate *)date;
 + (NSDate *)stringToTime:(NSString *)stringTime;

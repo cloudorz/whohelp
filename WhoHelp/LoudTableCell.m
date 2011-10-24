@@ -49,7 +49,7 @@
             arrowImage.image = [UIImage imageNamed:@"list_arrow.png"];
             [self.contentView addSubview:arrowImage];
             
-            nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TOPSPACE+TEXTMARGIN, 75, NAMEFONTSIZE+2)] autorelease];
+            nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(TEXTMARGIN+IMGLEFT+IMGSIZE+LEFTSPACE+TEXTMLEFTARGIN, TOPSPACE+TEXTMARGIN, 200, NAMEFONTSIZE+2)] autorelease];
             nameLabel.tag = CELLNAME;
             nameLabel.opaque = YES;
             nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];

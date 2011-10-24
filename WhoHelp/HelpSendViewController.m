@@ -21,8 +21,8 @@
 @synthesize numIndicator=numIndicator_;
 @synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize reverseGeocoder=reverseGeocoder_;
 @synthesize address=address_;
+@synthesize wardButton=wardButton_;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -66,34 +66,26 @@
     [super viewWillAppear:animated];
 //    self.helpTextView.placeholder = @"你需要的帮助$你提供的报酬";
 //    self.helpTextView.placeholderColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
-    //[[LocationController sharedInstance].locationManager startUpdatingLocation];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
+                                                 name:UIKeyboardWillShowNotification object:self.view.window];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self fakeParsePosition];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //[[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    [self.reverseGeocoder cancel];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil]; 
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-//  
-//    if (interfaceOrientation == UIInterfaceOrientationPortrait){
-//        self.helpTextView.frame = CGRectMake(0.0, 44.0, 320.0, 164.0);
-//    } else{
-//        self.helpTextView.frame = CGRectMake(0.0, 44.0, 480.0, 80.0);
-//    }
-//    
-//    return YES;
+    
+    return YES;
 }
 
 #pragma mark - modal actions
@@ -106,11 +98,26 @@
 
 - (IBAction)sendButtonPressed:(id)sender
 {
-    [self postHelpTextToRemoteServer];
+    [self fakePostHelpTextToRemoteServer];
+}
+
+- (void)fakePostHelpTextToRemoteServer
+{
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
+    } else{
+        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
+    }       
 }
 
 - (void)postHelpTextToRemoteServer
 {
+    
+    if (NO == [LocationController sharedInstance].allow){
+        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
+        return;
+    }
     
     [self.loadingIndicator startAnimating];
     self.sendBarItem.enabled = NO;
@@ -119,14 +126,12 @@
     
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
 
     NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
     [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
-    if (self.address != nil){
-        [preLoud setObject:self.address forKey:@"address"];
-    }
     
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:preLoud];
@@ -202,58 +207,34 @@
     return YES;
 }
 
-
-#pragma mark - get the address from lat and lon
-- (void)fakeParsePosition
+- (void)keyboardWillShow:(NSNotification *)notif
 {
+    //keyboard will be shown now. depending for which textfield is active, move up or move down the view appropriately
 
-    [[LocationController sharedInstance].locationManager startUpdatingLocation];
-    [self performSelector:@selector(parsePosition) withObject:nil afterDelay:3.0];
+    NSValue *endingFrame = [[notif userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect frame;
+    [endingFrame getValue:&frame];
+    
+    CGRect numIndicatorFrame = self.numIndicator.frame;
+    CGRect wardButtonFrame = self.wardButton.frame;
+    CGRect contentFrame = self.helpTextView.frame;
+    if (frame.size.height == 480.0f){
         
-}
-
-- (void)parsePosition
-{
-    // Reverse geocode
-    self.reverseGeocoder = [[[MKReverseGeocoder alloc] initWithCoordinate:[LocationController sharedInstance].location.coordinate] autorelease];
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+        numIndicatorFrame.origin.y = 320.0f - (frame.size.width + 45.0f);
+        wardButtonFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
+        contentFrame.size.height = 320.0f - 44.0f - (frame.size.width + 50.0f);
+    } else {
+        
+        numIndicatorFrame.origin.y = 480.0f - (frame.size.height + 45.0f);
+        wardButtonFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
+        contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 50.0f);
+    }
     
-    self.reverseGeocoder.delegate = self;
-    [self.reverseGeocoder start];
+    self.numIndicator.frame = numIndicatorFrame;
+    self.wardButton.frame = wardButtonFrame;
+    self.helpTextView.frame = contentFrame;
+
 }
-
-- (NSString *)getPlaceInfo:(MKPlacemark *)placemark
-{
-
-    return [NSString stringWithFormat:@"%@ %@", 
-                placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
-                placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
-}
-
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
-{
-    //NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
-    [self.reverseGeocoder cancel];
-    // stop loading status
-    self.address = nil;
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
-{
-    //    NSLog(@"Got it");
-    //    //NSDictionary *p = placemark.addressDictionary;
-    //    NSLog(@"street address: %@", placemark.thoroughfare);
-    //    NSLog(@"street-level: %@", placemark.subThoroughfare);
-    //    NSLog(@"city-level: %@", placemark.subLocality);
-    //    NSLog(@"city address: %@", placemark.locality);
-    
-    // stop loading status
-    [self.reverseGeocoder cancel];
-    self.address = [self getPlaceInfo:placemark];
-}
-
-
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -263,8 +244,8 @@
     [numIndicator_ release];
     [sendBarItem_ release];
     [loadingIndicator_ release];
-    [reverseGeocoder_ release];
     [address_ release];
+    [wardButton_ release];
     [super dealloc];
 }
 @end

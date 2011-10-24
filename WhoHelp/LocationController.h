@@ -21,11 +21,13 @@
 	CLLocationManager* locationManager;
 	CLLocation* location;
 	id delegate;
+    BOOL allow;
 }
 
 @property (nonatomic, retain) CLLocationManager* locationManager;
 @property (nonatomic, retain) CLLocation* location;
 @property (nonatomic, assign) id <LocationControllerDelegate> delegate;
+@property BOOL allow;
 
 + (LocationController*)sharedInstance; // Singleton method
 

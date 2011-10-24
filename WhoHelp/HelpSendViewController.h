@@ -7,22 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
 #import "Profile.h"
 #import "LocationController.h"
 #import "SSTextView.h"
 
-@interface HelpSendViewController : UIViewController <UITextViewDelegate, MKReverseGeocoderDelegate>
+@interface HelpSendViewController : UIViewController <UITextViewDelegate>
 {
 @private
     UITabBarController *helpTabBarController_;
     UITextView *helpTextView_;
     UILabel *numIndicator_;
     UIBarItem *sendBarItem_;
+    UIButton *wardButton_;
     
     UIActivityIndicatorView *loadingIndicator_;
     
-    MKReverseGeocoder *reverseGeocoder_;
     NSString *address_;
     
 }
@@ -32,14 +31,15 @@
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) IBOutlet UIBarItem *sendBarItem;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) MKReverseGeocoder *reverseGeocoder;
+@property (nonatomic, retain) IBOutlet UIButton *wardButton;
 @property (nonatomic, retain) NSString *address;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;
 - (IBAction)addRewardButtonPressed:(id)sender;
 - (void)postHelpTextToRemoteServer;
-- (void)parsePosition;
-- (void)fakeParsePosition;
+- (void)fakePostHelpTextToRemoteServer;
+//- (void)parsePosition;
+//- (void)fakeParsePosition;
 
 @end
