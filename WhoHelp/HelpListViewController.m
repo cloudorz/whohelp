@@ -13,7 +13,6 @@
 #import "Utils.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
-#import "LoudTableCell.h"
 
 @implementation HelpListViewController
 
@@ -24,6 +23,7 @@
 @synthesize userEtag=userEtag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
+//@synthesize tapLoud=tapLoud_;
 @synthesize tapLoudLink=tapLoudLink_;
 @synthesize tapIndexPath=tapIndexPath_;
 @synthesize tmpList=tmpList_;
@@ -202,9 +202,26 @@
         
     } 
     // avatar
-    cell.avatarImage.image = [UIImage imageWithData:[self photoFromUser:[loud objectForKey:@"user"]]];
+    NSMutableDictionary *info = [self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]];
+    if (nil == info){
+        cell.avatarImage.image = nil;
+        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
+                               cell, @"cell",
+                               [loud objectForKey:@"user"], @"user",
+                               nil];
+        [self performSelectorInBackground:@selector(setPhotoAsync:) withObject:args];
+    }else {
+        cell.avatarImage.image = [UIImage imageWithData:[info objectForKey:@"photoData"]];
+    }
+    
     // name
     cell.nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
+    
+    if ([[[loud objectForKey:@"user"] objectForKey:@"is_admin"] boolValue]){
+        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+    }else {
+        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+    }
     
     // content
     cell.cellText.attributedText = [Utils colorContent:[loud objectForKey:@"content"]];
@@ -279,7 +296,7 @@
         } else{
             // contact the loud's owner.
             UIActionSheet *contactSheet = [[UIActionSheet alloc] 
-                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]] 
+                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]]
                                            delegate:self 
                                            cancelButtonTitle:@"取消" 
                                            destructiveButtonTitle:nil 
@@ -290,6 +307,7 @@
             [contactSheet release];
 
             self.tapUser = user;
+//            self.tapLoud = loud;
         }
 
     }
@@ -504,6 +522,18 @@
     
 }
 
+#pragma mark - set photo to cell
+- (void)setPhotoAsync: (NSDictionary *)args
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    LoudTableCell *cell = [args objectForKey:@"cell"];
+    NSDictionary *user = [args objectForKey:@"user"];
+    cell.avatarImage.image = [UIImage imageWithData:[self photoFromUser:user]];
+    
+    [pool release];
+}
+
 #pragma mark - get photo from cahce or remote
 - (NSData *)photoFromUser: (NSDictionary *)user
 {
@@ -560,18 +590,23 @@
     }
     
     if (1 == actionSheet.tag) {
-    
+//        if (2 == buttonIndex){
+//            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?ll=%@,%@", [self.tapLoud objectForKey:@"lat"], [self.tapLoud objectForKey:@"lon"]]];
+//            NSLog(@"%@", callURL);
+//            [[UIApplication sharedApplication] openURL:callURL];
+//        } else {
         NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", buttonIndex == 0 ? @"tel" : @"sms", [self.tapUser objectForKey:@"phone"]]];
-       
+        
         UIDevice *device = [UIDevice currentDevice];
         
         if ([[device model] isEqualToString:@"iPhone"] ) {
-
+            
             [[UIApplication sharedApplication] openURL:callURL];
         } else {
             
             [Utils wrongInfoString:@"你的设备不支持这项功能"];
         }
+//        }
         
     } else if (2 == actionSheet.tag) {
         if (buttonIndex == actionSheet.destructiveButtonIndex){
@@ -736,6 +771,7 @@
     [curCollection_ release];
     [moreCell_ release];
     [tapUser_ release];
+//    [tapLoud_ release];
     [tapLoudLink_ release];
     [tapIndexPath_ release];
     [lastUpdated_ release];

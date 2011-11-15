@@ -12,6 +12,7 @@
 #import "Profile.h"
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
+#import "LoudTableCell.h"
 
 @interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, OHAttributedLabelDelegate>
 {
@@ -59,5 +60,6 @@
 - (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;
 - (NSData *)photoFromUser: (NSDictionary *)user;
+- (void)setPhotoAsync: (NSDictionary *)args;
 
 @end

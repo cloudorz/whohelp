@@ -23,6 +23,7 @@
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize address=address_;
 @synthesize wardButton=wardButton_;
+@synthesize helpText=helpText_;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -218,21 +219,25 @@
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect wardButtonFrame = self.wardButton.frame;
     CGRect contentFrame = self.helpTextView.frame;
+    CGRect helpTextFrame = self.helpText.frame;
     if (frame.size.height == 480.0f){
         
         numIndicatorFrame.origin.y = 320.0f - (frame.size.width + 45.0f);
         wardButtonFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
         contentFrame.size.height = 320.0f - 44.0f - (frame.size.width + 50.0f);
+        helpTextFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
     } else {
         
         numIndicatorFrame.origin.y = 480.0f - (frame.size.height + 45.0f);
         wardButtonFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
         contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 50.0f);
+        helpTextFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
     }
     
     self.numIndicator.frame = numIndicatorFrame;
     self.wardButton.frame = wardButtonFrame;
     self.helpTextView.frame = contentFrame;
+    self.helpText.frame = helpTextFrame;
 
 }
 
@@ -246,6 +251,7 @@
     [loadingIndicator_ release];
     [address_ release];
     [wardButton_ release];
+    [helpText_ release];
     [super dealloc];
 }
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Profile.h"
 #import "LocationController.h"
-#import "SSTextView.h"
+//#import "SSTextView.h"
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate>
 {
@@ -19,6 +19,7 @@
     UILabel *numIndicator_;
     UIBarItem *sendBarItem_;
     UIButton *wardButton_;
+    UILabel *helpText_;
     
     UIActivityIndicatorView *loadingIndicator_;
     
@@ -33,6 +34,7 @@
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UIButton *wardButton;
 @property (nonatomic, retain) NSString *address;
+@property (nonatomic, retain) IBOutlet UILabel *helpText;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;

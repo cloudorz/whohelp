@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610114A5146F5A5C00CDDF57 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 610114A3146F5A5C00CDDF57 /* icon.png */; };
+		610114A6146F5A5C00CDDF57 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 610114A4146F5A5C00CDDF57 /* icon@2x.png */; };
 		6102B21914376FC1007F728C /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6102B21814376FC0007F728C /* LocationController.m */; };
-		6102B21D143773F6007F728C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21B143773F6007F728C /* icon.png */; };
-		6102B21E143773F6007F728C /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21C143773F6007F728C /* icon@2x.png */; };
 		6102B2211437740E007F728C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21F1437740E007F728C /* Default.png */; };
 		6102B2221437740E007F728C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B2201437740E007F728C /* Default@2x.png */; };
 		611FD7921439F2A100398709 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611FD7911439F2A100398709 /* AudioToolbox.framework */; };
@@ -46,6 +46,10 @@
 		614E3F02141E026300418314 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EE9141E026300418314 /* SBJsonTokeniser.m */; };
 		614E3F03141E026300418314 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEA141E026300418314 /* SBJsonUTF8Stream.m */; };
 		614E3F04141E026300418314 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEB141E026300418314 /* SBJsonWriter.m */; };
+		6154AAB5145691BE00A62A32 /* ChangPassswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */; };
+		6154AAB6145691BE00A62A32 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */; };
+		6154AABA145691CD00A62A32 /* DeleteAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */; };
+		6154AABB145691CD00A62A32 /* DeleteAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */; };
 		615E66F3144170E2002E36C3 /* SSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E66F2144170E2002E36C3 /* SSTextView.m */; };
 		615E6A6F141F418F00400B60 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A67141F418E00400B60 /* blackArrow.png */; };
 		615E6A70141F418F00400B60 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A68141F418E00400B60 /* blackArrow@2x.png */; };
@@ -101,12 +105,8 @@
 		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
 		619B96A6143602A80017DE0D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 619B96A5143602A70017DE0D /* Utils.m */; };
 		61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B1342D1428D27C0067AF09 /* list_arrow.png */; };
-		61B1343E142A12BA0067AF09 /* ChangPassswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */; };
-		61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */; };
 		61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13442142A249E0067AF09 /* ChangNameViewController.m */; };
 		61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13443142A249E0067AF09 /* ChangNameViewController.xib */; };
-		61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */; };
-		61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */; };
 		61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13461142DC0640067AF09 /* ResetPasswordViewController.m */; };
 		61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */; };
 		61B13468142F182B0067AF09 /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13466142F18280067AF09 /* SignupViewController.m */; };
@@ -126,10 +126,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		610114A3146F5A5C00CDDF57 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		610114A4146F5A5C00CDDF57 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		6102B21714376FC0007F728C /* LocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationController.h; sourceTree = "<group>"; };
 		6102B21814376FC0007F728C /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
-		6102B21B143773F6007F728C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		6102B21C143773F6007F728C /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		6102B21F1437740E007F728C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		6102B2201437740E007F728C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		611FD7911439F2A100398709 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -197,6 +197,12 @@
 		614E3EF6141E026300418314 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
 		614E3EF7141E026300418314 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		614E3EF8141E026300418314 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		6154AAB2145691BD00A62A32 /* ChangPassswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangPassswordViewController.h; sourceTree = "<group>"; };
+		6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangPassswordViewController.m; sourceTree = "<group>"; };
+		6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangPassswordViewController.xib; sourceTree = "<group>"; };
+		6154AAB7145691CD00A62A32 /* DeleteAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAccountViewController.h; sourceTree = "<group>"; };
+		6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAccountViewController.m; sourceTree = "<group>"; };
+		6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeleteAccountViewController.xib; sourceTree = "<group>"; };
 		615E66F1144170E1002E36C3 /* SSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTextView.h; sourceTree = "<group>"; };
 		615E66F2144170E2002E36C3 /* SSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTextView.m; sourceTree = "<group>"; };
 		615E6A67141F418E00400B60 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -266,15 +272,9 @@
 		619B96A4143602A70017DE0D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		619B96A5143602A70017DE0D /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		61B1342D1428D27C0067AF09 /* list_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_arrow.png; sourceTree = "<group>"; };
-		61B1343B142A12B90067AF09 /* ChangPassswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangPassswordViewController.h; sourceTree = "<group>"; };
-		61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangPassswordViewController.m; sourceTree = "<group>"; };
-		61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangPassswordViewController.xib; sourceTree = "<group>"; };
 		61B13441142A249D0067AF09 /* ChangNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangNameViewController.h; sourceTree = "<group>"; };
 		61B13442142A249E0067AF09 /* ChangNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangNameViewController.m; sourceTree = "<group>"; };
 		61B13443142A249E0067AF09 /* ChangNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangNameViewController.xib; sourceTree = "<group>"; };
-		61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAccountViewController.h; sourceTree = "<group>"; };
-		61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAccountViewController.m; sourceTree = "<group>"; };
-		61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeleteAccountViewController.xib; sourceTree = "<group>"; };
 		61B13460142DC0630067AF09 /* ResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController.h; sourceTree = "<group>"; };
 		61B13461142DC0640067AF09 /* ResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController.m; sourceTree = "<group>"; };
 		61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResetPasswordViewController.xib; sourceTree = "<group>"; };
@@ -483,11 +483,11 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				610114A3146F5A5C00CDDF57 /* icon.png */,
+				610114A4146F5A5C00CDDF57 /* icon@2x.png */,
 				6149FE631439ED9F0093814A /* bird.aif */,
 				6102B21F1437740E007F728C /* Default.png */,
 				6102B2201437740E007F728C /* Default@2x.png */,
-				6102B21B143773F6007F728C /* icon.png */,
-				6102B21C143773F6007F728C /* icon@2x.png */,
 				61B1342D1428D27C0067AF09 /* list_arrow.png */,
 				615E6AE91425BA6200400B60 /* button.png */,
 				615E6AEA1425BA6200400B60 /* button@2x.png */,
@@ -546,15 +546,15 @@
 				615E6AE31424E05600400B60 /* LoginViewController.h */,
 				615E6AE41424E05700400B60 /* LoginViewController.m */,
 				615E6AE51424E05700400B60 /* LoginViewController.xib */,
-				61B1343B142A12B90067AF09 /* ChangPassswordViewController.h */,
-				61B1343C142A12B90067AF09 /* ChangPassswordViewController.m */,
-				61B1343D142A12B90067AF09 /* ChangPassswordViewController.xib */,
 				61B13441142A249D0067AF09 /* ChangNameViewController.h */,
 				61B13442142A249E0067AF09 /* ChangNameViewController.m */,
 				61B13443142A249E0067AF09 /* ChangNameViewController.xib */,
-				61B1345A142A29E90067AF09 /* DeleteAccountViewController.h */,
-				61B1345B142A29E90067AF09 /* DeleteAccountViewController.m */,
-				61B1345C142A29EA0067AF09 /* DeleteAccountViewController.xib */,
+				6154AAB7145691CD00A62A32 /* DeleteAccountViewController.h */,
+				6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */,
+				6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */,
+				6154AAB2145691BD00A62A32 /* ChangPassswordViewController.h */,
+				6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */,
+				6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */,
 				61B13460142DC0630067AF09 /* ResetPasswordViewController.h */,
 				61B13461142DC0640067AF09 /* ResetPasswordViewController.m */,
 				61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */,
@@ -671,18 +671,18 @@
 				615E6AEB1425BA6200400B60 /* button.png in Resources */,
 				615E6AEC1425BA6200400B60 /* button@2x.png in Resources */,
 				61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */,
-				61B1343F142A12BA0067AF09 /* ChangPassswordViewController.xib in Resources */,
 				61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */,
-				61B1345E142A29EA0067AF09 /* DeleteAccountViewController.xib in Resources */,
 				61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */,
 				61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */,
 				61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */,
-				6102B21D143773F6007F728C /* icon.png in Resources */,
-				6102B21E143773F6007F728C /* icon@2x.png in Resources */,
 				6102B2211437740E007F728C /* Default.png in Resources */,
 				6102B2221437740E007F728C /* Default@2x.png in Resources */,
 				6149FE641439EDA00093814A /* bird.aif in Resources */,
 				611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */,
+				6154AAB6145691BE00A62A32 /* ChangPassswordViewController.xib in Resources */,
+				6154AABB145691CD00A62A32 /* DeleteAccountViewController.xib in Resources */,
+				610114A5146F5A5C00CDDF57 /* icon.png in Resources */,
+				610114A6146F5A5C00CDDF57 /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,9 +750,7 @@
 				615E6AF01426066400400B60 /* Profile.m in Sources */,
 				6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */,
 				6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */,
-				61B1343E142A12BA0067AF09 /* ChangPassswordViewController.m in Sources */,
 				61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */,
-				61B1345D142A29EA0067AF09 /* DeleteAccountViewController.m in Sources */,
 				61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */,
 				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,
 				61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */,
@@ -762,6 +760,8 @@
 				611FD79A143B20F100398709 /* LoudTableCell.m in Sources */,
 				611FD79F143B4CD300398709 /* LawViewController.m in Sources */,
 				615E66F3144170E2002E36C3 /* SSTextView.m in Sources */,
+				6154AAB5145691BE00A62A32 /* ChangPassswordViewController.m in Sources */,
+				6154AABA145691CD00A62A32 /* DeleteAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,7 +834,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
@@ -845,8 +845,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -855,7 +858,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -873,6 +876,7 @@
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -883,12 +887,16 @@
 		617E3A6E141B584F00441135 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

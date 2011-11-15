@@ -56,16 +56,17 @@ static LocationController* sharedCLDelegate = nil;
             // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
         case kCLErrorDenied:
             errorString = @"乐帮需要获取你位置信息的许可，以便提供给你周边的求助信息。";
+            [Utils tellNotification:errorString];
             break;
         case kCLErrorLocationUnknown:
             errorString = @"获取位置信息出现未知错误";
+            [Utils tellNotification:errorString];
             break;
             
         default:
             break;
     }
     self.allow = NO;
-    [Utils tellNotification:errorString];
 }
 
 #pragma mark -

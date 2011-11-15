@@ -21,6 +21,7 @@
             self.contentView.backgroundColor = [UIColor clearColor];
             self.selectionStyle = UITableViewCellSelectionStyleBlue;
             
+//            NSLog(@"print print %f", contentHeight);
             
             avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(IMGLEFT, 5, IMGSIZE, IMGSIZE)] autorelease];
             avatarImage.tag = CELLAVATAR;
@@ -54,7 +55,7 @@
             nameLabel.opaque = YES;
             nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
             nameLabel.textAlignment = UITextAlignmentLeft;
-            nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+            //nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
             nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
             [self.contentView addSubview:nameLabel];
             

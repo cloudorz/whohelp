@@ -212,6 +212,7 @@
     return attributedString;
 }
 
+
 #pragma mark - random number
 
 + (NSString *)genRandStringLength:(int)len 
