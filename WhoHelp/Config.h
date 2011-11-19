@@ -11,15 +11,16 @@
 
 #define APPKEY @"20111007001"
 #define APPSRT @"9e6306f58b705e44d585d61e500d884d"
-#define SENDURI @"http://rest.whohelp.me/l/"
-#define IMGURI @"http://static.whohelp.me/"
-#define AUTHURI @"http://rest.whohelp.me/auth"
-#define USERURI @"http://rest.whohelp.me/u/"
-#define UPLOADURI @"http://rest.whohelp.me/upload"
-#define RESETURI @"http://rest.whohelp.me/reset/"
-#define SURI @"http://rest.whohelp.me/s"
-#define CODEURI @"http://rest.whohelp.me/code"
-#define UPDATEURI @"http://rest.whohelp.me/update"
+#define SENDURI @"http://n2u.in/l/"
+#define IMGURI @"http://s.n2u.in/"
+#define AUTHURI @"http://n2u.in/auth"
+#define USERURI @"http://n2u.in/u/"
+#define UPLOADURI @"http://n2u.in/upload"
+#define RESETURI @"http://n2u.in/reset/"
+#define SURI @"http://n2u.in/s"
+#define CODEURI @"http://n2u.in/code"
+#define UPDATEURI @"http://n2u.in/update"
+#define POSURI @"http://l.n2u.in/"
 
 #define CELLAVATAR 5
 #define CELLNAME 1
