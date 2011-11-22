@@ -11,15 +11,14 @@
 
 #define APPKEY @"20111007001"
 #define APPSRT @"9e6306f58b705e44d585d61e500d884d"
-#define SENDURI @"http://n2u.in/l/"
-#define IMGURI @"http://s.n2u.in/"
-#define AUTHURI @"http://n2u.in/auth"
-#define USERURI @"http://n2u.in/u/"
-#define UPLOADURI @"http://n2u.in/upload"
-#define RESETURI @"http://n2u.in/reset/"
-#define SURI @"http://n2u.in/s"
-#define CODEURI @"http://n2u.in/code"
-#define UPDATEURI @"http://n2u.in/update"
+#define SENDURI @"https://n2u.in/l/"
+#define AUTHURI @"https://n2u.in/auth"
+#define USERURI @"https://n2u.in/u/"
+#define UPLOADURI @"https://n2u.in/upload"
+#define RESETURI @"https://n2u.in/reset/"
+#define SURI @"https://n2u.in/s"
+#define CODEURI @"https://n2u.in/code"
+#define UPDATEURI @"https://n2u.in/update"
 #define POSURI @"http://l.n2u.in/"
 
 #define CELLAVATAR 5

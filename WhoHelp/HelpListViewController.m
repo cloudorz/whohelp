@@ -346,6 +346,7 @@
     if (nil != self.etag){
         [request addRequestHeader:@"If-None-Match" value:self.etag];
     }
+    //[request setValidatesSecureCertificate:NO];
     [request startSynchronous];
     
     NSError *error = [request error];
@@ -396,6 +397,7 @@
             
         }
     }else{
+        NSLog(@"%@", [error description]);
         [Utils warningNotification:@"网络链接错误"];
     }
 }
@@ -408,6 +410,7 @@
     }
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+    //[request setValidatesSecureCertificate:NO];
     [request startSynchronous];
     
     NSError *error = [request error];
@@ -491,7 +494,9 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (nil != self.curCollection && 
+
+    if (YES == _mylist &&
+        nil != self.curCollection && 
         indexPath.row == [self.louds count] && 
         nil != [self.curCollection objectForKey:@"next"]) 
     {
@@ -612,6 +617,7 @@
         if (buttonIndex == actionSheet.destructiveButtonIndex){
             
             ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+            //[request setValidatesSecureCertificate:NO];
             [request setRequestMethod:@"DELETE"];
             [request startSynchronous];
             
@@ -654,6 +660,7 @@
     if (nil != self.etag){
         [request addRequestHeader:@"If-None-Match" value:self.etag];
     }
+    //[request setValidatesSecureCertificate:NO];
     [request startSynchronous];
     
     NSError *error = [request error];
@@ -722,6 +729,7 @@
     if (nil != self.lastUpdated){
         [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
     }
+    //[request setValidatesSecureCertificate:NO];
     [request startSynchronous];
     
     
