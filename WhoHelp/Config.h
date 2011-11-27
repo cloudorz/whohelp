@@ -19,7 +19,8 @@
 #define SURI @"https://n2u.in/s"
 #define CODEURI @"https://n2u.in/code"
 #define UPDATEURI @"https://n2u.in/update"
-#define POSURI @"http://l.n2u.in/"
+#define POSURI @"http://l.n2u.in/e2m/"
+#define ADDRURI @"http://l.n2u.in/m2addr/"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

@@ -23,7 +23,6 @@
 @synthesize userEtag=userEtag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
-//@synthesize tapLoud=tapLoud_;
 @synthesize tapLoudLink=tapLoudLink_;
 @synthesize tapIndexPath=tapIndexPath_;
 @synthesize tmpList=tmpList_;
@@ -73,7 +72,12 @@
  	
     if (_refreshHeaderView == nil) {
 		
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
+                                           initWithFrame:CGRectMake(0.0f, 
+                                                                    0.0f - self.tableView.bounds.size.height, 
+                                                                    self.view.frame.size.width, 
+                                                                    self.tableView.bounds.size.height)
+                                           ];
 		view.delegate = self;
 		[self.tableView addSubview:view];
 		_refreshHeaderView = view;
@@ -189,7 +193,9 @@
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier;
-    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height;
+    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+                                                      constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
+                                                          lineBreakMode:UILineBreakModeWordWrap].height;
 
     CellIdentifier = [NSString stringWithFormat:@"helpEntry:%.0f", contentHeight];
     
@@ -198,7 +204,9 @@
     
     if (cell == nil) {
         
-        cell = [[[LoudTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier height:contentHeight] autorelease];
+        cell = [[[LoudTableCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                     reuseIdentifier:CellIdentifier 
+                                              height:contentHeight] autorelease];
         
     } 
     // avatar
@@ -257,7 +265,9 @@
     if (indexPath.row < [self.louds count]){
         NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
 
-        CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+                                                   constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
+                                                       lineBreakMode:UILineBreakModeWordWrap];
         
         return theSize.height + TOPSPACE + BOTTOMSPACE + 15 + NAMEFONTSIZE + SMALLFONTSIZE + 2*TEXTMARGIN;
     } else{
@@ -307,7 +317,6 @@
             [contactSheet release];
 
             self.tapUser = user;
-//            self.tapLoud = loud;
         }
 
     }
@@ -339,7 +348,13 @@
         return;
     }
     
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", SURI, curloc.latitude, curloc.longitude, APPKEY, [ProfileManager sharedInstance].profile.token] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", 
+                                        SURI, 
+                                        curloc.latitude, 
+                                        curloc.longitude, 
+                                        APPKEY, 
+                                        [ProfileManager sharedInstance].profile.token] 
+                                       stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
   
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -409,7 +424,12 @@
         return;
     }
     
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] 
+                                                                queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", 
+                                                                             APPKEY, 
+                                                                             [ProfileManager sharedInstance].profile.token]
+                                                              ]
+                               ];
     //[request setValidatesSecureCertificate:NO];
     [request startSynchronous];
     
@@ -511,7 +531,7 @@
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     
     [self reloadTableViewDataSource];
-    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:2.0];
     
 }
 
@@ -595,12 +615,11 @@
     }
     
     if (1 == actionSheet.tag) {
-//        if (2 == buttonIndex){
-//            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?ll=%@,%@", [self.tapLoud objectForKey:@"lat"], [self.tapLoud objectForKey:@"lon"]]];
-//            NSLog(@"%@", callURL);
-//            [[UIApplication sharedApplication] openURL:callURL];
-//        } else {
-        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", buttonIndex == 0 ? @"tel" : @"sms", [self.tapUser objectForKey:@"phone"]]];
+   
+        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
+                                               buttonIndex == 0 ? @"tel" : @"sms", 
+                                               [self.tapUser objectForKey:@"phone"]]
+                          ];
         
         UIDevice *device = [UIDevice currentDevice];
         
@@ -611,12 +630,16 @@
             
             [Utils wrongInfoString:@"你的设备不支持这项功能"];
         }
-//        }
         
     } else if (2 == actionSheet.tag) {
         if (buttonIndex == actionSheet.destructiveButtonIndex){
             
-            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", APPKEY, [ProfileManager sharedInstance].profile.token]]];
+            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink 
+                                                                        queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", 
+                                                                                     APPKEY, 
+                                                                                     [ProfileManager sharedInstance].profile.token]
+                                                                      ]
+                                       ];
             //[request setValidatesSecureCertificate:NO];
             [request setRequestMethod:@"DELETE"];
             [request startSynchronous];
@@ -655,7 +678,13 @@
 #pragma mark - get the three 
 - (void)fetch3Louds
 {
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", SURI, APPKEY, [ProfileManager sharedInstance].profile.token, [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
+                                        SURI, 
+                                        APPKEY, 
+                                        [ProfileManager sharedInstance].profile.token, 
+                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
+                                       ]
+                  ];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil != self.etag){
         [request addRequestHeader:@"If-None-Match" value:self.etag];
@@ -724,7 +753,13 @@
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
 
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@&lat=%f&lon=%f", UPDATEURI, APPKEY, [ProfileManager sharedInstance].profile.token, curloc.latitude, curloc.longitude]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@&lat=%f&lon=%f", 
+                                       UPDATEURI, 
+                                       APPKEY, 
+                                       [ProfileManager sharedInstance].profile.token, 
+                                       curloc.latitude, 
+                                       curloc.longitude]
+                  ];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil != self.lastUpdated){
         [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
@@ -779,7 +814,6 @@
     [curCollection_ release];
     [moreCell_ release];
     [tapUser_ release];
-//    [tapLoud_ release];
     [tapLoudLink_ release];
     [tapIndexPath_ release];
     [lastUpdated_ release];

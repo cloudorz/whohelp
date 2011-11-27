@@ -207,7 +207,8 @@
     
     NSRange rang = [rawString rangeOfString:@"$" options:NSBackwardsSearch];
     if (NSNotFound != rang.location){
-        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] range:NSMakeRange(rang.location, [rawString length] - rang.location)];
+        [attributedString setTextColor:[UIColor colorWithRed:111/255.0 green:195/255.0 blue:58/255.0 alpha:1.0] 
+                                 range:NSMakeRange(rang.location, [rawString length] - rang.location)];
     }
     return attributedString;
 }

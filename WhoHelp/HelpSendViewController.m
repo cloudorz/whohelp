@@ -23,9 +23,7 @@
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize address=address_;
 @synthesize wardButton=wardButton_;
-@synthesize helpText=helpText_;
-@synthesize reverseGeocoder=reverseGeocoder_;
-@synthesize fakeLocation=fakeLocation_;
+@synthesize placeholderLabel=placeholderLabel_;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,6 +49,20 @@
 {
     [super viewDidLoad];
     // display the keyboard
+    // you might have to play around a little with numbers in CGRectMake method
+    // they work fine with my settings
+    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10.0, 2.5, self.helpTextView.frame.size.width - 20.0, 34.0)] autorelease];
+    self.placeholderLabel.text = @"你的求助内容$你愿意提供的报酬";
+
+    // placeholderLabel is instance variable retained by view controller
+    self.placeholderLabel.backgroundColor = [UIColor clearColor];
+    self.placeholderLabel.font = [UIFont systemFontOfSize: 18.0];
+    self.placeholderLabel.textColor = [UIColor lightGrayColor];
+    
+    // textView is UITextView object you want add placeholder text to
+    [self.helpTextView addSubview:self.placeholderLabel];
+    
+    // show keyboard
     [self.helpTextView becomeFirstResponder];
     [self.loadingIndicator stopAnimating];
 
@@ -103,20 +115,20 @@
 
 - (IBAction)sendButtonPressed:(id)sender
 {
-    //[self fakePostHelpTextToRemoteServer];
+    [self fakePostHelpTextToRemoteServer];
     [self.loadingIndicator startAnimating];
-    [self fakeParsePosition];
+    //[self fakeParsePosition];
 }
 
-//- (void)fakePostHelpTextToRemoteServer
-//{
-//    if ([CLLocationManager locationServicesEnabled]){
-//        [[LocationController sharedInstance].locationManager startUpdatingLocation];
-//        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
-//    } else{
-//        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
-//    }       
-//}
+- (void)fakePostHelpTextToRemoteServer
+{
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
+    } else{
+        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
+    }       
+}
 
 - (void)postHelpTextToRemoteServer
 {
@@ -133,14 +145,17 @@
     
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-//    CLLocationCoordinate2D fakeloc = self.fakeLocation.coordinate;
-    //[[LocationController sharedInstance].locationManager stopUpdatingLocation];
+
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    CLLocation *fakeLocation = [self retriveFakeLocation:[LocationController sharedInstance].location];
+    CLLocationCoordinate2D fakeloc = fakeLocation.coordinate;
+    [self retriveAddress:fakeloc];
 
     NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
-//    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.latitude] forKey:@"flat"];
-//    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.longitude] forKey:@"flon"];
+    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.latitude] forKey:@"flat"];
+    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.longitude] forKey:@"flon"];
     [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
     if (self.address != nil){
         [preLoud setObject:self.address forKey:@"address"];
@@ -203,12 +218,31 @@
 - (void)textViewDidChange:(UITextView *)textView
 {
     //NSLog(@"done the editing change");
+    if(![textView hasText]) {
+        
+        [textView addSubview:self.placeholderLabel];
+        
+    } else if ([[textView subviews] containsObject:self.placeholderLabel]) {
+        
+        [self.placeholderLabel removeFromSuperview];
+        
+    }
+        
     NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
     self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - nonSpaceTextLength/*[self.helpTextView.text length]*/];
+    
     if (nonSpaceTextLength <= 0) {
         self.sendBarItem.enabled = NO;
     } else{
         self.sendBarItem.enabled = YES;
+    }
+
+}
+
+- (void)textViewDidEndEditing:(UITextView *)theTextView
+{
+    if (![theTextView hasText]) {
+        [theTextView addSubview:self.placeholderLabel];
     }
 }
 
@@ -238,25 +272,25 @@
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect wardButtonFrame = self.wardButton.frame;
     CGRect contentFrame = self.helpTextView.frame;
-    CGRect helpTextFrame = self.helpText.frame;
+  //  CGRect helpTextFrame = self.helpText.frame;
     if (frame.size.height == 480.0f){
         
         numIndicatorFrame.origin.y = 320.0f - (frame.size.width + 45.0f);
         wardButtonFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
         contentFrame.size.height = 320.0f - 44.0f - (frame.size.width + 50.0f);
-        helpTextFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
+        //helpTextFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
     } else {
         
         numIndicatorFrame.origin.y = 480.0f - (frame.size.height + 45.0f);
         wardButtonFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
         contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 50.0f);
-        helpTextFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
+        //helpTextFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
     }
     
     self.numIndicator.frame = numIndicatorFrame;
     self.wardButton.frame = wardButtonFrame;
     self.helpTextView.frame = contentFrame;
-    self.helpText.frame = helpTextFrame;
+//    self.helpText.frame = helpTextFrame;
 
 }
 
@@ -266,14 +300,14 @@
     if ([CLLocationManager locationServicesEnabled]){
         self.sendBarItem.enabled = NO;
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        [self performSelector:@selector(parsePosition) withObject:nil afterDelay:3.0];
+        [self performSelector:@selector(parsePosition) withObject:nil afterDelay:2.0];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
     } 
     
 }
 
-- (void)retriveFakeLocation: (CLLocation *)location
+- (CLLocation *)retriveFakeLocation: (CLLocation *)location
 {
     // real one
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%f,%f", POSURI, location.coordinate.latitude, location.coordinate.longitude]];
@@ -287,53 +321,32 @@
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSDictionary *pos = [jsonParser objectWithData:[request responseData]];
         [jsonParser release];
-        self.fakeLocation = [[CLLocation alloc] initWithLatitude:[[pos objectForKey:@"lat"] doubleValue] longitude:[[pos objectForKey:@"lon"] doubleValue]];
-    } else {
-        self.fakeLocation = location;
+        location = [[[CLLocation alloc] initWithLatitude:[[pos objectForKey:@"lat"] doubleValue] longitude:[[pos objectForKey:@"lon"] doubleValue]] autorelease];
     }
     
-}
-
-- (void)parsePosition
-{
-    // Reverse geocode
-    [self retriveFakeLocation:[LocationController sharedInstance].location];
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    // Get the fake location
-    self.reverseGeocoder = [[MKReverseGeocoder alloc] initWithCoordinate:self.fakeLocation.coordinate];
-    self.reverseGeocoder.delegate = self;
-    [self.reverseGeocoder start];
-}
-
-- (NSString *)getPlaceInfo:(MKPlacemark *)placemark
-{
-    return [NSString stringWithFormat:@"%@ %@", 
-                placemark.thoroughfare == nil ? @"" : placemark.thoroughfare, 
-                placemark.subThoroughfare == nil ? @"" : placemark.subThoroughfare];
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
-{
-    //NSLog(@"Reverse geo lookup failed with error: %@", [error localizedDescription]);
-    [self.reverseGeocoder cancel];
-    // stop loading status
-    self.address = nil;
-    [self postHelpTextToRemoteServer];
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
-{
-    //    NSLog(@"Got it");
-    //    //NSDictionary *p = placemark.addressDictionary;
-    //    NSLog(@"street address: %@", placemark.thoroughfare);
-    //    NSLog(@"street-level: %@", placemark.subThoroughfare);
-    //    NSLog(@"city-level: %@", placemark.subLocality);
-    //    NSLog(@"city address: %@", placemark.locality);
+    return location;
     
-    // stop loading status
-    [self.reverseGeocoder cancel];
-    self.address = [self getPlaceInfo:placemark];
-    [self postHelpTextToRemoteServer];
+}
+
+- (void)retriveAddress: (CLLocationCoordinate2D)loc
+{
+    // real one
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%f,%f", ADDRURI, loc.latitude, loc.longitude]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error && (200 == [request responseStatusCode])) {
+        
+        NSString *addr = [request responseString];
+
+        NSRange range = [addr rangeOfString:@"#" options:NSBackwardsSearch];
+        if (range.location != NSNotFound) {
+            self.address = [addr substringFromIndex:NSMaxRange(range)];
+        }else{
+            self.address = addr;
+        }
+    }
 }
 
 #pragma mark - dealloc
@@ -346,9 +359,8 @@
     [loadingIndicator_ release];
     [address_ release];
     [wardButton_ release];
-    [reverseGeocoder_ release];
-    [fakeLocation_ release];
     [helpText_ release];
+    [placeholderLabel_ release];
     [super dealloc];
 }
 @end
