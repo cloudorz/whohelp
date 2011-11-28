@@ -21,7 +21,6 @@
 @synthesize numIndicator=numIndicator_;
 @synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize address=address_;
 @synthesize wardButton=wardButton_;
 @synthesize placeholderLabel=placeholderLabel_;
 
@@ -145,22 +144,12 @@
     
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    CLLocation *fakeLocation = [self retriveFakeLocation:[LocationController sharedInstance].location];
-    CLLocationCoordinate2D fakeloc = fakeLocation.coordinate;
-    [self retriveAddress:fakeloc];
 
     NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
     [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
-    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.latitude] forKey:@"flat"];
-    [preLoud setObject:[NSNumber numberWithDouble:fakeloc.longitude] forKey:@"flon"];
     [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
-    if (self.address != nil){
-        [preLoud setObject:self.address forKey:@"address"];
-    }
-
     
     SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
     NSString *dataString = [preJson stringWithObject:preLoud];
@@ -307,47 +296,6 @@
     
 }
 
-- (CLLocation *)retriveFakeLocation: (CLLocation *)location
-{
-    // real one
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%f,%f", POSURI, location.coordinate.latitude, location.coordinate.longitude]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error && (200 == [request responseStatusCode])) {
-        
-        // create the json parser 
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        NSDictionary *pos = [jsonParser objectWithData:[request responseData]];
-        [jsonParser release];
-        location = [[[CLLocation alloc] initWithLatitude:[[pos objectForKey:@"lat"] doubleValue] longitude:[[pos objectForKey:@"lon"] doubleValue]] autorelease];
-    }
-    
-    return location;
-    
-}
-
-- (void)retriveAddress: (CLLocationCoordinate2D)loc
-{
-    // real one
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%f,%f", ADDRURI, loc.latitude, loc.longitude]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error && (200 == [request responseStatusCode])) {
-        
-        NSString *addr = [request responseString];
-
-        NSRange range = [addr rangeOfString:@"#" options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            self.address = [addr substringFromIndex:NSMaxRange(range)];
-        }else{
-            self.address = addr;
-        }
-    }
-}
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -357,7 +305,6 @@
     [numIndicator_ release];
     [sendBarItem_ release];
     [loadingIndicator_ release];
-    [address_ release];
     [wardButton_ release];
     [helpText_ release];
     [placeholderLabel_ release];

@@ -24,7 +24,6 @@
     
     UIActivityIndicatorView *loadingIndicator_;
     
-    NSString *address_;
     UILabel *placeholderLabel_;
     
 }
@@ -35,7 +34,6 @@
 @property (nonatomic, retain) IBOutlet UIBarItem *sendBarItem;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UIButton *wardButton;
-@property (nonatomic, retain) NSString *address;
 @property (nonatomic, retain) UILabel *placeholderLabel;
 
 - (IBAction)cancelButtonPressed:(id)sender;
@@ -43,7 +41,5 @@
 - (IBAction)addRewardButtonPressed:(id)sender;
 - (void)postHelpTextToRemoteServer;
 - (void)fakePostHelpTextToRemoteServer;
-- (CLLocation *)retriveFakeLocation: (CLLocation *)location;
-- (void)retriveAddress: (CLLocationCoordinate2D)loc;
 
 @end
