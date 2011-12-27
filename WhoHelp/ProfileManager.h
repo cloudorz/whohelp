@@ -21,9 +21,9 @@
 + (ProfileManager *)sharedInstance;
 
 - (void)save;
-- (void)del;
-- (NSManagedObject *)getProfileByPhone:(NSNumber *)phone;
+//- (void)del;
+- (NSManagedObject *)getProfileByKey:(NSString *)key;
 - (void)saveUserInfo:(NSMutableDictionary *) data;
-- (void)logout;
+//- (void)logout;
 
 @end

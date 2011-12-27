@@ -33,8 +33,8 @@ static ProfileManager *sharedProfileManager = nil;
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
         [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
-        [request setPredicate:predicate];
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"isLogin == YES"]];
+//        [request setPredicate:predicate];
         
         NSError *error = nil;
         NSMutableArray *mutableFetchResults = [[self.moc executeFetchRequest:request error:&error] mutableCopy];
@@ -71,17 +71,17 @@ static ProfileManager *sharedProfileManager = nil;
     }
 }
 
-- (void)del
-{
-    [self.moc deleteObject:self.profile];
-    [self save];
-    self.profile = nil;
-}
+//- (void)del
+//{
+//    [self.moc deleteObject:self.profile];
+//    [self save];
+//    self.profile = nil;
+//}
 
 - (void)saveUserInfo:(NSMutableDictionary *) data
 {
     
-    Profile *profile = (Profile *)[self getProfileByPhone:[data objectForKey:@"phone"]];
+    Profile *profile = (Profile *)[self getProfileByKey:[data objectForKey:@"userkey"]];
     
     if (profile == nil){
         profile =  (Profile *)[NSEntityDescription insertNewObjectForEntityForName:@"Profile" inManagedObjectContext:self.moc];
@@ -92,10 +92,9 @@ static ProfileManager *sharedProfileManager = nil;
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
     
     profile.name = [data objectForKey:@"name"];
-    profile.phone = [data objectForKey:@"phone"];
-    profile.token = [data objectForKey:@"token"];
+    profile.userkey = [data objectForKey:@"userkey"];
+    profile.secret = [data objectForKey:@"secret"];
     profile.updated = [dateFormatter dateFromString:[data objectForKey:@"updated"]];
-    profile.isLogin = [NSNumber numberWithBool:TRUE];
     
     [self save];
     
@@ -104,16 +103,16 @@ static ProfileManager *sharedProfileManager = nil;
     [dateFormatter release];
 }
 
-- (void)logout
-{
-    if (nil != self.profile){
-        self.profile.isLogin = NO;
-        [self save];
-    }
-}
+//- (void)logout
+//{
+//    if (nil != self.profile){
+//        self.profile.isLogin = NO;
+//        [self save];
+//    }
+//}
 
 #pragma mark - database operation
-- (NSManagedObject *)getProfileByPhone:(NSNumber *)phone
+- (NSManagedObject *)getProfileByKey:(NSString *)key
 {
     // Create request
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -125,7 +124,7 @@ static ProfileManager *sharedProfileManager = nil;
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
     [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"phone == %@", phone]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"userkey == %@", key]];
     [request setPredicate:predicate];
     
     NSError *error = nil;
@@ -133,7 +132,7 @@ static ProfileManager *sharedProfileManager = nil;
     [request release];
     
     NSManagedObject *res = nil;
-    if (error == nil) {
+    if (!error) {
         if ([mutableFetchResults count] > 0) {
             
             res = [mutableFetchResults objectAtIndex:0];

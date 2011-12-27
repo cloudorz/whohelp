@@ -8,7 +8,7 @@
 
 #import "WhoHelpAppDelegate.h"
 #import "HelpSendViewController.h"
-#import "LoginViewController.h"
+#import "PreAuthViewController.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
 
@@ -217,13 +217,13 @@
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if (nil == [ProfileManager sharedInstance].profile){
-        LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.tabBarController presentModalViewController:helpLoginVC animated:NO];
-        [helpLoginVC release];
+        PreAuthViewController *preAVC = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+        [self.tabBarController presentModalViewController:preAVC animated:NO];
+        [preAVC release];
         
         return NO;
     } else{
-        if (12 == viewController.tabBarItem.tag){
+        if (13 == viewController.tabBarItem.tag){
             HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
             [self.tabBarController presentModalViewController:helpSendVC animated:YES];
             [helpSendVC release];

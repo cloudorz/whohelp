@@ -10,10 +10,9 @@
 
 
 @implementation Profile
-@dynamic isLogin;
 @dynamic name;
-@dynamic phone;
-@dynamic token;
+@dynamic userkey;
+@dynamic secret;
 @dynamic updated;
 
 @end

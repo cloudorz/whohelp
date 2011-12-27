@@ -287,37 +287,37 @@
         NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
         NSDictionary *user= [loud objectForKey:@"user"];
         
-        if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:[user objectForKey:@"phone"]]){
-            // del the user loud 
-            UIActionSheet *delLoudSheet = [[UIActionSheet alloc] 
-                                           initWithTitle:nil 
-                                           delegate:self 
-                                           cancelButtonTitle:@"取消" 
-                                           destructiveButtonTitle:@"撤销求助" 
-                                           otherButtonTitles:nil];
-            
-            delLoudSheet.tag = 2;
-            [delLoudSheet showFromTabBar:self.tabBarController.tabBar];
-            [delLoudSheet release];
-            
-            self.tapLoudLink = [loud objectForKey:@"link"];
-            self.tapIndexPath = indexPath;
-
-        } else{
-            // contact the loud's owner.
-            UIActionSheet *contactSheet = [[UIActionSheet alloc] 
-                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]]
-                                           delegate:self 
-                                           cancelButtonTitle:@"取消" 
-                                           destructiveButtonTitle:nil 
-                                           otherButtonTitles:@"电话", @"短信", nil];
-            
-            contactSheet.tag = 1;
-            [contactSheet showFromTabBar:self.tabBarController.tabBar];
-            [contactSheet release];
-
-            self.tapUser = user;
-        }
+//        if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:[user objectForKey:@"phone"]]){
+//            // del the user loud 
+//            UIActionSheet *delLoudSheet = [[UIActionSheet alloc] 
+//                                           initWithTitle:nil 
+//                                           delegate:self 
+//                                           cancelButtonTitle:@"取消" 
+//                                           destructiveButtonTitle:@"撤销求助" 
+//                                           otherButtonTitles:nil];
+//            
+//            delLoudSheet.tag = 2;
+//            [delLoudSheet showFromTabBar:self.tabBarController.tabBar];
+//            [delLoudSheet release];
+//            
+//            self.tapLoudLink = [loud objectForKey:@"link"];
+//            self.tapIndexPath = indexPath;
+//
+//        } else{
+//            // contact the loud's owner.
+//            UIActionSheet *contactSheet = [[UIActionSheet alloc] 
+//                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]]
+//                                           delegate:self 
+//                                           cancelButtonTitle:@"取消" 
+//                                           destructiveButtonTitle:nil 
+//                                           otherButtonTitles:@"电话", @"短信", nil];
+//            
+//            contactSheet.tag = 1;
+//            [contactSheet showFromTabBar:self.tabBarController.tabBar];
+//            [contactSheet release];
+//
+//            self.tapUser = user;
+//        }
 
     }
      
@@ -348,73 +348,73 @@
         return;
     }
     
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", 
-                                        SURI, 
-                                        curloc.latitude, 
-                                        curloc.longitude, 
-                                        APPKEY, 
-                                        [ProfileManager sharedInstance].profile.token] 
-                                       stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    
-  
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != self.etag){
-        [request addRequestHeader:@"If-None-Match" value:self.etag];
-    }
-    //[request setValidatesSecureCertificate:NO];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            NSData *responseData = [request responseData];
-            
-            // create the json parser 
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
-            [jsonParser release];
-            
-            if (nil != self.curCollection){
-                // beep bo
-                _sing = YES;
-            }
-            
-            self.curCollection = collection;
-            self.louds = [collection objectForKey:@"louds"];
-            self.etag = [[request responseHeaders] objectForKey:@"Etag"];
-            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
-            
-            _mylist = YES;
-            // reload the tableview data
-            [self.tableView reloadData];
-            
-            [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
-            
-            
-        } else if (400 == [request responseStatusCode]) {
-            
-            [Utils warningNotification:@"参数错误"];
-            
-        } else if (304 == [request responseStatusCode]) {
-            if (NO == _mylist){
-                
-                self.louds = self.tmpList;
-                [self.tableView reloadData];
-            }
-            _mylist = YES;
-            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
-            //NSLog(@"the louds list not modified.");
-        } else if (401 == [request responseStatusCode]){
-            [Utils warningNotification:@"授权失败"];
-        } else{
-            
-            [Utils warningNotification:@"服务器异常返回"];
-            
-        }
-    }else{
-        NSLog(@"%@", [error description]);
-        [Utils warningNotification:@"网络链接错误"];
-    }
+//    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", 
+//                                        SURI, 
+//                                        curloc.latitude, 
+//                                        curloc.longitude, 
+//                                        APPKEY, 
+//                                        [ProfileManager sharedInstance].profile.token] 
+//                                       stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+//    
+//  
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    if (nil != self.etag){
+//        [request addRequestHeader:@"If-None-Match" value:self.etag];
+//    }
+//    //[request setValidatesSecureCertificate:NO];
+//    [request startSynchronous];
+//    
+//    NSError *error = [request error];
+//    if (!error) {
+//        if ([request responseStatusCode] == 200){
+//            NSData *responseData = [request responseData];
+//            
+//            // create the json parser 
+//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
+//            [jsonParser release];
+//            
+//            if (nil != self.curCollection){
+//                // beep bo
+//                _sing = YES;
+//            }
+//            
+//            self.curCollection = collection;
+//            self.louds = [collection objectForKey:@"louds"];
+//            self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+//            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+//            
+//            _mylist = YES;
+//            // reload the tableview data
+//            [self.tableView reloadData];
+//            
+//            [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+//            
+//            
+//        } else if (400 == [request responseStatusCode]) {
+//            
+//            [Utils warningNotification:@"参数错误"];
+//            
+//        } else if (304 == [request responseStatusCode]) {
+//            if (NO == _mylist){
+//                
+//                self.louds = self.tmpList;
+//                [self.tableView reloadData];
+//            }
+//            _mylist = YES;
+//            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+//            //NSLog(@"the louds list not modified.");
+//        } else if (401 == [request responseStatusCode]){
+//            [Utils warningNotification:@"授权失败"];
+//        } else{
+//            
+//            [Utils warningNotification:@"服务器异常返回"];
+//            
+//        }
+//    }else{
+//        NSLog(@"%@", [error description]);
+//        [Utils warningNotification:@"网络链接错误"];
+//    }
 }
 
 
@@ -423,41 +423,41 @@
     if (nil == self.louds || nil == [self.curCollection objectForKey:@"next"]){
         return;
     }
-    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] 
-                                                                queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", 
-                                                                             APPKEY, 
-                                                                             [ProfileManager sharedInstance].profile.token]
-                                                              ]
-                               ];
-    //[request setValidatesSecureCertificate:NO];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            
-            NSData *responseData = [request responseData];
-            // create the json parser 
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
-            [jsonParser release];
-            
-            self.curCollection = collection;
-            [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
-
-            // reload the tableview data
-            [self.tableView reloadData];
- 
-        } else if (400 == [request responseStatusCode]) {
-            [Utils warningNotification:@"参数错误"];
-        } else{
-            [Utils warningNotification:@"服务器异常返回"];
-        }
-        
-    }else{
-        [Utils warningNotification:@"网络链接错误"];
-    }
+//    
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] 
+//                                                                queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", 
+//                                                                             APPKEY, 
+//                                                                             [ProfileManager sharedInstance].profile.token]
+//                                                              ]
+//                               ];
+//    //[request setValidatesSecureCertificate:NO];
+//    [request startSynchronous];
+//    
+//    NSError *error = [request error];
+//    if (!error) {
+//        if ([request responseStatusCode] == 200){
+//            
+//            NSData *responseData = [request responseData];
+//            // create the json parser 
+//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
+//            [jsonParser release];
+//            
+//            self.curCollection = collection;
+//            [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
+//
+//            // reload the tableview data
+//            [self.tableView reloadData];
+// 
+//        } else if (400 == [request responseStatusCode]) {
+//            [Utils warningNotification:@"参数错误"];
+//        } else{
+//            [Utils warningNotification:@"服务器异常返回"];
+//        }
+//        
+//    }else{
+//        [Utils warningNotification:@"网络链接错误"];
+//    }
     
 }
 
@@ -613,60 +613,60 @@
     if (buttonIndex == actionSheet.cancelButtonIndex){
         return;
     }
-    
-    if (1 == actionSheet.tag) {
-   
-        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
-                                               buttonIndex == 0 ? @"tel" : @"sms", 
-                                               [self.tapUser objectForKey:@"phone"]]
-                          ];
-        
-        UIDevice *device = [UIDevice currentDevice];
-        
-        if ([[device model] isEqualToString:@"iPhone"] ) {
-            
-            [[UIApplication sharedApplication] openURL:callURL];
-        } else {
-            
-            [Utils wrongInfoString:@"你的设备不支持这项功能"];
-        }
-        
-    } else if (2 == actionSheet.tag) {
-        if (buttonIndex == actionSheet.destructiveButtonIndex){
-            
-            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink 
-                                                                        queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", 
-                                                                                     APPKEY, 
-                                                                                     [ProfileManager sharedInstance].profile.token]
-                                                                      ]
-                                       ];
-            //[request setValidatesSecureCertificate:NO];
-            [request setRequestMethod:@"DELETE"];
-            [request startSynchronous];
-            
-            NSError *error = [request error];
-            if (!error) {
-                if ([request responseStatusCode] == 200){
-                    
-                    if (_mylist == NO){
-                        id anObject = [self.louds objectAtIndex:self.tapIndexPath.row];
-                        [self.tmpList removeObject:anObject];
-                    }
-                    
-                    [self.louds removeObjectAtIndex:self.tapIndexPath.row];
-                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.tapIndexPath] withRowAnimation:  UITableViewRowAnimationRight];
-
-                } else {
-                    [Utils warningNotification:@"非常规返回"];
-                }
-                
-            }else{
-                [Utils warningNotification:@"网络链接错误"];
-            }
-
-        }  
-        
-    }
+//    
+//    if (1 == actionSheet.tag) {
+//   
+//        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
+//                                               buttonIndex == 0 ? @"tel" : @"sms", 
+//                                               [self.tapUser objectForKey:@"phone"]]
+//                          ];
+//        
+//        UIDevice *device = [UIDevice currentDevice];
+//        
+//        if ([[device model] isEqualToString:@"iPhone"] ) {
+//            
+//            [[UIApplication sharedApplication] openURL:callURL];
+//        } else {
+//            
+//            [Utils wrongInfoString:@"你的设备不支持这项功能"];
+//        }
+//        
+//    } else if (2 == actionSheet.tag) {
+//        if (buttonIndex == actionSheet.destructiveButtonIndex){
+//            
+//            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink 
+//                                                                        queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", 
+//                                                                                     APPKEY, 
+//                                                                                     [ProfileManager sharedInstance].profile.token]
+//                                                                      ]
+//                                       ];
+//            //[request setValidatesSecureCertificate:NO];
+//            [request setRequestMethod:@"DELETE"];
+//            [request startSynchronous];
+//            
+//            NSError *error = [request error];
+//            if (!error) {
+//                if ([request responseStatusCode] == 200){
+//                    
+//                    if (_mylist == NO){
+//                        id anObject = [self.louds objectAtIndex:self.tapIndexPath.row];
+//                        [self.tmpList removeObject:anObject];
+//                    }
+//                    
+//                    [self.louds removeObjectAtIndex:self.tapIndexPath.row];
+//                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.tapIndexPath] withRowAnimation:  UITableViewRowAnimationRight];
+//
+//                } else {
+//                    [Utils warningNotification:@"非常规返回"];
+//                }
+//                
+//            }else{
+//                [Utils warningNotification:@"网络链接错误"];
+//            }
+//
+//        }  
+//        
+//    }
     
 }
 
@@ -678,43 +678,43 @@
 #pragma mark - get the three 
 - (void)fetch3Louds
 {
-    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
-                                        SURI, 
-                                        APPKEY, 
-                                        [ProfileManager sharedInstance].profile.token, 
-                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
-                                       ]
-                  ];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != self.etag){
-        [request addRequestHeader:@"If-None-Match" value:self.etag];
-    }
-    //[request setValidatesSecureCertificate:NO];
-    [request startSynchronous];
-    
-    NSError *error = [request error];
-    if (!error) {
-        if ([request responseStatusCode] == 200){
-            
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            id data = [request responseData];
-            id result = [jsonParser objectWithData:data];
-            [jsonParser release];
-            
-            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
-            self.myLouds = [result objectForKey:@"louds"];
-            
-        } else if (304 == [request responseStatusCode]){
-            // done some thing
-        } else if (400 == [request responseStatusCode]) {
-            [Utils warningNotification:@"参数错误"];
-        }else {
-            [Utils warningNotification:@"非常规返回"];
-        }
-        
-    }else{
-        [Utils warningNotification:@"请求服务错误"];
-    }
+//    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
+//                                        SURI, 
+//                                        APPKEY, 
+//                                        [ProfileManager sharedInstance].profile.token, 
+//                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
+//                                       ]
+//                  ];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    if (nil != self.etag){
+//        [request addRequestHeader:@"If-None-Match" value:self.etag];
+//    }
+//    //[request setValidatesSecureCertificate:NO];
+//    [request startSynchronous];
+//    
+//    NSError *error = [request error];
+//    if (!error) {
+//        if ([request responseStatusCode] == 200){
+//            
+//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//            id data = [request responseData];
+//            id result = [jsonParser objectWithData:data];
+//            [jsonParser release];
+//            
+//            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
+//            self.myLouds = [result objectForKey:@"louds"];
+//            
+//        } else if (304 == [request responseStatusCode]){
+//            // done some thing
+//        } else if (400 == [request responseStatusCode]) {
+//            [Utils warningNotification:@"参数错误"];
+//        }else {
+//            [Utils warningNotification:@"非常规返回"];
+//        }
+//        
+//    }else{
+//        [Utils warningNotification:@"请求服务错误"];
+//    }
 
 }
 
@@ -746,58 +746,58 @@
 #pragma mark - get update info
 - (void)fetchUpdatedInfo
 {
-    if ([ProfileManager sharedInstance].profile.isLogin == NO || [LocationController sharedInstance].allow == NO){
-        return;
-    }
-    
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@&lat=%f&lon=%f", 
-                                       UPDATEURI, 
-                                       APPKEY, 
-                                       [ProfileManager sharedInstance].profile.token, 
-                                       curloc.latitude, 
-                                       curloc.longitude]
-                  ];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != self.lastUpdated){
-        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
-    }
-    //[request setValidatesSecureCertificate:NO];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    if (!error){
-        
-        if (200 == [request responseStatusCode]) {
-            NSData *responseData = [request responseData];
-            // create the json parser 
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            NSDictionary *info = [jsonParser objectWithData:responseData];
-            [jsonParser release];
-            
-            NSInteger num = [[info objectForKey:@"count"] intValue];
-            if (num > 0 ){
-                [[[self.tabBarController.tabBar items] objectAtIndex:0] 
-                 setBadgeValue:[NSString stringWithFormat:@"%d", num]];
-            } else{
-                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
-            }
-     
-        } else if (304 == [request responseStatusCode]){
-            
-            // do nothing
-        } else if (401 == [request responseStatusCode]){
-            NSLog(@"error: %@", @"无权操作");
-        }else{
-            NSLog(@"error: %@", @"非正常返回");
-        }
-        
-    } else {
-        [Utils warningNotification:@"网络链接错误"];
-    }
+//    if ([ProfileManager sharedInstance].profile.isLogin == NO || [LocationController sharedInstance].allow == NO){
+//        return;
+//    }
+//    
+//    // make json data for post
+//    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+//
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@&tk=%@&lat=%f&lon=%f", 
+//                                       UPDATEURI, 
+//                                       APPKEY, 
+//                                       [ProfileManager sharedInstance].profile.token, 
+//                                       curloc.latitude, 
+//                                       curloc.longitude]
+//                  ];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    if (nil != self.lastUpdated){
+//        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+//    }
+//    //[request setValidatesSecureCertificate:NO];
+//    [request startSynchronous];
+//    
+//    
+//    NSError *error = [request error];
+//    if (!error){
+//        
+//        if (200 == [request responseStatusCode]) {
+//            NSData *responseData = [request responseData];
+//            // create the json parser 
+//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//            NSDictionary *info = [jsonParser objectWithData:responseData];
+//            [jsonParser release];
+//            
+//            NSInteger num = [[info objectForKey:@"count"] intValue];
+//            if (num > 0 ){
+//                [[[self.tabBarController.tabBar items] objectAtIndex:0] 
+//                 setBadgeValue:[NSString stringWithFormat:@"%d", num]];
+//            } else{
+//                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+//            }
+//     
+//        } else if (304 == [request responseStatusCode]){
+//            
+//            // do nothing
+//        } else if (401 == [request responseStatusCode]){
+//            NSLog(@"error: %@", @"无权操作");
+//        }else{
+//            NSLog(@"error: %@", @"非正常返回");
+//        }
+//        
+//    } else {
+//        [Utils warningNotification:@"网络链接错误"];
+//    }
     
 }
 

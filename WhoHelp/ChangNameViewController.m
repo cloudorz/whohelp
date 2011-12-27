@@ -136,7 +136,7 @@
         }
         
     }else{
-        [Utils warningNotification:@"网络链接错误"];
+        [Utils warningNotification:[error localizedDescription]];
     }
 }
 

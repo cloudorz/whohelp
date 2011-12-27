@@ -13,10 +13,10 @@
 @interface Profile : NSManagedObject {
 @private
 }
-@property (nonatomic, retain) NSNumber * isLogin;
+
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * phone;
-@property (nonatomic, retain) NSString * token;
+@property (nonatomic, retain) NSString * userkey;
+@property (nonatomic, retain) NSString * secret;
 @property (nonatomic, retain) NSDate * updated;
 
 @end

@@ -72,19 +72,14 @@
 		617E3A3B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
 		617E3A3D141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
 		617E3A3F141B584F00441135 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3E141B584F00441135 /* CoreData.framework */; };
-		617E3A45141B584F00441135 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A43141B584F00441135 /* InfoPlist.strings */; };
 		617E3A47141B584F00441135 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A46141B584F00441135 /* main.m */; };
 		617E3A4B141B584F00441135 /* WhoHelpAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */; };
-		617E3A4E141B584F00441135 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A4C141B584F00441135 /* MainWindow.xib */; };
 		617E3A51141B584F00441135 /* WhoHelp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */; };
 		617E3A59141B584F00441135 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A58141B584F00441135 /* SenTestingKit.framework */; };
 		617E3A5A141B584F00441135 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A38141B584F00441135 /* UIKit.framework */; };
 		617E3A5B141B584F00441135 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3A141B584F00441135 /* Foundation.framework */; };
 		617E3A5C141B584F00441135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3C141B584F00441135 /* CoreGraphics.framework */; };
 		617E3A5D141B584F00441135 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A3E141B584F00441135 /* CoreData.framework */; };
-		617E3A65141B584F00441135 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A63141B584F00441135 /* InfoPlist.strings */; };
-		617E3A67141B584F00441135 /* WhoHelpTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A66141B584F00441135 /* WhoHelpTests.h */; };
-		617E3A69141B584F00441135 /* WhoHelpTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A68141B584F00441135 /* WhoHelpTests.m */; };
 		617E3A73141B587A00441135 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A72141B587900441135 /* CoreLocation.framework */; };
 		617E3A75141B588300441135 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617E3A74141B588300441135 /* MapKit.framework */; };
 		617E3A79141B69D300441135 /* HelpListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A77141B69D300441135 /* HelpListViewController.m */; };
@@ -93,15 +88,11 @@
 		617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A88141B8D7400441135 /* HelpSettingViewController.xib */; };
 		617E3A91141B956200441135 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8B141B956200441135 /* back@2x.png */; };
 		617E3A92141B956200441135 /* call@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8C141B956200441135 /* call@2x.png */; };
-		617E3A93141B956200441135 /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8D141B956200441135 /* home@2x.png */; };
 		617E3A94141B956200441135 /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8E141B956200441135 /* mail@2x.png */; };
-		617E3A95141B956200441135 /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A8F141B956200441135 /* settings@2x.png */; };
 		617E3A96141B956200441135 /* type@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A90141B956200441135 /* type@2x.png */; };
 		617E3A9D141B9B1600441135 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A97141B9B1500441135 /* back.png */; };
 		617E3A9E141B9B1600441135 /* call.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A98141B9B1500441135 /* call.png */; };
-		617E3A9F141B9B1600441135 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A99141B9B1500441135 /* home.png */; };
 		617E3AA0141B9B1600441135 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9A141B9B1500441135 /* mail.png */; };
-		617E3AA1141B9B1600441135 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9B141B9B1600441135 /* settings.png */; };
 		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
 		619B96A6143602A80017DE0D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 619B96A5143602A70017DE0D /* Utils.m */; };
 		61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B1342D1428D27C0067AF09 /* list_arrow.png */; };
@@ -113,6 +104,22 @@
 		61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13467142F18290067AF09 /* SignupViewController.xib */; };
 		61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1346B142F43DA0067AF09 /* Signup2ViewController.m */; };
 		61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */; };
+		61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */; };
+		61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */; };
+		61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */; };
+		61FCFE2114A9D78E009F35C2 /* DoubanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */; };
+		61FCFE2414A9DABF009F35C2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2514A9DABF009F35C2 /* MainWindow.xib */; };
+		61FCFE2614A9DAD0009F35C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2714A9DAD0009F35C2 /* InfoPlist.strings */; };
+		61FCFE3214A9DBF2009F35C2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2814A9DBF2009F35C2 /* help.png */; };
+		61FCFE3314A9DBF2009F35C2 /* help@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2914A9DBF2009F35C2 /* help@2x.png */; };
+		61FCFE3414A9DBF2009F35C2 /* mylist.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2A14A9DBF2009F35C2 /* mylist.png */; };
+		61FCFE3514A9DBF2009F35C2 /* mylist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2B14A9DBF2009F35C2 /* mylist@2x.png */; };
+		61FCFE3614A9DBF2009F35C2 /* nearby.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2C14A9DBF2009F35C2 /* nearby.png */; };
+		61FCFE3714A9DBF2009F35C2 /* nearby@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2D14A9DBF2009F35C2 /* nearby@2x.png */; };
+		61FCFE3814A9DBF2009F35C2 /* prize.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2E14A9DBF2009F35C2 /* prize.png */; };
+		61FCFE3914A9DBF2009F35C2 /* prize@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2F14A9DBF2009F35C2 /* prize@2x.png */; };
+		61FCFE3A14A9DBF2009F35C2 /* setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE3014A9DBF2009F35C2 /* setting.png */; };
+		61FCFE3B14A9DBF2009F35C2 /* setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE3114A9DBF2009F35C2 /* setting@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,28 +234,19 @@
 		615E6AED1425E41B00400B60 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		615E6AEE1426066400400B60 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
 		615E6AEF1426066400400B60 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
-		617D773D1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelpTests/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
-		617D773E1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelp/zh-Hans.lproj/MainWindow.xib"; sourceTree = "<absolute>"; };
-		617D773F1437435300552059 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "/Users/cloud/iosdev/WhoHelp/WhoHelp/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		617E3A34141B584F00441135 /* WhoHelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhoHelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A38141B584F00441135 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		617E3A3A141B584F00441135 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		617E3A3C141B584F00441135 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		617E3A3E141B584F00441135 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		617E3A42141B584F00441135 /* WhoHelp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WhoHelp-Info.plist"; sourceTree = "<group>"; };
-		617E3A44141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		617E3A46141B584F00441135 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhoHelp-Prefix.pch"; sourceTree = "<group>"; };
 		617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhoHelpAppDelegate.h; sourceTree = "<group>"; };
 		617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpAppDelegate.m; sourceTree = "<group>"; };
-		617E3A4D141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		617E3A50141B584F00441135 /* WhoHelp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WhoHelp.xcdatamodel; sourceTree = "<group>"; };
 		617E3A57141B584F00441135 /* WhoHelpTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhoHelpTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E3A58141B584F00441135 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WhoHelpTests-Info.plist"; sourceTree = "<group>"; };
-		617E3A64141B584F00441135 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		617E3A66141B584F00441135 /* WhoHelpTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhoHelpTests.h; sourceTree = "<group>"; };
-		617E3A68141B584F00441135 /* WhoHelpTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhoHelpTests.m; sourceTree = "<group>"; };
 		617E3A72141B587900441135 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		617E3A74141B588300441135 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		617E3A76141B69D300441135 /* HelpListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpListViewController.h; sourceTree = "<group>"; };
@@ -259,15 +257,11 @@
 		617E3A88141B8D7400441135 /* HelpSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSettingViewController.xib; sourceTree = "<group>"; };
 		617E3A8B141B956200441135 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		617E3A8C141B956200441135 /* call@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "call@2x.png"; sourceTree = "<group>"; };
-		617E3A8D141B956200441135 /* home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home@2x.png"; sourceTree = "<group>"; };
 		617E3A8E141B956200441135 /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
-		617E3A8F141B956200441135 /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		617E3A90141B956200441135 /* type@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "type@2x.png"; sourceTree = "<group>"; };
 		617E3A97141B9B1500441135 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
 		617E3A98141B9B1500441135 /* call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = call.png; sourceTree = "<group>"; };
-		617E3A99141B9B1500441135 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		617E3A9A141B9B1500441135 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
-		617E3A9B141B9B1600441135 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		617E3A9C141B9B1600441135 /* type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = type.png; sourceTree = "<group>"; };
 		619B96A4143602A70017DE0D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		619B96A5143602A70017DE0D /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
@@ -284,6 +278,24 @@
 		61B1346A142F43D80067AF09 /* Signup2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Signup2ViewController.h; sourceTree = "<group>"; };
 		61B1346B142F43DA0067AF09 /* Signup2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Signup2ViewController.m; sourceTree = "<group>"; };
 		61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Signup2ViewController.xib; sourceTree = "<group>"; };
+		61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreAuthViewController.xib; sourceTree = "<group>"; };
+		61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreAuthViewController.h; sourceTree = "<group>"; };
+		61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreAuthViewController.m; sourceTree = "<group>"; };
+		61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = DoubanAuthViewController.h; sourceTree = "<group>"; };
+		61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoubanAuthViewController.m; sourceTree = "<group>"; };
+		61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DoubanViewController.xib; sourceTree = "<group>"; };
+		61FCFE2514A9DABF009F35C2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		61FCFE2714A9DAD0009F35C2 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		61FCFE2814A9DBF2009F35C2 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
+		61FCFE2914A9DBF2009F35C2 /* help@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help@2x.png"; sourceTree = "<group>"; };
+		61FCFE2A14A9DBF2009F35C2 /* mylist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mylist.png; sourceTree = "<group>"; };
+		61FCFE2B14A9DBF2009F35C2 /* mylist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mylist@2x.png"; sourceTree = "<group>"; };
+		61FCFE2C14A9DBF2009F35C2 /* nearby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nearby.png; sourceTree = "<group>"; };
+		61FCFE2D14A9DBF2009F35C2 /* nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nearby@2x.png"; sourceTree = "<group>"; };
+		61FCFE2E14A9DBF2009F35C2 /* prize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = prize.png; sourceTree = "<group>"; };
+		61FCFE2F14A9DBF2009F35C2 /* prize@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "prize@2x.png"; sourceTree = "<group>"; };
+		61FCFE3014A9DBF2009F35C2 /* setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting.png; sourceTree = "<group>"; };
+		61FCFE3114A9DBF2009F35C2 /* setting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -333,7 +345,7 @@
 			name = OHAttributedLabel;
 			sourceTree = "<group>";
 		};
-		614E3EDC141DE4CC00418314 /* RESTful */ = {
+		614E3EDC141DE4CC00418314 /* ASIHttp */ = {
 			isa = PBXGroup;
 			children = (
 				614E3ED9141DE4B700418314 /* Reachability.h */,
@@ -359,7 +371,7 @@
 				614E3ECF141DE49600418314 /* ASINetworkQueue.m */,
 				614E3ED0141DE49900418314 /* ASIProgressDelegate.h */,
 			);
-			name = RESTful;
+			name = ASIHttp;
 			sourceTree = "<group>";
 		};
 		614E3EDF141E01DC00418314 /* JSON */ = {
@@ -445,14 +457,12 @@
 		617E3A40141B584F00441135 /* WhoHelp */ = {
 			isa = PBXGroup;
 			children = (
+				61FCFE2314A9D812009F35C2 /* Utils */,
+				61FCFE2214A9D7E3009F35C2 /* Plugins */,
+				61FCFE1714A9D722009F35C2 /* Auth */,
 				61B1345F142A35B20067AF09 /* Setting */,
-				6145384D14288F5300BA2C34 /* OHAttributedLabel */,
-				615E6A8C1422D8B700400B60 /* Refresh */,
-				614E3EDF141E01DC00418314 /* JSON */,
-				614E3EDC141DE4CC00418314 /* RESTful */,
-				615E6AED1425E41B00400B60 /* Config.h */,
-				619B96A4143602A70017DE0D /* Utils.h */,
-				619B96A5143602A70017DE0D /* Utils.m */,
+				615E6AEE1426066400400B60 /* Profile.h */,
+				615E6AEF1426066400400B60 /* Profile.m */,
 				6149FE55143894BC0093814A /* ProfileManager.h */,
 				6149FE56143894BC0093814A /* ProfileManager.m */,
 				6102B21714376FC0007F728C /* LocationController.h */,
@@ -473,9 +483,8 @@
 				615E6A811420785100400B60 /* HelpSendViewController.h */,
 				615E6A821420785100400B60 /* HelpSendViewController.m */,
 				615E6A831420785200400B60 /* HelpSendViewController.xib */,
-				617E3A4C141B584F00441135 /* MainWindow.xib */,
+				61FCFE2514A9DABF009F35C2 /* MainWindow.xib */,
 				617E3A41141B584F00441135 /* Supporting Files */,
-				617E3A60141B584F00441135 /* WhoHelpTests */,
 			);
 			path = WhoHelp;
 			sourceTree = "<group>";
@@ -483,6 +492,16 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				61FCFE2814A9DBF2009F35C2 /* help.png */,
+				61FCFE2914A9DBF2009F35C2 /* help@2x.png */,
+				61FCFE2A14A9DBF2009F35C2 /* mylist.png */,
+				61FCFE2B14A9DBF2009F35C2 /* mylist@2x.png */,
+				61FCFE2C14A9DBF2009F35C2 /* nearby.png */,
+				61FCFE2D14A9DBF2009F35C2 /* nearby@2x.png */,
+				61FCFE2E14A9DBF2009F35C2 /* prize.png */,
+				61FCFE2F14A9DBF2009F35C2 /* prize@2x.png */,
+				61FCFE3014A9DBF2009F35C2 /* setting.png */,
+				61FCFE3114A9DBF2009F35C2 /* setting@2x.png */,
 				610114A3146F5A5C00CDDF57 /* icon.png */,
 				610114A4146F5A5C00CDDF57 /* icon@2x.png */,
 				6149FE631439ED9F0093814A /* bird.aif */,
@@ -501,41 +520,16 @@
 				615E6A6E141F418F00400B60 /* whiteArrow@2x.png */,
 				617E3A97141B9B1500441135 /* back.png */,
 				617E3A98141B9B1500441135 /* call.png */,
-				617E3A99141B9B1500441135 /* home.png */,
 				617E3A9A141B9B1500441135 /* mail.png */,
-				617E3A9B141B9B1600441135 /* settings.png */,
 				617E3A9C141B9B1600441135 /* type.png */,
 				617E3A8B141B956200441135 /* back@2x.png */,
 				617E3A8C141B956200441135 /* call@2x.png */,
-				617E3A8D141B956200441135 /* home@2x.png */,
 				617E3A8E141B956200441135 /* mail@2x.png */,
-				617E3A8F141B956200441135 /* settings@2x.png */,
 				617E3A90141B956200441135 /* type@2x.png */,
 				617E3A42141B584F00441135 /* WhoHelp-Info.plist */,
-				617E3A43141B584F00441135 /* InfoPlist.strings */,
+				61FCFE2714A9DAD0009F35C2 /* InfoPlist.strings */,
 				617E3A46141B584F00441135 /* main.m */,
 				617E3A48141B584F00441135 /* WhoHelp-Prefix.pch */,
-				615E6AEE1426066400400B60 /* Profile.h */,
-				615E6AEF1426066400400B60 /* Profile.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		617E3A60141B584F00441135 /* WhoHelpTests */ = {
-			isa = PBXGroup;
-			children = (
-				617E3A66141B584F00441135 /* WhoHelpTests.h */,
-				617E3A68141B584F00441135 /* WhoHelpTests.m */,
-				617E3A61141B584F00441135 /* Supporting Files */,
-			);
-			path = WhoHelpTests;
-			sourceTree = SOURCE_ROOT;
-		};
-		617E3A61141B584F00441135 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				617E3A62141B584F00441135 /* WhoHelpTests-Info.plist */,
-				617E3A63141B584F00441135 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -569,6 +563,40 @@
 				611FD79E143B4CD200398709 /* LawViewController.xib */,
 			);
 			name = Setting;
+			sourceTree = "<group>";
+		};
+		61FCFE1714A9D722009F35C2 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */,
+				61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */,
+				61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */,
+				61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */,
+				61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */,
+				61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */,
+			);
+			name = Auth;
+			sourceTree = "<group>";
+		};
+		61FCFE2214A9D7E3009F35C2 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				6145384D14288F5300BA2C34 /* OHAttributedLabel */,
+				615E6A8C1422D8B700400B60 /* Refresh */,
+				614E3EDF141E01DC00418314 /* JSON */,
+				614E3EDC141DE4CC00418314 /* ASIHttp */,
+			);
+			name = Plugins;
+			sourceTree = "<group>";
+		};
+		61FCFE2314A9D812009F35C2 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				615E6AED1425E41B00400B60 /* Config.h */,
+				619B96A4143602A70017DE0D /* Utils.h */,
+				619B96A5143602A70017DE0D /* Utils.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -642,21 +670,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				617E3A45141B584F00441135 /* InfoPlist.strings in Resources */,
-				617E3A4E141B584F00441135 /* MainWindow.xib in Resources */,
+				61FCFE2614A9DAD0009F35C2 /* InfoPlist.strings in Resources */,
+				61FCFE2414A9DABF009F35C2 /* MainWindow.xib in Resources */,
 				617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */,
 				617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */,
 				617E3A91141B956200441135 /* back@2x.png in Resources */,
 				617E3A92141B956200441135 /* call@2x.png in Resources */,
-				617E3A93141B956200441135 /* home@2x.png in Resources */,
 				617E3A94141B956200441135 /* mail@2x.png in Resources */,
-				617E3A95141B956200441135 /* settings@2x.png in Resources */,
 				617E3A96141B956200441135 /* type@2x.png in Resources */,
 				617E3A9D141B9B1600441135 /* back.png in Resources */,
 				617E3A9E141B9B1600441135 /* call.png in Resources */,
-				617E3A9F141B9B1600441135 /* home.png in Resources */,
 				617E3AA0141B9B1600441135 /* mail.png in Resources */,
-				617E3AA1141B9B1600441135 /* settings.png in Resources */,
 				617E3AA2141B9B1600441135 /* type.png in Resources */,
 				615E6A6F141F418F00400B60 /* blackArrow.png in Resources */,
 				615E6A70141F418F00400B60 /* blackArrow@2x.png in Resources */,
@@ -683,6 +707,18 @@
 				6154AABB145691CD00A62A32 /* DeleteAccountViewController.xib in Resources */,
 				610114A5146F5A5C00CDDF57 /* icon.png in Resources */,
 				610114A6146F5A5C00CDDF57 /* icon@2x.png in Resources */,
+				61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */,
+				61FCFE2114A9D78E009F35C2 /* DoubanViewController.xib in Resources */,
+				61FCFE3214A9DBF2009F35C2 /* help.png in Resources */,
+				61FCFE3314A9DBF2009F35C2 /* help@2x.png in Resources */,
+				61FCFE3414A9DBF2009F35C2 /* mylist.png in Resources */,
+				61FCFE3514A9DBF2009F35C2 /* mylist@2x.png in Resources */,
+				61FCFE3614A9DBF2009F35C2 /* nearby.png in Resources */,
+				61FCFE3714A9DBF2009F35C2 /* nearby@2x.png in Resources */,
+				61FCFE3814A9DBF2009F35C2 /* prize.png in Resources */,
+				61FCFE3914A9DBF2009F35C2 /* prize@2x.png in Resources */,
+				61FCFE3A14A9DBF2009F35C2 /* setting.png in Resources */,
+				61FCFE3B14A9DBF2009F35C2 /* setting@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,8 +726,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				617E3A65141B584F00441135 /* InfoPlist.strings in Resources */,
-				617E3A67141B584F00441135 /* WhoHelpTests.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +796,8 @@
 				615E66F3144170E2002E36C3 /* SSTextView.m in Sources */,
 				6154AAB5145691BE00A62A32 /* ChangPassswordViewController.m in Sources */,
 				6154AABA145691CD00A62A32 /* DeleteAccountViewController.m in Sources */,
+				61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */,
+				61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,7 +805,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				617E3A69141B584F00441135 /* WhoHelpTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -782,36 +817,6 @@
 			targetProxy = 617E3A5E141B584F00441135 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		617E3A43141B584F00441135 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				617E3A44141B584F00441135 /* en */,
-				617D773F1437435300552059 /* zh-Hans */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		617E3A4C141B584F00441135 /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				617E3A4D141B584F00441135 /* en */,
-				617D773E1437435300552059 /* zh-Hans */,
-			);
-			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
-		617E3A63141B584F00441135 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				617E3A64141B584F00441135 /* en */,
-				617D773D1437435300552059 /* zh-Hans */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		617E3A6A141B584F00441135 /* Debug */ = {

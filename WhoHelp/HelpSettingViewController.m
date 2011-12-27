@@ -226,41 +226,41 @@
         return;
     }
     
-    if (1 == actionSheet.tag) {
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = YES;
-        // handle photo
-        switch (buttonIndex) {
-            case 0:
-                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]){
-                    picker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-                } else {
-                    picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-                }
-                
-                break;
-            case 1:
-                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                break;
-        }
-        [self presentModalViewController:picker animated:YES];
-        
-    } else if (2 == actionSheet.tag) {
-        switch (buttonIndex) {
-            case 0:
-                [[ProfileManager sharedInstance] logout];
-                if ([ProfileManager sharedInstance].profile.isLogin == NO){
-                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
-                    [helpLoginVC release];
-                }
-                break;
-                
-        }
-
-    }
+//    if (1 == actionSheet.tag) {
+//        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//        picker.delegate = self;
+//        picker.allowsEditing = YES;
+//        // handle photo
+//        switch (buttonIndex) {
+//            case 0:
+//                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+//                if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]){
+//                    picker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+//                } else {
+//                    picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+//                }
+//                
+//                break;
+//            case 1:
+//                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//                break;
+//        }
+//        [self presentModalViewController:picker animated:YES];
+//        
+//    } else if (2 == actionSheet.tag) {
+//        switch (buttonIndex) {
+//            case 0:
+//                [[ProfileManager sharedInstance] logout];
+//                if ([ProfileManager sharedInstance].profile.isLogin == NO){
+//                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+//                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
+//                    [helpLoginVC release];
+//                }
+//                break;
+//                
+//        }
+//
+//    }
     
 }
 
@@ -274,7 +274,7 @@
 
     self.image = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
 
-    [Utils uploadImageFromData:self.image phone:[[ProfileManager sharedInstance].profile.phone stringValue]];
+//    [Utils uploadImageFromData:self.image phone:[[ProfileManager sharedInstance].profile.phone stringValue]];
     
     [self dismissModalViewControllerAnimated:YES];
     [picker release];
