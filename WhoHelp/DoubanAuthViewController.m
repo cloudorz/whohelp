@@ -56,10 +56,19 @@
     // e.g. self.myOutlet = nil;
 }
 
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - back action
+- (IBAction)cancelAuth:(id)sender
+{
+  
+    [self dismissModalViewControllerAnimated:YES];
+
 }
 
 #pragma mark - web view delegates
@@ -93,14 +102,17 @@
         if (!error){
             [Utils warningNotification:[error localizedDescription]];
         } else {
-             NSLog(@"fuck: %@", content);
+             //NSLog(@"fuck: %@", content);
             // create the json parser 
             SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
             NSMutableDictionary *info = [jsonParser objectWithString:content];
             [jsonParser release];            
             [[ProfileManager sharedInstance] saveUserInfo:info];
-            // TODO what about just authorize?
-            [self dismissModalViewControllerAnimated:YES];
+            
+
+            [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...
+            [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
+
         }
         
         return NO;

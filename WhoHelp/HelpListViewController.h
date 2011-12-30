@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AudioToolbox/AudioToolbox.h>
 #import "EGORefreshTableHeaderView.h"
 #import "Profile.h"
 #import "OHAttributedLabel.h"
@@ -21,7 +20,6 @@
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
-    BOOL _sing;
     BOOL _mylist;
     
     NSMutableDictionary *curCollection_;
@@ -29,8 +27,6 @@
     NSString *etag_, *userEtag_, *lastUpdated_;
     UITableViewCell *moreCell_;
     
-    SystemSoundID soudObject_;
-    CFURLRef soundFileURLRef;
     
     NSDictionary *tapUser_;
     NSString *tapLoudLink_;
@@ -49,7 +45,7 @@
 @property (nonatomic, retain) NSIndexPath *tapIndexPath;
 @property (nonatomic, retain) NSString *tapLoudLink;
 @property (nonatomic, retain) NSTimer *timer;
-@property (readonly) SystemSoundID soudObject;
+
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;

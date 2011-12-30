@@ -15,31 +15,46 @@
 @interface HelpSendViewController : UIViewController <UITextViewDelegate>
 {
 @private
-    UITabBarController *helpTabBarController_;
-    UITextView *helpTextView_;
-    UILabel *numIndicator_;
+
     UIBarItem *sendBarItem_;
-    UIButton *wardButton_;
-    UILabel *helpText_;
     
     UIActivityIndicatorView *loadingIndicator_;
     
+    // new
+    NSDictionary *helpCategory_;
+    
+    UIImageView *avatar_;
     UILabel *placeholderLabel_;
+    UILabel *numIndicator_;
+    UILabel *duetimeLabel_;
+    UILabel *wardLabel_;
+    UITextView *helpTextView_;
     
 }
 
-@property (nonatomic, retain) UITabBarController *helpTabBarController;
 @property (nonatomic, retain) IBOutlet UITextView *helpTextView;
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) IBOutlet UIBarItem *sendBarItem;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) IBOutlet UIButton *wardButton;
+@property (nonatomic, retain) IBOutlet UILabel *duetimeLabel;
+@property (nonatomic, retain) IBOutlet UILabel *wardLabel;
 @property (nonatomic, retain) UILabel *placeholderLabel;
+
+// new 
+@property (nonatomic, retain) NSDictionary *helpCategory;
+@property (nonatomic, retain) IBOutlet UIImageView *avatar;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;
-- (IBAction)addRewardButtonPressed:(id)sender;
+
 - (void)postHelpTextToRemoteServer;
 - (void)fakePostHelpTextToRemoteServer;
+
+// new
+- (IBAction)duetimeAction:(id)sender;
+- (IBAction)wadAction:(id)sender;
+- (IBAction)renrenAction:(id)sender;
+- (IBAction)weiboAction:(id)sender;
+- (IBAction)doubanAction:(id)sender;
 
 @end

@@ -57,19 +57,19 @@ static ProfileManager *sharedProfileManager = nil;
 	return self;
 }
 
-- (void)save
-{
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.moc;
-    if (managedObjectContext != nil)
-    {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
-        {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            //abort();
-        } 
-    }
-}
+//- (void)save
+//{
+//    NSError *error = nil;
+//    NSManagedObjectContext *managedObjectContext = self.moc;
+//    if (managedObjectContext != nil)
+//    {
+//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
+//        {
+//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//            //abort();
+//        } 
+//    }
+//}
 
 //- (void)del
 //{
@@ -81,26 +81,24 @@ static ProfileManager *sharedProfileManager = nil;
 - (void)saveUserInfo:(NSMutableDictionary *) data
 {
     
-    Profile *profile = (Profile *)[self getProfileByKey:[data objectForKey:@"userkey"]];
-    
-    if (profile == nil){
-        profile =  (Profile *)[NSEntityDescription insertNewObjectForEntityForName:@"Profile" inManagedObjectContext:self.moc];
+//    Profile *profile = (Profile *)[self getProfileByKey:[data objectForKey:@"userkey"]];
+    if (self.profile == nil){
+        self.profile =  (Profile *)[NSEntityDescription insertNewObjectForEntityForName:@"Profile" inManagedObjectContext:self.moc];
     }
     
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
     
-    profile.name = [data objectForKey:@"name"];
-    profile.userkey = [data objectForKey:@"userkey"];
-    profile.secret = [data objectForKey:@"secret"];
-    profile.updated = [dateFormatter dateFromString:[data objectForKey:@"updated"]];
-    
-    [self save];
-    
-    self.profile = profile;
-    
+    self.profile.name = [data objectForKey:@"name"];
+    self.profile.userkey = [data objectForKey:@"userkey"];
+    self.profile.secret = [data objectForKey:@"secret"];
+    self.profile.updated = [dateFormatter dateFromString:[data objectForKey:@"updated"]];
     [dateFormatter release];
+    
+    //[self save];
+    
+    
 }
 
 //- (void)logout
@@ -111,42 +109,42 @@ static ProfileManager *sharedProfileManager = nil;
 //    }
 //}
 
-#pragma mark - database operation
-- (NSManagedObject *)getProfileByKey:(NSString *)key
-{
-    // Create request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    // config the request
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.moc];
-    [request setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"userkey == %@", key]];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSMutableArray *mutableFetchResults = [[self.moc executeFetchRequest:request error:&error] mutableCopy];
-    [request release];
-    
-    NSManagedObject *res = nil;
-    if (!error) {
-        if ([mutableFetchResults count] > 0) {
-            
-            res = [mutableFetchResults objectAtIndex:0];
-        }
-        
-    } else {
-        // Handle the error FIXME
-        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
-    }
-    
-    [mutableFetchResults release];
-    return res;
-    
-}
+//#pragma mark - database operation
+//- (NSManagedObject *)getProfileByKey:(NSString *)key
+//{
+//    // Create request
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    
+//    // config the request
+//    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Profile"  inManagedObjectContext:self.moc];
+//    [request setEntity:entity];
+//    
+//    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updated" ascending:NO];
+//    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+////    
+////    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"userkey == %@", key]];
+////    [request setPredicate:predicate];
+//    
+//    NSError *error = nil;
+//    NSMutableArray *mutableFetchResults = [[self.moc executeFetchRequest:request error:&error] mutableCopy];
+//    [request release];
+//    
+//    NSManagedObject *res = nil;
+//    if (!error) {
+//        if ([mutableFetchResults count] > 0) {
+//            
+//            res = [mutableFetchResults objectAtIndex:0];
+//        }
+//        
+//    } else {
+//        // Handle the error FIXME
+//        NSLog(@"Get by profile error: %@, %@", error, [error userInfo]);
+//    }
+//    
+//    [mutableFetchResults release];
+//    return res;
+//    
+//}
 
 + (ProfileManager *)sharedInstance
 {

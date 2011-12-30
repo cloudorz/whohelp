@@ -12,7 +12,6 @@
 		6102B21914376FC1007F728C /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6102B21814376FC0007F728C /* LocationController.m */; };
 		6102B2211437740E007F728C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21F1437740E007F728C /* Default.png */; };
 		6102B2221437740E007F728C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B2201437740E007F728C /* Default@2x.png */; };
-		611FD7921439F2A100398709 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611FD7911439F2A100398709 /* AudioToolbox.framework */; };
 		611FD79A143B20F100398709 /* LoudTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD799143B20F100398709 /* LoudTableCell.m */; };
 		611FD79F143B4CD300398709 /* LawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD79D143B4CD100398709 /* LawViewController.m */; };
 		611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 611FD79E143B4CD200398709 /* LawViewController.xib */; };
@@ -46,10 +45,6 @@
 		614E3F02141E026300418314 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EE9141E026300418314 /* SBJsonTokeniser.m */; };
 		614E3F03141E026300418314 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEA141E026300418314 /* SBJsonUTF8Stream.m */; };
 		614E3F04141E026300418314 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 614E3EEB141E026300418314 /* SBJsonWriter.m */; };
-		6154AAB5145691BE00A62A32 /* ChangPassswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */; };
-		6154AAB6145691BE00A62A32 /* ChangPassswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */; };
-		6154AABA145691CD00A62A32 /* DeleteAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */; };
-		6154AABB145691CD00A62A32 /* DeleteAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */; };
 		615E66F3144170E2002E36C3 /* SSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E66F2144170E2002E36C3 /* SSTextView.m */; };
 		615E6A6F141F418F00400B60 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A67141F418E00400B60 /* blackArrow.png */; };
 		615E6A70141F418F00400B60 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A68141F418E00400B60 /* blackArrow@2x.png */; };
@@ -63,8 +58,6 @@
 		615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 615E6A7F141F478900400B60 /* QuartzCore.framework */; };
 		615E6A841420785200400B60 /* HelpSendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6A821420785100400B60 /* HelpSendViewController.m */; };
 		615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6A831420785200400B60 /* HelpSendViewController.xib */; };
-		615E6AE61424E05800400B60 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6AE41424E05700400B60 /* LoginViewController.m */; };
-		615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AE51424E05700400B60 /* LoginViewController.xib */; };
 		615E6AEB1425BA6200400B60 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AE91425BA6200400B60 /* button.png */; };
 		615E6AEC1425BA6200400B60 /* button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615E6AEA1425BA6200400B60 /* button@2x.png */; };
 		615E6AF01426066400400B60 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 615E6AEF1426066400400B60 /* Profile.m */; };
@@ -96,18 +89,21 @@
 		617E3AA2141B9B1600441135 /* type.png in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A9C141B9B1600441135 /* type.png */; };
 		619B96A6143602A80017DE0D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 619B96A5143602A70017DE0D /* Utils.m */; };
 		61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B1342D1428D27C0067AF09 /* list_arrow.png */; };
-		61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13442142A249E0067AF09 /* ChangNameViewController.m */; };
-		61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13443142A249E0067AF09 /* ChangNameViewController.xib */; };
-		61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13461142DC0640067AF09 /* ResetPasswordViewController.m */; };
-		61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */; };
-		61B13468142F182B0067AF09 /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B13466142F18280067AF09 /* SignupViewController.m */; };
-		61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B13467142F18290067AF09 /* SignupViewController.xib */; };
-		61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B1346B142F43DA0067AF09 /* Signup2ViewController.m */; };
-		61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */; };
+		61D506D114AC54DF00B3C57E /* HelpPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D506CF14AC54DF00B3C57E /* HelpPostViewController.m */; };
+		61D506D214AC54DF00B3C57E /* HelpPostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61D506D014AC54DF00B3C57E /* HelpPostViewController.xib */; };
+		61D506D614AC556900B3C57E /* HelpPrivateListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D506D414AC556800B3C57E /* HelpPrivateListViewController.m */; };
+		61D506D714AC556900B3C57E /* HelpPrivateListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61D506D514AC556800B3C57E /* HelpPrivateListViewController.xib */; };
+		61D506DB14AC558800B3C57E /* HelpPrizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D506D914AC558700B3C57E /* HelpPrizeViewController.m */; };
+		61D506DC14AC558800B3C57E /* HelpPrizeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61D506DA14AC558700B3C57E /* HelpPrizeViewController.xib */; };
+		61D506DF14AC921A00B3C57E /* avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 61D506DE14AC921A00B3C57E /* avatar.png */; };
+		61D506E314ACA9E400B3C57E /* SelectDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D506E114ACA9E400B3C57E /* SelectDateViewController.m */; };
+		61D506E414ACA9E400B3C57E /* SelectDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61D506E214ACA9E400B3C57E /* SelectDateViewController.xib */; };
+		61D506E814ACAA3500B3C57E /* SelectWardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D506E614ACAA3500B3C57E /* SelectWardViewController.m */; };
+		61D506E914ACAA3500B3C57E /* SelectWardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61D506E714ACAA3500B3C57E /* SelectWardViewController.xib */; };
 		61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */; };
 		61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */; };
 		61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */; };
-		61FCFE2114A9D78E009F35C2 /* DoubanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */; };
+		61FCFE2114A9D78E009F35C2 /* DoubanAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */; };
 		61FCFE2414A9DABF009F35C2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2514A9DABF009F35C2 /* MainWindow.xib */; };
 		61FCFE2614A9DAD0009F35C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2714A9DAD0009F35C2 /* InfoPlist.strings */; };
 		61FCFE3214A9DBF2009F35C2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2814A9DBF2009F35C2 /* help.png */; };
@@ -204,12 +200,6 @@
 		614E3EF6141E026300418314 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
 		614E3EF7141E026300418314 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		614E3EF8141E026300418314 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
-		6154AAB2145691BD00A62A32 /* ChangPassswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangPassswordViewController.h; sourceTree = "<group>"; };
-		6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangPassswordViewController.m; sourceTree = "<group>"; };
-		6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangPassswordViewController.xib; sourceTree = "<group>"; };
-		6154AAB7145691CD00A62A32 /* DeleteAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAccountViewController.h; sourceTree = "<group>"; };
-		6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAccountViewController.m; sourceTree = "<group>"; };
-		6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeleteAccountViewController.xib; sourceTree = "<group>"; };
 		615E66F1144170E1002E36C3 /* SSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTextView.h; sourceTree = "<group>"; };
 		615E66F2144170E2002E36C3 /* SSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTextView.m; sourceTree = "<group>"; };
 		615E6A67141F418E00400B60 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -226,9 +216,6 @@
 		615E6A811420785100400B60 /* HelpSendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSendViewController.h; sourceTree = "<group>"; };
 		615E6A821420785100400B60 /* HelpSendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSendViewController.m; sourceTree = "<group>"; };
 		615E6A831420785200400B60 /* HelpSendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSendViewController.xib; sourceTree = "<group>"; };
-		615E6AE31424E05600400B60 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		615E6AE41424E05700400B60 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		615E6AE51424E05700400B60 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		615E6AE91425BA6200400B60 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
 		615E6AEA1425BA6200400B60 /* button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button@2x.png"; sourceTree = "<group>"; };
 		615E6AED1425E41B00400B60 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -266,24 +253,28 @@
 		619B96A4143602A70017DE0D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		619B96A5143602A70017DE0D /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		61B1342D1428D27C0067AF09 /* list_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_arrow.png; sourceTree = "<group>"; };
-		61B13441142A249D0067AF09 /* ChangNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangNameViewController.h; sourceTree = "<group>"; };
-		61B13442142A249E0067AF09 /* ChangNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangNameViewController.m; sourceTree = "<group>"; };
-		61B13443142A249E0067AF09 /* ChangNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangNameViewController.xib; sourceTree = "<group>"; };
-		61B13460142DC0630067AF09 /* ResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController.h; sourceTree = "<group>"; };
-		61B13461142DC0640067AF09 /* ResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController.m; sourceTree = "<group>"; };
-		61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResetPasswordViewController.xib; sourceTree = "<group>"; };
-		61B13465142F18260067AF09 /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupViewController.h; sourceTree = "<group>"; };
-		61B13466142F18280067AF09 /* SignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupViewController.m; sourceTree = "<group>"; };
-		61B13467142F18290067AF09 /* SignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignupViewController.xib; sourceTree = "<group>"; };
-		61B1346A142F43D80067AF09 /* Signup2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Signup2ViewController.h; sourceTree = "<group>"; };
-		61B1346B142F43DA0067AF09 /* Signup2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Signup2ViewController.m; sourceTree = "<group>"; };
-		61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Signup2ViewController.xib; sourceTree = "<group>"; };
+		61D506CE14AC54DE00B3C57E /* HelpPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpPostViewController.h; sourceTree = "<group>"; };
+		61D506CF14AC54DF00B3C57E /* HelpPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpPostViewController.m; sourceTree = "<group>"; };
+		61D506D014AC54DF00B3C57E /* HelpPostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpPostViewController.xib; sourceTree = "<group>"; };
+		61D506D314AC556800B3C57E /* HelpPrivateListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpPrivateListViewController.h; sourceTree = "<group>"; };
+		61D506D414AC556800B3C57E /* HelpPrivateListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpPrivateListViewController.m; sourceTree = "<group>"; };
+		61D506D514AC556800B3C57E /* HelpPrivateListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpPrivateListViewController.xib; sourceTree = "<group>"; };
+		61D506D814AC558700B3C57E /* HelpPrizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpPrizeViewController.h; sourceTree = "<group>"; };
+		61D506D914AC558700B3C57E /* HelpPrizeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpPrizeViewController.m; sourceTree = "<group>"; };
+		61D506DA14AC558700B3C57E /* HelpPrizeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpPrizeViewController.xib; sourceTree = "<group>"; };
+		61D506DE14AC921A00B3C57E /* avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar.png; sourceTree = "<group>"; };
+		61D506E014ACA9E400B3C57E /* SelectDateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectDateViewController.h; sourceTree = "<group>"; };
+		61D506E114ACA9E400B3C57E /* SelectDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectDateViewController.m; sourceTree = "<group>"; };
+		61D506E214ACA9E400B3C57E /* SelectDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectDateViewController.xib; sourceTree = "<group>"; };
+		61D506E514ACAA3500B3C57E /* SelectWardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectWardViewController.h; sourceTree = "<group>"; };
+		61D506E614ACAA3500B3C57E /* SelectWardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectWardViewController.m; sourceTree = "<group>"; };
+		61D506E714ACAA3500B3C57E /* SelectWardViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectWardViewController.xib; sourceTree = "<group>"; };
 		61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreAuthViewController.xib; sourceTree = "<group>"; };
 		61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreAuthViewController.h; sourceTree = "<group>"; };
 		61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreAuthViewController.m; sourceTree = "<group>"; };
-		61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = DoubanAuthViewController.h; sourceTree = "<group>"; };
+		61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoubanAuthViewController.h; sourceTree = "<group>"; };
 		61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoubanAuthViewController.m; sourceTree = "<group>"; };
-		61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DoubanViewController.xib; sourceTree = "<group>"; };
+		61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DoubanAuthViewController.xib; sourceTree = "<group>"; };
 		61FCFE2514A9DABF009F35C2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		61FCFE2714A9DAD0009F35C2 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		61FCFE2814A9DBF2009F35C2 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
@@ -304,7 +295,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6130E39E143C1E0800D0C952 /* libz.1.2.5.dylib in Frameworks */,
-				611FD7921439F2A100398709 /* AudioToolbox.framework in Frameworks */,
 				614538561428930B00BA2C34 /* CoreText.framework in Frameworks */,
 				615E6A80141F478900400B60 /* QuartzCore.framework in Frameworks */,
 				614E3EDE141DE6DA00418314 /* MobileCoreServices.framework in Frameworks */,
@@ -460,29 +450,23 @@
 				61FCFE2314A9D812009F35C2 /* Utils */,
 				61FCFE2214A9D7E3009F35C2 /* Plugins */,
 				61FCFE1714A9D722009F35C2 /* Auth */,
+				61D506DD14AC8A4300B3C57E /* Send Help */,
 				61B1345F142A35B20067AF09 /* Setting */,
-				615E6AEE1426066400400B60 /* Profile.h */,
-				615E6AEF1426066400400B60 /* Profile.m */,
-				6149FE55143894BC0093814A /* ProfileManager.h */,
-				6149FE56143894BC0093814A /* ProfileManager.m */,
-				6102B21714376FC0007F728C /* LocationController.h */,
-				6102B21814376FC0007F728C /* LocationController.m */,
-				611FD798143B20F100398709 /* LoudTableCell.h */,
-				611FD799143B20F100398709 /* LoudTableCell.m */,
-				615E66F1144170E1002E36C3 /* SSTextView.h */,
-				615E66F2144170E2002E36C3 /* SSTextView.m */,
 				617E3A49141B584F00441135 /* WhoHelpAppDelegate.h */,
 				617E3A4A141B584F00441135 /* WhoHelpAppDelegate.m */,
 				617E3A4F141B584F00441135 /* WhoHelp.xcdatamodeld */,
 				617E3A76141B69D300441135 /* HelpListViewController.h */,
 				617E3A77141B69D300441135 /* HelpListViewController.m */,
 				617E3A78141B69D300441135 /* HelpListViewController.xib */,
+				61D506D314AC556800B3C57E /* HelpPrivateListViewController.h */,
+				61D506D414AC556800B3C57E /* HelpPrivateListViewController.m */,
+				61D506D514AC556800B3C57E /* HelpPrivateListViewController.xib */,
+				61D506D814AC558700B3C57E /* HelpPrizeViewController.h */,
+				61D506D914AC558700B3C57E /* HelpPrizeViewController.m */,
+				61D506DA14AC558700B3C57E /* HelpPrizeViewController.xib */,
 				617E3A86141B8D7400441135 /* HelpSettingViewController.h */,
 				617E3A87141B8D7400441135 /* HelpSettingViewController.m */,
 				617E3A88141B8D7400441135 /* HelpSettingViewController.xib */,
-				615E6A811420785100400B60 /* HelpSendViewController.h */,
-				615E6A821420785100400B60 /* HelpSendViewController.m */,
-				615E6A831420785200400B60 /* HelpSendViewController.xib */,
 				61FCFE2514A9DABF009F35C2 /* MainWindow.xib */,
 				617E3A41141B584F00441135 /* Supporting Files */,
 			);
@@ -492,6 +476,7 @@
 		617E3A41141B584F00441135 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				61D506DE14AC921A00B3C57E /* avatar.png */,
 				61FCFE2814A9DBF2009F35C2 /* help.png */,
 				61FCFE2914A9DBF2009F35C2 /* help@2x.png */,
 				61FCFE2A14A9DBF2009F35C2 /* mylist.png */,
@@ -537,27 +522,6 @@
 		61B1345F142A35B20067AF09 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				615E6AE31424E05600400B60 /* LoginViewController.h */,
-				615E6AE41424E05700400B60 /* LoginViewController.m */,
-				615E6AE51424E05700400B60 /* LoginViewController.xib */,
-				61B13441142A249D0067AF09 /* ChangNameViewController.h */,
-				61B13442142A249E0067AF09 /* ChangNameViewController.m */,
-				61B13443142A249E0067AF09 /* ChangNameViewController.xib */,
-				6154AAB7145691CD00A62A32 /* DeleteAccountViewController.h */,
-				6154AAB8145691CD00A62A32 /* DeleteAccountViewController.m */,
-				6154AAB9145691CD00A62A32 /* DeleteAccountViewController.xib */,
-				6154AAB2145691BD00A62A32 /* ChangPassswordViewController.h */,
-				6154AAB3145691BE00A62A32 /* ChangPassswordViewController.m */,
-				6154AAB4145691BE00A62A32 /* ChangPassswordViewController.xib */,
-				61B13460142DC0630067AF09 /* ResetPasswordViewController.h */,
-				61B13461142DC0640067AF09 /* ResetPasswordViewController.m */,
-				61B13462142DC0650067AF09 /* ResetPasswordViewController.xib */,
-				61B13465142F18260067AF09 /* SignupViewController.h */,
-				61B13466142F18280067AF09 /* SignupViewController.m */,
-				61B13467142F18290067AF09 /* SignupViewController.xib */,
-				61B1346A142F43D80067AF09 /* Signup2ViewController.h */,
-				61B1346B142F43DA0067AF09 /* Signup2ViewController.m */,
-				61B1346C142F43DB0067AF09 /* Signup2ViewController.xib */,
 				611FD79C143B4CD000398709 /* LawViewController.h */,
 				611FD79D143B4CD100398709 /* LawViewController.m */,
 				611FD79E143B4CD200398709 /* LawViewController.xib */,
@@ -565,15 +529,34 @@
 			name = Setting;
 			sourceTree = "<group>";
 		};
+		61D506DD14AC8A4300B3C57E /* Send Help */ = {
+			isa = PBXGroup;
+			children = (
+				61D506CE14AC54DE00B3C57E /* HelpPostViewController.h */,
+				61D506CF14AC54DF00B3C57E /* HelpPostViewController.m */,
+				61D506D014AC54DF00B3C57E /* HelpPostViewController.xib */,
+				615E6A811420785100400B60 /* HelpSendViewController.h */,
+				615E6A821420785100400B60 /* HelpSendViewController.m */,
+				615E6A831420785200400B60 /* HelpSendViewController.xib */,
+				61D506E014ACA9E400B3C57E /* SelectDateViewController.h */,
+				61D506E114ACA9E400B3C57E /* SelectDateViewController.m */,
+				61D506E214ACA9E400B3C57E /* SelectDateViewController.xib */,
+				61D506E514ACAA3500B3C57E /* SelectWardViewController.h */,
+				61D506E614ACAA3500B3C57E /* SelectWardViewController.m */,
+				61D506E714ACAA3500B3C57E /* SelectWardViewController.xib */,
+			);
+			name = "Send Help";
+			sourceTree = "<group>";
+		};
 		61FCFE1714A9D722009F35C2 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */,
 				61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */,
 				61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */,
+				61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */,
 				61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */,
 				61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */,
-				61FCFE1D14A9D78E009F35C2 /* DoubanViewController.xib */,
+				61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
@@ -592,6 +575,16 @@
 		61FCFE2314A9D812009F35C2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				615E6AEE1426066400400B60 /* Profile.h */,
+				615E6AEF1426066400400B60 /* Profile.m */,
+				6149FE55143894BC0093814A /* ProfileManager.h */,
+				6149FE56143894BC0093814A /* ProfileManager.m */,
+				6102B21714376FC0007F728C /* LocationController.h */,
+				6102B21814376FC0007F728C /* LocationController.m */,
+				611FD798143B20F100398709 /* LoudTableCell.h */,
+				611FD799143B20F100398709 /* LoudTableCell.m */,
+				615E66F1144170E1002E36C3 /* SSTextView.h */,
+				615E66F2144170E2002E36C3 /* SSTextView.m */,
 				615E6AED1425E41B00400B60 /* Config.h */,
 				619B96A4143602A70017DE0D /* Utils.h */,
 				619B96A5143602A70017DE0D /* Utils.m */,
@@ -691,24 +684,17 @@
 				615E6A75141F418F00400B60 /* whiteArrow.png in Resources */,
 				615E6A76141F418F00400B60 /* whiteArrow@2x.png in Resources */,
 				615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */,
-				615E6AE71424E05800400B60 /* LoginViewController.xib in Resources */,
 				615E6AEB1425BA6200400B60 /* button.png in Resources */,
 				615E6AEC1425BA6200400B60 /* button@2x.png in Resources */,
 				61B1342E1428D27C0067AF09 /* list_arrow.png in Resources */,
-				61B13445142A249E0067AF09 /* ChangNameViewController.xib in Resources */,
-				61B13464142DC0650067AF09 /* ResetPasswordViewController.xib in Resources */,
-				61B13469142F182B0067AF09 /* SignupViewController.xib in Resources */,
-				61B1346E142F43DD0067AF09 /* Signup2ViewController.xib in Resources */,
 				6102B2211437740E007F728C /* Default.png in Resources */,
 				6102B2221437740E007F728C /* Default@2x.png in Resources */,
 				6149FE641439EDA00093814A /* bird.aif in Resources */,
 				611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */,
-				6154AAB6145691BE00A62A32 /* ChangPassswordViewController.xib in Resources */,
-				6154AABB145691CD00A62A32 /* DeleteAccountViewController.xib in Resources */,
 				610114A5146F5A5C00CDDF57 /* icon.png in Resources */,
 				610114A6146F5A5C00CDDF57 /* icon@2x.png in Resources */,
 				61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */,
-				61FCFE2114A9D78E009F35C2 /* DoubanViewController.xib in Resources */,
+				61FCFE2114A9D78E009F35C2 /* DoubanAuthViewController.xib in Resources */,
 				61FCFE3214A9DBF2009F35C2 /* help.png in Resources */,
 				61FCFE3314A9DBF2009F35C2 /* help@2x.png in Resources */,
 				61FCFE3414A9DBF2009F35C2 /* mylist.png in Resources */,
@@ -719,6 +705,12 @@
 				61FCFE3914A9DBF2009F35C2 /* prize@2x.png in Resources */,
 				61FCFE3A14A9DBF2009F35C2 /* setting.png in Resources */,
 				61FCFE3B14A9DBF2009F35C2 /* setting@2x.png in Resources */,
+				61D506D214AC54DF00B3C57E /* HelpPostViewController.xib in Resources */,
+				61D506D714AC556900B3C57E /* HelpPrivateListViewController.xib in Resources */,
+				61D506DC14AC558800B3C57E /* HelpPrizeViewController.xib in Resources */,
+				61D506DF14AC921A00B3C57E /* avatar.png in Resources */,
+				61D506E414ACA9E400B3C57E /* SelectDateViewController.xib in Resources */,
+				61D506E914ACAA3500B3C57E /* SelectWardViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,24 +772,22 @@
 				614E3F04141E026300418314 /* SBJsonWriter.m in Sources */,
 				615E6A7A141F41B800400B60 /* EGORefreshTableHeaderView.m in Sources */,
 				615E6A841420785200400B60 /* HelpSendViewController.m in Sources */,
-				615E6AE61424E05800400B60 /* LoginViewController.m in Sources */,
 				615E6AF01426066400400B60 /* Profile.m in Sources */,
 				6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */,
 				6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */,
-				61B13444142A249E0067AF09 /* ChangNameViewController.m in Sources */,
-				61B13463142DC0650067AF09 /* ResetPasswordViewController.m in Sources */,
-				61B13468142F182B0067AF09 /* SignupViewController.m in Sources */,
-				61B1346D142F43DD0067AF09 /* Signup2ViewController.m in Sources */,
 				619B96A6143602A80017DE0D /* Utils.m in Sources */,
 				6102B21914376FC1007F728C /* LocationController.m in Sources */,
 				6149FE57143894BD0093814A /* ProfileManager.m in Sources */,
 				611FD79A143B20F100398709 /* LoudTableCell.m in Sources */,
 				611FD79F143B4CD300398709 /* LawViewController.m in Sources */,
 				615E66F3144170E2002E36C3 /* SSTextView.m in Sources */,
-				6154AAB5145691BE00A62A32 /* ChangPassswordViewController.m in Sources */,
-				6154AABA145691CD00A62A32 /* DeleteAccountViewController.m in Sources */,
 				61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */,
 				61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */,
+				61D506D114AC54DF00B3C57E /* HelpPostViewController.m in Sources */,
+				61D506D614AC556900B3C57E /* HelpPrivateListViewController.m in Sources */,
+				61D506DB14AC558800B3C57E /* HelpPrizeViewController.m in Sources */,
+				61D506E314ACA9E400B3C57E /* SelectDateViewController.m in Sources */,
+				61D506E814ACAA3500B3C57E /* SelectWardViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

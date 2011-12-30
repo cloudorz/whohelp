@@ -20,9 +20,9 @@
 
 + (ProfileManager *)sharedInstance;
 
-- (void)save;
+//- (void)save;
 //- (void)del;
-- (NSManagedObject *)getProfileByKey:(NSString *)key;
+//- (NSManagedObject *)getProfileByKey:(NSString *)key;
 - (void)saveUserInfo:(NSMutableDictionary *) data;
 //- (void)logout;
 

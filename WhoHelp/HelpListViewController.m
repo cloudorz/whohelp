@@ -29,15 +29,6 @@
 @synthesize lastUpdated=lastUpdated_;
 @synthesize timer=timer_;
 
-- (SystemSoundID) soudObject
-{
-    if (0 == soudObject_){
-        CFBundleRef mainBundle = CFBundleGetMainBundle();
-        soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("bird"), CFSTR("aif"), NULL);
-        AudioServicesCreateSystemSoundID(soundFileURLRef, &soudObject_);
-    }
-    return soudObject_;
-}
 
 - (NSMutableDictionary *)photoCache
 {
@@ -92,11 +83,11 @@
     _mylist = YES;
     
     // timer
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
-                                                  target:self 
-                                                selector:@selector(fetchUpdatedInfo) 
-                                                userInfo:nil 
-                                                 repeats:YES];
+//    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
+//                                                  target:self 
+//                                                selector:@selector(fetchUpdatedInfo) 
+//                                                userInfo:nil 
+//                                                 repeats:YES];
     
 }
 
@@ -128,7 +119,7 @@
     [super viewDidAppear:animated];
     [self becomeFirstResponder];
     // load remote data and init tableview
-    [self fakeFetchLoudList];
+    //[self fakeFetchLoudList];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -480,11 +471,6 @@
     _reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     
-    if (_sing){
-        AudioServicesPlaySystemSound(self.soudObject);
-        _sing = NO;
-    }
-    
 }
 
 #pragma mark -
@@ -818,8 +804,6 @@
     [tapIndexPath_ release];
     [lastUpdated_ release];
     [timer_ release];
-    AudioServicesDisposeSystemSoundID(soudObject_);
-    CFRelease(soundFileURLRef);
     [super dealloc];
 }
 

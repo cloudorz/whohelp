@@ -9,7 +9,10 @@
 #import "PreAuthViewController.h"
 #import "ASIHTTPRequest.h"
 #import "Config.h"
+#import "Utils.h"
+#import "ProfileManager.h"
 #import "DoubanAuthViewController.h"
+#import "WhoHelpAppDelegate.h"
 
 @implementation PreAuthViewController
 @synthesize authLinkWeibo=authLinkWeibo_;
@@ -33,12 +36,20 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+
+- (void)dismissCurrentViewAction:(id) sender
+{   
+    [self dismissModalViewControllerAnimated:NO];
+    
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCurrentViewAction:) name:@"DismissPreAuthVC" object:nil];
 }
 
 - (void)viewDidUnload
@@ -46,6 +57,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -59,10 +71,12 @@
 {
     [self authRequest:@"/douban/auth"];
 }
+
 - (IBAction)linkToAuthWeibo:(id)sender
 {
-    [self authRequest:@"/douban/auth"];
+    [self authRequest:@"/weibo/auth"];
 }
+
 - (IBAction)linkToAuthRenren:(id)sender
 {
     [self authRequest:@"/douban/auth"];
@@ -71,7 +85,7 @@
 
 - (void)authRequest: (NSString *)path
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?ak=%@", HOST, path, APPKEY2]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, path]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -81,12 +95,14 @@
 {
     // Use when fetching text data
     NSString *responseString = [request responseString];
+
     
     // Use when fetching binary data
     //NSData *responseData = [request responseData];
 
     DoubanAuthViewController *webVC = [[DoubanAuthViewController alloc] initWithNibName:@"DoubanAuthViewController" bundle:nil];
-    //[webVC.webview loadHTMLString:responseString baseURL:request.url];
+
+    webVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     webVC.baseURL = request.url;
     webVC.body = responseString;
     [self presentModalViewController:webVC animated:YES];
@@ -98,6 +114,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
+    [Utils warningNotification:[error description]];
     NSLog(@"%@", [error description]);
 }
 
@@ -107,6 +124,7 @@
     [authLinkDouban_ release];
     [authLinkRenren_ release];
     [authLinkWeibo_ release];
+
     [super dealloc];
 }
 

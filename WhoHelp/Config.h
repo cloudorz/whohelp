@@ -23,7 +23,7 @@
 #define ADDRURI @"http://l.n2u.in/m2addr/"
 
 #define HOST @"http://192.168.0.124"
-#define APPKEY2 @"20111106001"
+#define APPKEY2 @"apple2011122801"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

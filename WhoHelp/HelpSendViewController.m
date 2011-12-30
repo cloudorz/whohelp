@@ -12,19 +12,41 @@
 #import "Config.h"
 #import "Utils.h"
 #import "ProfileManager.h"
+#import "SelectDateViewController.h"
+#import "SelectWardViewController.h"
 
 
 @implementation HelpSendViewController
 
-@synthesize helpTabBarController=helpTabBarController_;
 @synthesize helpTextView=helpTextView_;
 @synthesize numIndicator=numIndicator_;
 @synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
-@synthesize wardButton=wardButton_;
 @synthesize placeholderLabel=placeholderLabel_;
 
+// new 
+@synthesize helpCategory=helpCategory_;
+@synthesize avatar=avatar_;
+@synthesize duetimeLabel=duetimeLabel_;
+@synthesize wardLabel=wardLabel_;
 
+#pragma mark - dealloc
+- (void)dealloc
+{
+    [helpTextView_ release];
+    [numIndicator_ release];
+    [sendBarItem_ release];
+    [loadingIndicator_ release];
+    [placeholderLabel_ release];
+    // new
+    [helpCategory_ release];
+    [avatar_ release];
+    [wardLabel_ release];
+    [duetimeLabel_ release];
+    [super dealloc];
+}
+
+#pragma mark - init with nib
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -50,22 +72,29 @@
     // display the keyboard
     // you might have to play around a little with numbers in CGRectMake method
     // they work fine with my settings
-    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10.0, 2.5, self.helpTextView.frame.size.width - 20.0, 34.0)] autorelease];
-    self.placeholderLabel.text = @"你的求助内容$你愿意提供的报酬";
+    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(8, 2.5, self.helpTextView.frame.size.width - 20.0, 34.0)] autorelease];
+    self.placeholderLabel.text = @"描述一下你的问题";
 
     // placeholderLabel is instance variable retained by view controller
     self.placeholderLabel.backgroundColor = [UIColor clearColor];
-    self.placeholderLabel.font = [UIFont systemFontOfSize: 18.0];
+    self.placeholderLabel.font = [UIFont systemFontOfSize: 14.0];
     self.placeholderLabel.textColor = [UIColor lightGrayColor];
     
     // textView is UITextView object you want add placeholder text to
     [self.helpTextView addSubview:self.placeholderLabel];
     
     // show keyboard
-    [self.helpTextView becomeFirstResponder];
+//    [self.helpTextView becomeFirstResponder];
     [self.loadingIndicator stopAnimating];
-
+    
+    // hidden char numberindicator
+    self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
+    // new
+    self.navigationItem.title = [self.helpCategory valueForKey:@"text"];
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.editButtonItem.action = @selector(sendButtonPressed:);
+    self.avatar.image = [UIImage imageNamed:@"avatar.png"];  
 }
 
 - (void)viewDidUnload
@@ -78,9 +107,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    self.helpTextView.placeholder = @"你需要的帮助$你提供的报酬";
-//    self.helpTextView.placeholderColor = [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
-
+    
+    // add event to detect the keyboard show.
+    // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
 }
@@ -101,7 +130,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     
-    return YES;
+   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - modal actions
@@ -132,38 +161,38 @@
 - (void)postHelpTextToRemoteServer
 {
     
-    if (NO == [LocationController sharedInstance].allow){
-        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
-        return;
-    }
-    
-    [self.loadingIndicator startAnimating];
-    self.sendBarItem.enabled = NO;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, [ProfileManager sharedInstance].profile.token, APPKEY]];
-    
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-
-    NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
-    [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
-    [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
-    [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
-    
-    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
-    NSString *dataString = [preJson stringWithObject:preLoud];
-    [preJson release];
-    [preLoud release];
-    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
-    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
-    [request setRequestMethod:@"POST"];
-    [request setDelegate:self];
-    
-    [request startAsynchronous];
+//    if (NO == [LocationController sharedInstance].allow){
+//        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
+//        return;
+//    }
+//    
+//    [self.loadingIndicator startAnimating];
+//    self.sendBarItem.enabled = NO;
+//    
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, [ProfileManager sharedInstance].profile.token, APPKEY]];
+//    
+//    // make json data for post
+//    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+//    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+//
+//    NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
+//    [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
+//    [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
+//    [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
+//    
+//    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
+//    NSString *dataString = [preJson stringWithObject:preLoud];
+//    [preJson release];
+//    [preLoud release];
+//    
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+//    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
+//    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
+//    [request setRequestMethod:@"POST"];
+//    [request setDelegate:self];
+//    
+//    [request startAsynchronous];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -193,7 +222,8 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
     self.sendBarItem.enabled = YES;
-    [Utils warningNotification:@"网络链接错误"];
+    // 
+    [Utils warningNotification:[[request error] localizedDescription]];
 
 }
 
@@ -210,10 +240,12 @@
     if(![textView hasText]) {
         
         [textView addSubview:self.placeholderLabel];
+        self.numIndicator.hidden = YES;
         
     } else if ([[textView subviews] containsObject:self.placeholderLabel]) {
         
         [self.placeholderLabel removeFromSuperview];
+        self.numIndicator.hidden = NO;
         
     }
         
@@ -232,6 +264,7 @@
 {
     if (![theTextView hasText]) {
         [theTextView addSubview:self.placeholderLabel];
+        self.numIndicator.hidden = YES;
     }
 }
 
@@ -243,13 +276,23 @@
     
     return YES;
 }
-//
-//- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+
+#pragma mark - dimiss the keyboard
+//- (BOOL)textViewShouldEndEditing:(UITextView *)textView
 //{
-//    NSLog(@"fuck");
+//    [textView resignFirstResponder];
+//    NSLog(@"fufufufufuck");
 //    return YES;
 //}
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    [self.helpTextView resignFirstResponder];
+}
+
+
+# pragma mark - keyboard show event for resize the UI
 - (void)keyboardWillShow:(NSNotification *)notif
 {
     //keyboard will be shown now. depending for which textfield is active, move up or move down the view appropriately
@@ -259,28 +302,51 @@
     [endingFrame getValue:&frame];
     
     CGRect numIndicatorFrame = self.numIndicator.frame;
-    CGRect wardButtonFrame = self.wardButton.frame;
     CGRect contentFrame = self.helpTextView.frame;
-  //  CGRect helpTextFrame = self.helpText.frame;
+
     if (frame.size.height == 480.0f){
-        
-        numIndicatorFrame.origin.y = 320.0f - (frame.size.width + 45.0f);
-        wardButtonFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
+        // FIXME maybe work?
+        numIndicatorFrame.origin.y = 320.0f - 44.0f - (frame.size.width + 50.0f);
         contentFrame.size.height = 320.0f - 44.0f - (frame.size.width + 50.0f);
-        //helpTextFrame.origin.y = 320.0f - (frame.size.width + 50.0f);
+
     } else {
         
-        numIndicatorFrame.origin.y = 480.0f - (frame.size.height + 45.0f);
-        wardButtonFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
-        contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 50.0f);
-        //helpTextFrame.origin.y = 480.0f - (frame.size.height + 50.0f);
+        numIndicatorFrame.origin.y = 480.0f - 44.0f - (frame.size.height + 51.0f);
+        contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 48.0f);
     }
     
     self.numIndicator.frame = numIndicatorFrame;
-    self.wardButton.frame = wardButtonFrame;
-    self.helpTextView.frame = contentFrame;
-//    self.helpText.frame = helpTextFrame;
 
+    self.helpTextView.frame = contentFrame;
+
+}
+
+#pragma mark - actions
+
+- (IBAction)duetimeAction:(id)sender
+{
+    SelectDateViewController *sdVC = [[SelectDateViewController alloc] initWithNibName:@"SelectDateViewController" bundle:nil];
+    [self.navigationController pushViewController:sdVC animated:YES];
+    [sdVC release];
+}
+
+- (IBAction)wadAction:(id)sender
+{
+    SelectWardViewController *swVC = [[SelectWardViewController alloc] initWithNibName:@"SelectWardViewController" bundle:nil];
+    [self.navigationController pushViewController:swVC animated:YES];
+    [swVC release];
+}
+
+- (IBAction)renrenAction:(id)sender
+{
+}
+
+- (IBAction)weiboAction:(id)sender
+{
+}
+
+- (IBAction)doubanAction:(id)sender
+{
 }
 
 #pragma mark - get the address from lat and lon
@@ -296,18 +362,9 @@
     
 }
 
-
-#pragma mark - dealloc
-- (void)dealloc
-{
-    [helpTextView_ release];
-    [helpTabBarController_ release];
-    [numIndicator_ release];
-    [sendBarItem_ release];
-    [loadingIndicator_ release];
-    [wardButton_ release];
-    [helpText_ release];
-    [placeholderLabel_ release];
-    [super dealloc];
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
 }
+
 @end

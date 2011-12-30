@@ -14,11 +14,13 @@
     UIButton *authLinkDouban_;
     UIButton *authLinkWeibo_;
     UIButton *authLinkRenren_;
+
 }
 
 @property (nonatomic, retain) UIButton *authLinkDouban;
 @property (nonatomic, retain) UIButton *authLinkWeibo;
 @property (nonatomic, retain) UIButton *authLinkRenren;
+
 
 - (IBAction)linkToAuthDouban:(id)sender;
 - (IBAction)linkToAuthWeibo:(id)sender;

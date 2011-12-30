@@ -25,8 +25,13 @@
 {
     // Override point for customization after application launch.
     self.window.rootViewController = self.tabBarController;
+    // select the middle post help tab bar item.
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
     self.tabBarController.delegate = self;
+    // support the shake feature.
     application.applicationSupportsShakeToEdit = YES;
+    
+    
     [self.window makeKeyAndVisible];
     
     return YES;
@@ -157,7 +162,7 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WhoHelp.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WhoHelp2.sqlite"];
     
     NSError *error = nil;
 //    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
@@ -222,15 +227,16 @@
         [preAVC release];
         
         return NO;
-    } else{
-        if (13 == viewController.tabBarItem.tag){
-            HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
-            [self.tabBarController presentModalViewController:helpSendVC animated:YES];
-            [helpSendVC release];
-            
-            return NO;
-        }
-    }
+    } 
+//    else{
+//        if (13 == viewController.tabBarItem.tag){
+//            HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
+//            [self.tabBarController presentModalViewController:helpSendVC animated:YES];
+//            [helpSendVC release];
+//            
+//            return NO;
+//        }
+//    }
 
     return YES;
 }
