@@ -10,6 +10,16 @@
 
 @implementation SelectDateViewController
 
+@synthesize duetimePicker=duetimePicker_;
+@synthesize hlVC=hlVC_;
+
+-(void)dealloc
+{
+    [duetimePicker_ release];
+    [hlVC_ release];
+    [super dealloc];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -34,6 +44,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.title = @"有效期";
+    self.duetimePicker.minimumDate = [NSDate date];
 }
 
 - (void)viewDidUnload
@@ -41,6 +52,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

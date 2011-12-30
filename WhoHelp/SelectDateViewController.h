@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HelpSendViewController.h"
 
 @interface SelectDateViewController : UIViewController
+{
+@private
+    UIDatePicker *duetimePicker_;
+    HelpSendViewController *hlVC_;
+}
+
+@property (nonatomic, retain) IBOutlet UIDatePicker *duetimePicker;
+@property (nonatomic, retain) HelpSendViewController *hlVC;
 
 @end

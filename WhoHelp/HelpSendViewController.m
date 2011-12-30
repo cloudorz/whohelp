@@ -29,6 +29,8 @@
 @synthesize avatar=avatar_;
 @synthesize duetimeLabel=duetimeLabel_;
 @synthesize wardLabel=wardLabel_;
+@synthesize wardCategory=wardCategory_;
+@synthesize duetime=duetime_;
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -43,6 +45,8 @@
     [avatar_ release];
     [wardLabel_ release];
     [duetimeLabel_ release];
+    [duetime_ release];
+    [wardCategory_ release];
     [super dealloc];
 }
 
@@ -112,6 +116,11 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
+    // define event for set due time
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(duetimeSetAction:) 
+                                                 name:@"duetimeSetEvent" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wardSetAction:) 
+                                                 name:@"wardSetEvent" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -124,13 +133,26 @@
 {
     [super viewWillDisappear:animated];
     //[self.reverseGeocoder cancel];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil]; 
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"duetimeSetEvent" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     
    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+//#pragma mark - set value for other view controller
+//-(void)duetimeSetAction:(id)sender
+//{
+//    self.duetime = 
+//}
+
+-(void) wardSetAction:(id)sender
+{
+    
 }
 
 #pragma mark - modal actions
