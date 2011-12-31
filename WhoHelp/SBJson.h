@@ -81,4 +81,6 @@
 #import "SBJsonStreamParserAdapter.h"
 #import "SBJsonStreamWriter.h"
 #import "NSObject+SBJson.h"
+// nsdate to iso format for json
+#import "NSDate+ProxyForJson.h"
 

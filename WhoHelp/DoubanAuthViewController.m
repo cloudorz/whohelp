@@ -104,11 +104,8 @@
         } else {
              //NSLog(@"fuck: %@", content);
             // create the json parser 
-            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-            NSMutableDictionary *info = [jsonParser objectWithString:content];
-            [jsonParser release];            
-            [[ProfileManager sharedInstance] saveUserInfo:info];
             
+            [[ProfileManager sharedInstance] saveUserInfo:[content JSONValue]];
 
             [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...
             [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];

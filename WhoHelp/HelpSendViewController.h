@@ -30,7 +30,9 @@
     UILabel *wardLabel_;
     UITextView *helpTextView_;
     NSDate *duetime_;
-    NSString *wardCategory_;
+    NSDictionary *wardCategory_;
+    UIButton *duetimeButton_;
+    UIButton *wardButton_;
     
 }
 
@@ -41,12 +43,14 @@
 @property (nonatomic, retain) IBOutlet UILabel *duetimeLabel;
 @property (nonatomic, retain) IBOutlet UILabel *wardLabel;
 @property (nonatomic, retain) UILabel *placeholderLabel;
+@property (nonatomic, retain) IBOutlet UIButton *duetimeButton;
+@property (nonatomic, retain) IBOutlet UIButton *wardButton;
 
 // new 
 @property (nonatomic, retain) NSDictionary *helpCategory;
 @property (nonatomic, retain) IBOutlet UIImageView *avatar;
 @property (nonatomic, retain) NSDate *duetime;
-@property (nonatomic, retain) NSString *wardCategory;
+@property (nonatomic, retain) NSDictionary *wardCategory;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;

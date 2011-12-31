@@ -11,6 +11,7 @@
 #import "ASIFormDataRequest.h"
 #import "NSAttributedString+Attributes.h"
 #import "Config.h"
+#import "NSDate+IsoFormat.h"
 
 @implementation Utils
 
@@ -86,13 +87,14 @@
 #pragma mark - string to datetime
 + (NSDate *)stringToTime:(NSString *)stringTime
 {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    
-    NSDate * date = [dateFormatter dateFromString:stringTime];
-    [dateFormatter release];
-    
-    return date;
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+//    
+//    NSDate * date = [dateFormatter dateFromString:stringTime];
+//    [dateFormatter release];
+//    
+//    return date;
+    return [NSDate  dateFromISO8601:stringTime];
 }
 
 #pragma mark - get upload the images

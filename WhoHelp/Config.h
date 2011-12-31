@@ -24,6 +24,8 @@
 
 #define HOST @"http://192.168.0.124"
 #define APPKEY2 @"apple2011122801"
+#define SECRET @"3afb9fb7f605476d92b9ee7000b41ba0"
+#define LOUDURI @"/l/"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

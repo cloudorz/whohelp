@@ -29,8 +29,10 @@
 @synthesize avatar=avatar_;
 @synthesize duetimeLabel=duetimeLabel_;
 @synthesize wardLabel=wardLabel_;
-@synthesize wardCategory=wardCategory_;
+@synthesize wardCategory=wardCategory_; 
 @synthesize duetime=duetime_;
+@synthesize duetimeButton=duetimeButton_;
+@synthesize wardButton=wardButton_;
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -47,6 +49,8 @@
     [duetimeLabel_ release];
     [duetime_ release];
     [wardCategory_ release];
+    [wardButton_ release];
+    [duetimeButton_ release];
     [super dealloc];
 }
 
@@ -87,8 +91,6 @@
     // textView is UITextView object you want add placeholder text to
     [self.helpTextView addSubview:self.placeholderLabel];
     
-    // show keyboard
-//    [self.helpTextView becomeFirstResponder];
     [self.loadingIndicator stopAnimating];
     
     // hidden char numberindicator
@@ -116,6 +118,19 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
+    
+    // show setting time
+    if (nil != self.duetime){
+        //self.duetimeButton.titleLabel.text = [self.duetime descriptionWithLocale:[NSTimeZone localTimeZone]];
+        self.duetimeLabel.text = [self.duetime descriptionWithLocale:[NSTimeZone localTimeZone]];
+    }
+    
+    // show setting ward
+    if (nil != self.wardCategory){
+        //self.wardButton.titleLabel.text = self.wardCategory;
+        self.wardLabel.text = [self.wardCategory valueForKey:@"text"];
+    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -129,12 +144,6 @@
     [super viewWillDisappear:animated];
     //[self.reverseGeocoder cancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    
-    if (nil != self.duetime){
-        NSLog(@"%@", [self.duetime description]);
-        self.duetimeLabel.text = [self.duetime description];
-    }
-    
 
 }
 
@@ -171,45 +180,49 @@
 - (void)postHelpTextToRemoteServer
 {
     
-//    if (NO == [LocationController sharedInstance].allow){
-//        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
-//        return;
-//    }
-//    
-//    [self.loadingIndicator startAnimating];
-//    self.sendBarItem.enabled = NO;
-//    
-//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@?tk=%@&ak=%@", SENDURI, [ProfileManager sharedInstance].profile.token, APPKEY]];
-//    
-//    // make json data for post
-//    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-//    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-//
-//    NSMutableDictionary *preLoud = [[NSMutableDictionary alloc] init];
-//    [preLoud setObject:[NSNumber numberWithDouble:curloc.latitude] forKey:@"lat"];
-//    [preLoud setObject:[NSNumber numberWithDouble:curloc.longitude] forKey:@"lon"];
-//    [preLoud setObject:[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:@"content"];
-//    
-//    SBJsonWriter *preJson = [[SBJsonWriter alloc] init];
-//    NSString *dataString = [preJson stringWithObject:preLoud];
-//    [preJson release];
-//    [preLoud release];
-//    
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-//    [request addRequestHeader:@"Content-Type" value:@"application/json;charset=utf-8"];
-//    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
-//    [request setRequestMethod:@"POST"];
-//    [request setDelegate:self];
-//    
-//    [request startAsynchronous];
+    if (NO == [LocationController sharedInstance].allow){
+        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
+        return;
+    }
+    
+    [self.loadingIndicator startAnimating];
+    self.sendBarItem.enabled = NO;
+
+    
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+
+
+    NSDictionary *preLoud = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithDouble:curloc.latitude], @"lat",
+                             [NSNumber numberWithDouble:curloc.longitude], @"lon",
+                             [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
+                             [self.wardCategory objectForKey:@"label"], @"paycate",
+                             [self.helpCategory objectForKey:@"label"], @"loudcate",
+                             self.duetime, @"expired",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@", HOST, LOUDURI, APPKEY2]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[preLoud JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    // user name
+    [request setUsername:[ProfileManager sharedInstance].profile.userkey];
+    [request setPassword:[ProfileManager sharedInstance].profile.secret];
+    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
+    [request setRequestMethod:@"POST"];
+    [request setDelegate:self];
+    
+    [request startAsynchronous];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
 
     if ([request responseStatusCode] == 201){
-        [self dismissModalViewControllerAnimated:YES];
+        //[self dismissModalViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
         
     } else if (412 == [request responseStatusCode]){
         [Utils warningNotification:@"每个用户最多可发三条求助信息，请先删除部分求助再发送"];
@@ -336,6 +349,7 @@
 - (IBAction)duetimeAction:(id)sender
 {
     SelectDateViewController *sdVC = [[SelectDateViewController alloc] initWithNibName:@"SelectDateViewController" bundle:nil];
+    sdVC.hlVC = self;
     [self.navigationController pushViewController:sdVC animated:YES];
     [sdVC release];
 }
@@ -343,6 +357,7 @@
 - (IBAction)wadAction:(id)sender
 {
     SelectWardViewController *swVC = [[SelectWardViewController alloc] initWithNibName:@"SelectWardViewController" bundle:nil];
+    swVC.hlVC = self;
     [self.navigationController pushViewController:swVC animated:YES];
     [swVC release];
 }
