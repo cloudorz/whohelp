@@ -44,7 +44,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.title = @"有效期";
-    self.duetimePicker.minimumDate = [NSDate date];
+    self.duetimePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:3600];
+    self.duetimePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:3600*24*14];
+    self.duetimePicker.date = [[NSDate date] dateByAddingTimeInterval:3600*24];
+    self.duetimePicker.minuteInterval = 10;
+    self.duetimePicker.timeZone = [NSTimeZone localTimeZone];
 }
 
 - (void)viewDidUnload
@@ -57,6 +61,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    NSLog(@"%@", [self.duetimePicker.date descriptionWithLocale:[NSTimeZone localTimeZone]]);
+    self.hlVC.duetime = self.duetimePicker.date;
 
 }
 

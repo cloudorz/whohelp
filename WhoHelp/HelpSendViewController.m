@@ -116,11 +116,6 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
-    // define event for set due time
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(duetimeSetAction:) 
-                                                 name:@"duetimeSetEvent" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wardSetAction:) 
-                                                 name:@"wardSetEvent" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -134,8 +129,13 @@
     [super viewWillDisappear:animated];
     //[self.reverseGeocoder cancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"duetimeSetEvent" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    
+    if (nil != self.duetime){
+        NSLog(@"%@", [self.duetime description]);
+        self.duetimeLabel.text = [self.duetime description];
+    }
+    
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -150,18 +150,6 @@
 //    self.duetime = 
 //}
 
--(void) wardSetAction:(id)sender
-{
-    
-}
-
-#pragma mark - modal actions
--(IBAction)cancelButtonPressed:(id)sender
-{
-
-    [self dismissModalViewControllerAnimated:YES];
-
-}
 
 - (IBAction)sendButtonPressed:(id)sender
 {
