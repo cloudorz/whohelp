@@ -16,7 +16,7 @@
 {
 @private
 
-    UIBarItem *sendBarItem_;
+//    UIBarItem *sendBarItem_;
     
     UIActivityIndicatorView *loadingIndicator_;
     
@@ -33,12 +33,12 @@
     NSDictionary *wardCategory_;
     UIButton *duetimeButton_;
     UIButton *wardButton_;
+    NSString *wardText_;
     
 }
 
 @property (nonatomic, retain) IBOutlet UITextView *helpTextView;
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
-@property (nonatomic, retain) IBOutlet UIBarItem *sendBarItem;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, retain) IBOutlet UILabel *duetimeLabel;
 @property (nonatomic, retain) IBOutlet UILabel *wardLabel;
@@ -46,11 +46,14 @@
 @property (nonatomic, retain) IBOutlet UIButton *duetimeButton;
 @property (nonatomic, retain) IBOutlet UIButton *wardButton;
 
+
 // new 
 @property (nonatomic, retain) NSDictionary *helpCategory;
 @property (nonatomic, retain) IBOutlet UIImageView *avatar;
 @property (nonatomic, retain) NSDate *duetime;
 @property (nonatomic, retain) NSDictionary *wardCategory;
+@property (nonatomic, retain) NSString *wardText;
+//@property (nonatomic, retain) UIBarItem *sendBarItem;
 
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)sendButtonPressed:(id)sender;
@@ -64,5 +67,7 @@
 - (IBAction)renrenAction:(id)sender;
 - (IBAction)weiboAction:(id)sender;
 - (IBAction)doubanAction:(id)sender;
+
+- (void)turnOnSendEnabled;
 
 @end

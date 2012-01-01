@@ -12,11 +12,13 @@
 
 @synthesize duetimePicker=duetimePicker_;
 @synthesize hlVC=hlVC_;
+@synthesize timeLabel=timeLabel_;
 
 -(void)dealloc
 {
     [duetimePicker_ release];
     [hlVC_ release];
+    [timeLabel_ release];
     [super dealloc];
 }
 
@@ -49,6 +51,16 @@
     self.duetimePicker.date = [[NSDate date] dateByAddingTimeInterval:3600*24];
     self.duetimePicker.minuteInterval = 10;
     self.duetimePicker.timeZone = [NSTimeZone localTimeZone];
+    [self.duetimePicker addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self valueChanged:self.duetimePicker];
+}
+
+- (IBAction)valueChanged:(id) sender
+{
+    
+    self.timeLabel.text = [NSDateFormatter localizedStringFromDate:self.duetimePicker.date 
+                                                         dateStyle:NSDateFormatterShortStyle 
+                                                         timeStyle:NSDateFormatterShortStyle];
 }
 
 - (void)viewDidUnload

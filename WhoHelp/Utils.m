@@ -51,7 +51,8 @@
 #pragma mark - date formate to human readable
 + (NSString *)descriptionForTime:(NSDate *)date
 {
-    // convert the time formate to human reading. 
+    // convert the time formate to human reading.
+    // i18n FIXME
     NSInteger timePassed = abs([date timeIntervalSinceNow]);
     
     NSString *dateString = nil;
@@ -85,7 +86,7 @@
 }
 
 #pragma mark - string to datetime
-+ (NSDate *)stringToTime:(NSString *)stringTime
++ (NSDate *)dateFromISOStr:(NSString *)stringTime
 {
 //    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 //    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];

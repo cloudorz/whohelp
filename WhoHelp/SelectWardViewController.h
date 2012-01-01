@@ -9,14 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "HelpSendViewController.h"
 
-@interface SelectWardViewController : UITableViewController
+@interface SelectWardViewController : UITableViewController <UITextFieldDelegate>
 {
 @private
     NSArray *wardCategories_;
     HelpSendViewController *hlVC_;
+    UITextField *wardTextField_;
 }
 
 @property (nonatomic, retain, readonly) NSArray *wardCategories;
 @property (nonatomic, retain) HelpSendViewController *hlVC;
+@property (nonatomic, retain) UITextField *wardTextField;
 
 @end

@@ -17,7 +17,7 @@
 + (void)tellNotification:(NSString *)message;
 
 + (NSString *)descriptionForTime:(NSDate *)date;
-+ (NSDate *)stringToTime:(NSString *)stringTime;
++ (NSDate *)dateFromISOStr:(NSString *)stringTime;
 + (NSData *)fetchImage: (NSString *)imageURI;
 
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;

@@ -83,7 +83,7 @@
 					<object class="IBUIActivityIndicatorView" id="221052372">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{282, 12}, {20, 20}}</string>
+						<string key="NSFrame">{{182, 83}, {20, 20}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="137403344"/>
 						<string key="NSReuseIdentifierKey">_NS:824</string>
@@ -257,7 +257,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{267, 377}, {28, 29}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -502,7 +501,6 @@
 						<reference key="object" ref="191373211"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="221052372"/>
 							<reference ref="278580208"/>
 							<reference ref="557841054"/>
 							<reference ref="7963131"/>
@@ -513,6 +511,7 @@
 							<reference ref="853881289"/>
 							<reference ref="137403344"/>
 							<reference ref="90470055"/>
+							<reference ref="221052372"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">View</string>

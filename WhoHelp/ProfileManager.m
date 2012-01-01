@@ -8,6 +8,7 @@
 
 #import "ProfileManager.h"
 #import "WhoHelpAppDelegate.h"
+#import "Utils.h"
 static ProfileManager *sharedProfileManager = nil;
 
 @implementation ProfileManager
@@ -57,26 +58,26 @@ static ProfileManager *sharedProfileManager = nil;
 	return self;
 }
 
-//- (void)save
-//{
-//    NSError *error = nil;
-//    NSManagedObjectContext *managedObjectContext = self.moc;
-//    if (managedObjectContext != nil)
-//    {
-//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
-//        {
-//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//            //abort();
-//        } 
-//    }
-//}
+- (void)save
+{
+    NSError *error = nil;
+    NSManagedObjectContext *managedObjectContext = self.moc;
+    if (managedObjectContext != nil)
+    {
+        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
+        {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            //abort();
+        } 
+    }
+}
 
-//- (void)del
-//{
-//    [self.moc deleteObject:self.profile];
-//    [self save];
-//    self.profile = nil;
-//}
+- (void)del
+{
+    [self.moc deleteObject:self.profile];
+    [self save];
+    self.profile = nil;
+}
 
 - (void)saveUserInfo:(NSMutableDictionary *) data
 {
@@ -86,15 +87,10 @@ static ProfileManager *sharedProfileManager = nil;
         self.profile =  (Profile *)[NSEntityDescription insertNewObjectForEntityForName:@"Profile" inManagedObjectContext:self.moc];
     }
     
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    
     self.profile.name = [data objectForKey:@"name"];
     self.profile.userkey = [data objectForKey:@"userkey"];
     self.profile.secret = [data objectForKey:@"secret"];
-    self.profile.updated = [dateFormatter dateFromString:[data objectForKey:@"updated"]];
-    [dateFormatter release];
+    self.profile.updated = [Utils dateFromISOStr:[data objectForKey:@"updated"]];
     
     //[self save];
     

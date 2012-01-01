@@ -11,10 +11,12 @@
 @implementation SelectWardViewController
 
 @synthesize hlVC=hlVC_;
+@synthesize wardTextField=wardTextField_;
 
 - (void)dealloc
 {
     [wardCategories_ release];
+    [wardTextField_ release];
     [hlVC_ release];
     [super dealloc];
 }
@@ -22,10 +24,7 @@
 - (NSArray *)wardCategories
 {
     if (wardCategories_ == nil){
-        wardCategories_ = [[NSArray alloc] initWithObjects:
-                           [NSArray arrayWithObjects:
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"意思一下总是要的嘛", @"text", @"desc", @"label", @"avatar.png", @"pic", nil], 
-                            nil],                           
+        wardCategories_ = [[NSArray alloc] initWithObjects:                           
                            [NSArray arrayWithObjects:
                             [NSDictionary dictionaryWithObjectsAndKeys:@"请你吃顿饭", @"text", @"eat", @"label", @"avatar.png", @"pic", nil],
                             [NSDictionary dictionaryWithObjectsAndKeys:@"请你喝饮料", @"text", @"drink", @"label", @"avatar.png", @"pic", nil],
@@ -70,7 +69,25 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
     self.navigationItem.title = @"选择你的报酬";
+    
+    // set table header view
+    CGRect frame;
+    frame = CGRectMake(0, 0, 320, 40);
+
+    UITextField *wardDescView = [[[UITextField alloc] initWithFrame:frame] autorelease];
+    wardDescView.placeholder = @"意思一下总是要的嘛";
+    wardDescView.font = [UIFont systemFontOfSize:18.0f];
+    wardDescView.opaque = YES;
+    wardDescView.keyboardType = UIKeyboardTypeDefault;
+    wardDescView.keyboardAppearance = UIKeyboardAppearanceDefault;
+    wardDescView.returnKeyType = UIReturnKeyDone;
+    wardDescView.delegate = self;
+    
+    self.wardTextField = wardDescView;
+    self.tableView.tableHeaderView = wardDescView;
+    
 }
 
 - (void)viewDidUnload
@@ -83,6 +100,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -98,7 +116,27 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    // set back to send view controller ward desc text
+    self.hlVC.wardText = self.wardTextField.text;
+    
 }
+
+#pragma mark - dimiss the keyboard
+
+//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+//{
+////    [textField resignFirstResponder];
+//    NSLog(@"fuck fuck fuck");
+//    return YES;
+//}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -154,6 +192,20 @@
     return 10.0f;
 }
 
+//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    CGRect frame;
+//    
+//    
+//    frame = CGRectMake(0, 0, 320, 40);
+//    UIImageView *imageView = [[[UIImageView alloc] initWithFrame:frame] autorelease];
+//    imageView.image = [UIImage imageNamed:@"avatar.png"];
+//    imageView.opaque = YES;
+//    
+//    
+//    return imageView;
+//}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -199,7 +251,7 @@
 {
 
     self.hlVC.wardCategory = [[self.wardCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

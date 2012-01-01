@@ -20,7 +20,7 @@
 
 @synthesize helpTextView=helpTextView_;
 @synthesize numIndicator=numIndicator_;
-@synthesize sendBarItem=sendBarItem_;
+//@synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize placeholderLabel=placeholderLabel_;
 
@@ -33,13 +33,14 @@
 @synthesize duetime=duetime_;
 @synthesize duetimeButton=duetimeButton_;
 @synthesize wardButton=wardButton_;
+@synthesize wardText=wardText_;
 
 #pragma mark - dealloc
 - (void)dealloc
 {
     [helpTextView_ release];
     [numIndicator_ release];
-    [sendBarItem_ release];
+//    [sendBarItem_ release];
     [loadingIndicator_ release];
     [placeholderLabel_ release];
     // new
@@ -51,6 +52,7 @@
     [wardCategory_ release];
     [wardButton_ release];
     [duetimeButton_ release];
+    [wardText_ release];
     [super dealloc];
 }
 
@@ -100,8 +102,15 @@
     self.navigationItem.title = [self.helpCategory valueForKey:@"text"];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.editButtonItem.action = @selector(sendButtonPressed:);
+    self.editButtonItem.title = @"发送";
     self.avatar.image = [UIImage imageNamed:@"avatar.png"];  
 }
+
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
+}
+
 
 - (void)viewDidUnload
 {
@@ -121,16 +130,20 @@
     
     // show setting time
     if (nil != self.duetime){
-        //self.duetimeButton.titleLabel.text = [self.duetime descriptionWithLocale:[NSTimeZone localTimeZone]];
-        self.duetimeLabel.text = [self.duetime descriptionWithLocale:[NSTimeZone localTimeZone]];
+        [self.duetimeButton setTitle:[NSDateFormatter localizedStringFromDate:self.duetime
+                                                                    dateStyle:NSDateFormatterShortStyle 
+                                                                    timeStyle:NSDateFormatterShortStyle] 
+                            forState:UIControlStateNormal];
     }
     
     // show setting ward
     if (nil != self.wardCategory){
-        //self.wardButton.titleLabel.text = self.wardCategory;
-        self.wardLabel.text = [self.wardCategory valueForKey:@"text"];
+        [self.wardButton setTitle:[self.wardCategory valueForKey:@"text"] 
+                         forState:UIControlStateNormal];
     }
     
+    // send status
+    [self turnOnSendEnabled];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -159,6 +172,20 @@
 //    self.duetime = 
 //}
 
+- (void)turnOnSendEnabled
+{
+    // check the send button enabled 
+    if (self.helpCategory != nil && 
+        self.wardCategory != nil &&
+        [self.helpTextView.text length] > 0 &&
+        self.duetime != nil){
+        
+        self.editButtonItem.enabled = YES;
+    } else{
+        
+        self.editButtonItem.enabled = NO;
+    }
+}
 
 - (IBAction)sendButtonPressed:(id)sender
 {
@@ -171,6 +198,8 @@
 {
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        //    self.sendBarItem.enabled = NO;
+        self.editButtonItem.enabled = NO;
         [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
@@ -186,8 +215,6 @@
     }
     
     [self.loadingIndicator startAnimating];
-    self.sendBarItem.enabled = NO;
-
     
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
@@ -199,6 +226,7 @@
                              [NSNumber numberWithDouble:curloc.longitude], @"lon",
                              [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
                              [self.wardCategory objectForKey:@"label"], @"paycate",
+                             self.wardText, @"paydesc",
                              [self.helpCategory objectForKey:@"label"], @"loudcate",
                              self.duetime, @"expired",
                              nil];
@@ -224,8 +252,6 @@
         //[self dismissModalViewControllerAnimated:YES];
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (412 == [request responseStatusCode]){
-        [Utils warningNotification:@"每个用户最多可发三条求助信息，请先删除部分求助再发送"];
     } else if (400 == [request responseStatusCode]) {
         [Utils warningNotification:@"参数错误"];
     } else{
@@ -234,7 +260,8 @@
 
     // send ok cancel
     [self.loadingIndicator stopAnimating];
-    self.sendBarItem.enabled = YES;
+//    self.sendBarItem.enabled = YES;
+    self.editButtonItem.enabled = YES;
     
 
 }
@@ -244,16 +271,17 @@
 {
     // notify the user
     [self.loadingIndicator stopAnimating];
-    self.sendBarItem.enabled = YES;
+//    self.sendBarItem.enabled = YES;
+    self.editButtonItem.enabled = YES;
     // 
     [Utils warningNotification:[[request error] localizedDescription]];
 
 }
 
-- (IBAction)addRewardButtonPressed:(id)sender
-{
-    self.helpTextView.text = [NSString stringWithFormat:@"%@%@", self.helpTextView.text, @"$"];
-}
+//- (IBAction)addRewardButtonPressed:(id)sender
+//{
+//    self.helpTextView.text = [NSString stringWithFormat:@"%@%@", self.helpTextView.text, @"$"];
+//}
 
 #pragma mark - text view delegate
 
@@ -275,11 +303,7 @@
     NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
     self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - nonSpaceTextLength/*[self.helpTextView.text length]*/];
     
-    if (nonSpaceTextLength <= 0) {
-        self.sendBarItem.enabled = NO;
-    } else{
-        self.sendBarItem.enabled = YES;
-    }
+    [self turnOnSendEnabled];
 
 }
 
@@ -378,18 +402,14 @@
 - (void)fakeParsePosition
 {
     if ([CLLocationManager locationServicesEnabled]){
-        self.sendBarItem.enabled = NO;
+//        self.sendBarItem.enabled = NO;
+        self.editButtonItem.enabled = NO;
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         [self performSelector:@selector(parsePosition) withObject:nil afterDelay:2.0];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
     } 
     
-}
-
-- (BOOL)hidesBottomBarWhenPushed
-{ 
-    return TRUE; 
 }
 
 @end
