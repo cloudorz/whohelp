@@ -7,7 +7,7 @@
 //
 
 #import "HelpSendViewController.h"
-#import "ASIHTTPRequest.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
 #import "Config.h"
 #import "Utils.h"
@@ -226,20 +226,18 @@
                              [NSNumber numberWithDouble:curloc.longitude], @"lon",
                              [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
                              [self.wardCategory objectForKey:@"label"], @"paycate",
-                             self.wardText, @"paydesc",
                              [self.helpCategory objectForKey:@"label"], @"loudcate",
                              self.duetime, @"expired",
+                             self.wardText, @"paydesc", // This is a tricker, wardText is nil, the dictionary cut down.
                              nil];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@?ak=%@", HOST, LOUDURI, APPKEY2]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, LOUDURI]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[[preLoud JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
-    // user name
-    [request setUsername:[ProfileManager sharedInstance].profile.userkey];
-    [request setPassword:[ProfileManager sharedInstance].profile.secret];
-    // Default becomes POST when you use appendPostData: / appendPostDataFromFile: / setPostBody:
     [request setRequestMethod:@"POST"];
+    // sign to header for authorize
+    [request signInHeader];
     [request setDelegate:self];
     
     [request startAsynchronous];

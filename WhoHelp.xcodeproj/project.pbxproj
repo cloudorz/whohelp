@@ -12,6 +12,10 @@
 		6102B21914376FC1007F728C /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6102B21814376FC0007F728C /* LocationController.m */; };
 		6102B2211437740E007F728C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B21F1437740E007F728C /* Default.png */; };
 		6102B2221437740E007F728C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6102B2201437740E007F728C /* Default@2x.png */; };
+		6110E74414B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 6110E74314B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.m */; };
+		6110E74A14B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6110E74614B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.m */; };
+		6110E74B14B1997A00338F54 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 6110E74714B1997A00338F54 /* NSString+URLEncoding.m */; };
+		6110E74F14B19CB700338F54 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 6110E74D14B19CB700338F54 /* Base64Transcoder.c */; };
 		611FD79A143B20F100398709 /* LoudTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD799143B20F100398709 /* LoudTableCell.m */; };
 		611FD79F143B4CD300398709 /* LawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 611FD79D143B4CD100398709 /* LawViewController.m */; };
 		611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 611FD79E143B4CD200398709 /* LawViewController.xib */; };
@@ -137,6 +141,15 @@
 		6102B21814376FC0007F728C /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
 		6102B21F1437740E007F728C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		6102B2201437740E007F728C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		6110E74214B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASIHTTPRequest+HeaderSignAuth.h"; sourceTree = "<group>"; };
+		6110E74314B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ASIHTTPRequest+HeaderSignAuth.m"; sourceTree = "<group>"; };
+		6110E74614B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
+		6110E74714B1997A00338F54 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		6110E74814B1997A00338F54 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		6110E74914B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
+		6110E74C14B19A3300338F54 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
+		6110E74D14B19CB700338F54 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		6110E74E14B19CB700338F54 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		611FD7911439F2A100398709 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		611FD798143B20F100398709 /* LoudTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoudTableCell.h; sourceTree = "<group>"; };
 		611FD799143B20F100398709 /* LoudTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoudTableCell.m; sourceTree = "<group>"; };
@@ -366,6 +379,8 @@
 				614E3ECE141DE49200418314 /* ASINetworkQueue.h */,
 				614E3ECF141DE49600418314 /* ASINetworkQueue.m */,
 				614E3ED0141DE49900418314 /* ASIProgressDelegate.h */,
+				6110E74214B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.h */,
+				6110E74314B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.m */,
 			);
 			name = ASIHttp;
 			sourceTree = "<group>";
@@ -374,8 +389,6 @@
 			isa = PBXGroup;
 			children = (
 				614E3EED141E026300418314 /* SBJson.h */,
-				615B10B214AF5B690034C527 /* NSDate+IsoFormat.h */,
-				615B10B314AF5B690034C527 /* NSDate+IsoFormat.m */,
 				615B10B914AF65A80034C527 /* NSDate+ProxyForJson.h */,
 				615B10BA14AF65A80034C527 /* NSDate+ProxyForJson.m */,
 				614E3EEC141E026300418314 /* NSObject+SBJson.h */,
@@ -574,6 +587,15 @@
 		61FCFE2214A9D7E3009F35C2 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				615B10B214AF5B690034C527 /* NSDate+IsoFormat.h */,
+				615B10B314AF5B690034C527 /* NSDate+IsoFormat.m */,
+				6110E74D14B19CB700338F54 /* Base64Transcoder.c */,
+				6110E74E14B19CB700338F54 /* Base64Transcoder.h */,
+				6110E74C14B19A3300338F54 /* OASignatureProviding.h */,
+				6110E74914B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.h */,
+				6110E74614B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.m */,
+				6110E74814B1997A00338F54 /* NSString+URLEncoding.h */,
+				6110E74714B1997A00338F54 /* NSString+URLEncoding.m */,
 				6145384D14288F5300BA2C34 /* OHAttributedLabel */,
 				615E6A8C1422D8B700400B60 /* Refresh */,
 				614E3EDF141E01DC00418314 /* JSON */,
@@ -800,6 +822,10 @@
 				61D506E814ACAA3500B3C57E /* SelectWardViewController.m in Sources */,
 				615B10B414AF5B690034C527 /* NSDate+IsoFormat.m in Sources */,
 				615B10BB14AF65A80034C527 /* NSDate+ProxyForJson.m in Sources */,
+				6110E74414B1598500338F54 /* ASIHTTPRequest+HeaderSignAuth.m in Sources */,
+				6110E74A14B1997A00338F54 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				6110E74B14B1997A00338F54 /* NSString+URLEncoding.m in Sources */,
+				6110E74F14B19CB700338F54 /* Base64Transcoder.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

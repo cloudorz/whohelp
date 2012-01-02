@@ -9,7 +9,7 @@
 #ifndef WhoHelp_Config_h
 #define WhoHelp_Config_h
 
-#define APPKEY @"20111007001"
+
 #define APPSRT @"9e6306f58b705e44d585d61e500d884d"
 #define SENDURI @"https://n2u.in/l/"
 #define AUTHURI @"https://n2u.in/auth"
@@ -23,7 +23,7 @@
 #define ADDRURI @"http://l.n2u.in/m2addr/"
 
 #define HOST @"http://192.168.0.124"
-#define APPKEY2 @"apple2011122801"
+#define APPKEY @"apple2011122801"
 #define SECRET @"3afb9fb7f605476d92b9ee7000b41ba0"
 #define LOUDURI @"/l/"
 

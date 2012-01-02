@@ -230,7 +230,7 @@
     //[loud setObject:cell.distanceLabel.text forKey:@"distanceInfo"]; something worng
     
     if (nil == [loud objectForKey:@"createdTime"]){
-        [loud setObject:[Utils stringToTime:[loud objectForKey:@"created"]] forKey:@"createdTime"];
+        [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
     }
     // date time
     cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
