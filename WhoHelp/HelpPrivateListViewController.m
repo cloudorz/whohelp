@@ -142,6 +142,49 @@
 }
 */
 
+#pragma mark - get the three 
+- (void)fetch3Louds
+{
+    //    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
+    //                                        SURI, 
+    //                                        APPKEY, 
+    //                                        [ProfileManager sharedInstance].profile.token, 
+    //                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
+    //                                       ]
+    //                  ];
+    //    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    //    if (nil != self.etag){
+    //        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    //    }
+    //    //[request setValidatesSecureCertificate:NO];
+    //    [request startSynchronous];
+    //    
+    //    NSError *error = [request error];
+    //    if (!error) {
+    //        if ([request responseStatusCode] == 200){
+    //            
+    //            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+    //            id data = [request responseData];
+    //            id result = [jsonParser objectWithData:data];
+    //            [jsonParser release];
+    //            
+    //            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
+    //            self.myLouds = [result objectForKey:@"louds"];
+    //            
+    //        } else if (304 == [request responseStatusCode]){
+    //            // done some thing
+    //        } else if (400 == [request responseStatusCode]) {
+    //            [Utils warningNotification:@"参数错误"];
+    //        }else {
+    //            [Utils warningNotification:@"非常规返回"];
+    //        }
+    //        
+    //    }else{
+    //        [Utils warningNotification:@"请求服务错误"];
+    //    }
+    
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

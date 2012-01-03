@@ -46,7 +46,7 @@
 
 - (NSDictionary *)getAuthParameters
 {
-    // TODO auth_app_key auth_user_key auth_once auth_timestamp
+    // auth_app_key auth_user_key auth_once auth_timestamp auth_signature_method
     return [NSDictionary dictionaryWithObjectsAndKeys:
      [[self getAppKeyAndSecret] objectForKey:@"key"], @"auth_app_key",
      [[self getUserKeyAndSecret] objectForKey:@"key"], @"auth_user_key",

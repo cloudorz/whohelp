@@ -29,7 +29,7 @@
     self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
     self.tabBarController.delegate = self;
     // support the shake feature.
-    application.applicationSupportsShakeToEdit = YES;
+    //application.applicationSupportsShakeToEdit = YES;
     
     
     [self.window makeKeyAndVisible];

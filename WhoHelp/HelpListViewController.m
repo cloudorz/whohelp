@@ -13,22 +13,37 @@
 #import "Utils.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
+#import "WhiteNavigationBar.h"
+// custom
+#import "NSString+URLEncoding.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "DetailLoudViewController.h"
+#import "UserManager.h"
+
 
 @implementation HelpListViewController
 
 @synthesize louds=louds_;
-@synthesize myLouds=myLouds_;
 @synthesize curCollection=curCollection_;
 @synthesize etag=etag_;
 @synthesize userEtag=userEtag_;
 @synthesize moreCell=moreCell_;
-@synthesize tapUser=tapUser_;
-@synthesize tapLoudLink=tapLoudLink_;
-@synthesize tapIndexPath=tapIndexPath_;
-@synthesize tmpList=tmpList_;
 @synthesize lastUpdated=lastUpdated_;
 @synthesize timer=timer_;
 
+#pragma mark - dealloc 
+- (void)dealloc
+{
+    [louds_ release];
+    [_refreshHeaderView release];
+    [etag_ release];
+    [userEtag_ release];
+    [photoCache_ release];
+    [curCollection_ release];
+    [lastUpdated_ release];
+    [timer_ release];
+    [super dealloc];
+}
 
 - (NSMutableDictionary *)photoCache
 {
@@ -76,11 +91,45 @@
 		
 	}
     
+    //self.navigationItem.title = @"附近的求助";
+    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
+    label.text = @"附近的求助";
+    label.textAlignment = UITextAlignmentCenter;
+    label.font = [UIFont boldSystemFontOfSize:18.0f];
+    label.backgroundColor = [UIColor clearColor];
+    
+    self.navigationItem.titleView = label;
+    
+    // table view header view
+    
+//    UIImageView *headerImage = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
+//    headerImage.image = [UIImage imageNamed:@"tableheader.png"];
+//    headerImage.opaque = YES;
+//    
+//    self.tableView.tableHeaderView = headerImage;
+//    
+//    UIImageView *navHeaderImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navheader.png"]] autorelease];
+//    //navHeaderImage.image = ;
+//    navHeaderImage.frame = CGRectMake(0, 0, 320, 49);
+//    navHeaderImage.opaque = YES;
+//    
+//    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
+//    label.text = @"附近的求助";
+//    label.textAlignment = UITextAlignmentCenter;
+//    label.font = [UIFont systemFontOfSize:18.0f];
+//    label.backgroundColor = [UIColor clearColor];
+//    
+//    [navHeaderImage addSubview:label];
+//
+//    //self.navigationItem.titleView = navHeaderImage;
+//    
+//    [self.navigationController.navigationBar addSubview:navHeaderImage];
+    
+    // FIXME just for ios 5 
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navheader.png"] forBarMetrics:UIBarMetricsDefault];
+    
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
-    
-    // shake to my loud list
-    _mylist = YES;
     
     // timer
 //    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
@@ -95,7 +144,7 @@
 {
     [super viewDidUnload];
     _refreshHeaderView=nil;
-    [self.timer invalidate];
+    //[self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -161,7 +210,7 @@
 
 	if (nil == self.curCollection){
         labelNumber.text = @"正在加载...";
-    } else if (nil == [self.curCollection objectForKey:@"next"] || NO == _mylist){
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
         labelNumber.text = @"";
     } else {
         labelNumber.text = @"获取更多";
@@ -178,6 +227,33 @@
     return self.moreCell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIImageView *bgHeader = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
+    bgHeader.image = [UIImage imageNamed:@"tableheader.png"];
+    return bgHeader;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5.0f;
+}
+
+- (void)handleUserInfoForCell: (LoudTableCell *)cell withLink: (NSDictionary *)userLink
+{
+    [[UserManager sharedInstance] fetchUserRequestWithLink:userLink forBlock:^(NSDictionary *data){
+        cell.nameLabel.text = [data objectForKey:@"name"];
+        [self handleAvatarForCell:cell withUid:[data objectForKey:@"id"] withImgLink:[data objectForKey:@"avatar_link"]];
+    }];
+}
+
+- (void)handleAvatarForCell: (LoudTableCell *)cell withUid: (NSString *)uid withImgLink: (NSString *)link
+{
+    [[UserManager sharedInstance] fetchPhotoRequestWithUserId:uid withImgURL:link forBlock:^(NSData *data){
+        cell.avatarImage.image = [UIImage imageWithData:data];
+    }];
+    
+}
 
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -201,26 +277,27 @@
         
     } 
     // avatar
-    NSMutableDictionary *info = [self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]];
-    if (nil == info){
-        cell.avatarImage.image = nil;
-        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
-                               cell, @"cell",
-                               [loud objectForKey:@"user"], @"user",
-                               nil];
-        [self performSelectorInBackground:@selector(setPhotoAsync:) withObject:args];
-    }else {
-        cell.avatarImage.image = [UIImage imageWithData:[info objectForKey:@"photoData"]];
-    }
+//    NSMutableDictionary *info = [self.photoCache objectForKey:[[loud objectForKey:@"user"] objectForKey:@"id"]];
+//    if (nil == info){
+//        cell.avatarImage.image = nil;
+//        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
+//                               cell, @"cell",
+//                               [loud objectForKey:@"user"], @"user",
+//                               nil];
+//        [self performSelectorInBackground:@selector(setPhotoAsync:) withObject:args];
+//    }else {
+//        cell.avatarImage.image = [UIImage imageWithData:[info objectForKey:@"photoData"]];
+//    }
     
     // name
     cell.nameLabel.text = [[loud objectForKey:@"user"] objectForKey:@"name"];
     
-    if ([[[loud objectForKey:@"user"] objectForKey:@"is_admin"] boolValue]){
-        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-    }else {
-        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-    }
+//    if ([[[loud objectForKey:@"user"] objectForKey:@"is_admin"] boolValue]){
+//        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+//    }else {
+//        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+//    }
+    [self handleUserInfoForCell:cell withLink:[loud objectForKey:@"user"]];  // TODO test it
     
     // content
     cell.cellText.attributedText = [Utils colorContent:[loud objectForKey:@"content"]];
@@ -275,41 +352,10 @@
     // Navigation logic may go here. Create and push another view controller.
     if (indexPath.row < [self.louds count]){
         
-        NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
-        NSDictionary *user= [loud objectForKey:@"user"];
-        
-//        if ([[ProfileManager sharedInstance].profile.phone isEqualToNumber:[user objectForKey:@"phone"]]){
-//            // del the user loud 
-//            UIActionSheet *delLoudSheet = [[UIActionSheet alloc] 
-//                                           initWithTitle:nil 
-//                                           delegate:self 
-//                                           cancelButtonTitle:@"取消" 
-//                                           destructiveButtonTitle:@"撤销求助" 
-//                                           otherButtonTitles:nil];
-//            
-//            delLoudSheet.tag = 2;
-//            [delLoudSheet showFromTabBar:self.tabBarController.tabBar];
-//            [delLoudSheet release];
-//            
-//            self.tapLoudLink = [loud objectForKey:@"link"];
-//            self.tapIndexPath = indexPath;
-//
-//        } else{
-//            // contact the loud's owner.
-//            UIActionSheet *contactSheet = [[UIActionSheet alloc] 
-//                                           initWithTitle:[NSString stringWithFormat:@"联系:%@", [user objectForKey:@"name"]]
-//                                           delegate:self 
-//                                           cancelButtonTitle:@"取消" 
-//                                           destructiveButtonTitle:nil 
-//                                           otherButtonTitles:@"电话", @"短信", nil];
-//            
-//            contactSheet.tag = 1;
-//            [contactSheet showFromTabBar:self.tabBarController.tabBar];
-//            [contactSheet release];
-//
-//            self.tapUser = user;
-//        }
-
+        DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
+        dlVC.loud = [self.louds objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:dlVC animated:YES];
+        [dlVC release];
     }
      
 }
@@ -339,73 +385,60 @@
         return;
     }
     
-//    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"%@?q=position:%f,%f&qs=created desc&st=0&qn=20&ak=%@&tk=%@", 
-//                                        SURI, 
-//                                        curloc.latitude, 
-//                                        curloc.longitude, 
-//                                        APPKEY, 
-//                                        [ProfileManager sharedInstance].profile.token] 
-//                                       stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-//    
-//  
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    if (nil != self.etag){
-//        [request addRequestHeader:@"If-None-Match" value:self.etag];
-//    }
-//    //[request setValidatesSecureCertificate:NO];
-//    [request startSynchronous];
-//    
-//    NSError *error = [request error];
-//    if (!error) {
-//        if ([request responseStatusCode] == 200){
-//            NSData *responseData = [request responseData];
-//            
-//            // create the json parser 
-//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
-//            [jsonParser release];
-//            
-//            if (nil != self.curCollection){
-//                // beep bo
-//                _sing = YES;
-//            }
-//            
-//            self.curCollection = collection;
-//            self.louds = [collection objectForKey:@"louds"];
-//            self.etag = [[request responseHeaders] objectForKey:@"Etag"];
-//            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
-//            
-//            _mylist = YES;
-//            // reload the tableview data
-//            [self.tableView reloadData];
-//            
-//            [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
-//            
-//            
-//        } else if (400 == [request responseStatusCode]) {
-//            
-//            [Utils warningNotification:@"参数错误"];
-//            
-//        } else if (304 == [request responseStatusCode]) {
-//            if (NO == _mylist){
-//                
-//                self.louds = self.tmpList;
-//                [self.tableView reloadData];
-//            }
-//            _mylist = YES;
-//            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
-//            //NSLog(@"the louds list not modified.");
-//        } else if (401 == [request responseStatusCode]){
-//            [Utils warningNotification:@"授权失败"];
-//        } else{
-//            
-//            [Utils warningNotification:@"服务器异常返回"];
-//            
-//        }
-//    }else{
-//        NSLog(@"%@", [error description]);
-//        [Utils warningNotification:@"网络链接错误"];
-//    }
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=position:%f,%f&qs=%@&st=%d&qn=%d", 
+                                        HOST,
+                                        LOUDSEARCH,
+                                        curloc.latitude, 
+                                        curloc.longitude, 
+                                        [@"created desc" URLEncodedString],
+                                         0, 20
+                                       ]];
+    
+  
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            NSString *response = [request responseString];
+            
+            // create the json parser 
+            NSMutableDictionary * collection = [response JSONValue];
+            
+            
+            self.curCollection = collection;
+            self.louds = [collection objectForKey:@"louds"];
+            self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+            
+            // reload the tableview data
+            [self.tableView reloadData];
+            
+            [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+            
+            
+        } else if (400 == [request responseStatusCode]) {
+            
+            [Utils warningNotification:@"参数错误"];
+            
+        } else if (304 == [request responseStatusCode]) {
+            self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+            //NSLog(@"the louds list not modified.");
+        } else if (401 == [request responseStatusCode]){
+            [Utils warningNotification:@"授权失败"];
+        } else{
+            
+            [Utils warningNotification:@"服务器异常返回"];
+            
+        }
+    }else{
+        [Utils warningNotification:[error localizedDescription]];
+    }
 }
 
 
@@ -414,41 +447,34 @@
     if (nil == self.louds || nil == [self.curCollection objectForKey:@"next"]){
         return;
     }
-//    
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:[self.curCollection objectForKey:@"next"] 
-//                                                                queryString:[NSString stringWithFormat:@"ak=%@&tk=%@", 
-//                                                                             APPKEY, 
-//                                                                             [ProfileManager sharedInstance].profile.token]
-//                                                              ]
-//                               ];
-//    //[request setValidatesSecureCertificate:NO];
-//    [request startSynchronous];
-//    
-//    NSError *error = [request error];
-//    if (!error) {
-//        if ([request responseStatusCode] == 200){
-//            
-//            NSData *responseData = [request responseData];
-//            // create the json parser 
-//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//            NSMutableDictionary *collection = [jsonParser objectWithData:responseData];
-//            [jsonParser release];
-//            
-//            self.curCollection = collection;
-//            [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
-//
-//            // reload the tableview data
-//            [self.tableView reloadData];
-// 
-//        } else if (400 == [request responseStatusCode]) {
-//            [Utils warningNotification:@"参数错误"];
-//        } else{
-//            [Utils warningNotification:@"服务器异常返回"];
-//        }
-//        
-//    }else{
-//        [Utils warningNotification:@"网络链接错误"];
-//    }
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
+    [request signInHeader];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200){
+            
+            NSString *body = [request responseString];
+            // create the json parser 
+            NSMutableDictionary *collection = [body JSONValue];
+            
+            self.curCollection = collection;
+            [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
+
+            // reload the tableview data
+            [self.tableView reloadData];
+ 
+        } else if (400 == [request responseStatusCode]) {
+            [Utils warningNotification:@"参数错误"];
+        } else{
+            [Utils warningNotification:@"服务器异常返回"];
+        }
+        
+    }else{
+        [Utils warningNotification:[error localizedDescription]];
+    }
     
 }
 
@@ -501,8 +527,7 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    if (YES == _mylist &&
-        nil != self.curCollection && 
+    if (nil != self.curCollection && 
         indexPath.row == [self.louds count] && 
         nil != [self.curCollection objectForKey:@"next"]) 
     {
@@ -533,201 +558,71 @@
     
 }
 
-#pragma mark - set photo to cell
-- (void)setPhotoAsync: (NSDictionary *)args
-{
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    LoudTableCell *cell = [args objectForKey:@"cell"];
-    NSDictionary *user = [args objectForKey:@"user"];
-    cell.avatarImage.image = [UIImage imageWithData:[self photoFromUser:user]];
-    
-    [pool release];
-}
-
-#pragma mark - get photo from cahce or remote
-- (NSData *)photoFromUser: (NSDictionary *)user
-{
-    NSMutableDictionary *info = [self.photoCache objectForKey:[user objectForKey:@"id"]];
-    if (nil == info){
-        info = [[[NSMutableDictionary alloc] init] autorelease];
-    }
-    
-    if (nil != [info objectForKey:@"expir"] && abs([[info objectForKey:@"expir"] timeIntervalSinceNow]) < 6*60){
-        return [info objectForKey:@"photoData"];
-    }
-    
-    NSURL *url = [NSURL URLWithString:[user objectForKey:@"avatar_link"]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != [info objectForKey:@"last"]){
-        [request addRequestHeader:@"If-Modified-Since" value:[info objectForKey:@"last"]];
-    }
-    [request startSynchronous];
-
-
-    NSError *error = [request error];
-    if (!error){
-        if (304 == [request responseStatusCode] || 200 == [request responseStatusCode]){
-            [info setObject:[[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
-            [info setObject:[NSDate date] forKey:@"expir"];
-            if (200 == [request responseStatusCode]) {
-                
-                [info setObject:[request responseData] forKey:@"photoData"];
-            } 
-            
-            [self.photoCache setObject:info forKey:[user objectForKey:@"id"]];
-            
-            return [info objectForKey:@"photoData"];
-        }
-   
-    } else {
-        //[Utils warningNotification:@"网络链接错误"]; 
-    }
-
-    return nil;
-    
-}
+//#pragma mark - set photo to cell
+//- (void)setPhotoAsync: (NSDictionary *)args
+//{
+//    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+//    
+//    LoudTableCell *cell = [args objectForKey:@"cell"];
+//    NSDictionary *user = [args objectForKey:@"user"];
+//    cell.avatarImage.image = [UIImage imageWithData:[self photoFromUser:user]];
+//    
+//    [pool release];
+//}
+//
+//#pragma mark - get photo from cahce or remote
+//- (NSData *)photoFromUser: (NSDictionary *)user
+//{
+//    NSMutableDictionary *info = [self.photoCache objectForKey:[user objectForKey:@"id"]];
+//    if (nil == info){
+//        info = [[[NSMutableDictionary alloc] init] autorelease];
+//    }
+//    
+//    if (nil != [info objectForKey:@"expir"] && abs([[info objectForKey:@"expir"] timeIntervalSinceNow]) < 6*60){
+//        return [info objectForKey:@"photoData"];
+//    }
+//    
+//    NSURL *url = [NSURL URLWithString:[user objectForKey:@"avatar_link"]];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    if (nil != [info objectForKey:@"last"]){
+//        [request addRequestHeader:@"If-Modified-Since" value:[info objectForKey:@"last"]];
+//    }
+//    [request startSynchronous];
+//
+//
+//    NSError *error = [request error];
+//    if (!error){
+//        if (304 == [request responseStatusCode] || 200 == [request responseStatusCode]){
+//            [info setObject:[[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
+//            [info setObject:[NSDate date] forKey:@"expir"];
+//            if (200 == [request responseStatusCode]) {
+//                
+//                [info setObject:[request responseData] forKey:@"photoData"];
+//            } 
+//            
+//            [self.photoCache setObject:info forKey:[user objectForKey:@"id"]];
+//            
+//            return [info objectForKey:@"photoData"];
+//        }
+//   
+//    } else {
+//        //[Utils warningNotification:@"网络链接错误"]; 
+//    }
+//
+//    return nil;
+//    
+//}
 
 #pragma mark - actionsheetp delegate
 //- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 //{
 //    NSLog(@"click the button on action sheet");
 //}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == actionSheet.cancelButtonIndex){
-        return;
-    }
-//    
-//    if (1 == actionSheet.tag) {
-//   
-//        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
-//                                               buttonIndex == 0 ? @"tel" : @"sms", 
-//                                               [self.tapUser objectForKey:@"phone"]]
-//                          ];
-//        
-//        UIDevice *device = [UIDevice currentDevice];
-//        
-//        if ([[device model] isEqualToString:@"iPhone"] ) {
-//            
-//            [[UIApplication sharedApplication] openURL:callURL];
-//        } else {
-//            
-//            [Utils wrongInfoString:@"你的设备不支持这项功能"];
-//        }
-//        
-//    } else if (2 == actionSheet.tag) {
-//        if (buttonIndex == actionSheet.destructiveButtonIndex){
-//            
-//            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[Utils partURI:self.tapLoudLink 
-//                                                                        queryString:[NSString stringWithFormat: @"ak=%@&tk=%@", 
-//                                                                                     APPKEY, 
-//                                                                                     [ProfileManager sharedInstance].profile.token]
-//                                                                      ]
-//                                       ];
-//            //[request setValidatesSecureCertificate:NO];
-//            [request setRequestMethod:@"DELETE"];
-//            [request startSynchronous];
-//            
-//            NSError *error = [request error];
-//            if (!error) {
-//                if ([request responseStatusCode] == 200){
-//                    
-//                    if (_mylist == NO){
-//                        id anObject = [self.louds objectAtIndex:self.tapIndexPath.row];
-//                        [self.tmpList removeObject:anObject];
-//                    }
-//                    
-//                    [self.louds removeObjectAtIndex:self.tapIndexPath.row];
-//                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.tapIndexPath] withRowAnimation:  UITableViewRowAnimationRight];
 //
-//                } else {
-//                    [Utils warningNotification:@"非常规返回"];
-//                }
-//                
-//            }else{
-//                [Utils warningNotification:@"网络链接错误"];
-//            }
-//
-//        }  
-//        
-//    }
-    
-}
-
-#pragma mark - shake one
--(BOOL)canBecomeFirstResponder {
-    return YES;
-}
-
-#pragma mark - get the three 
-- (void)fetch3Louds
-{
-//    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
-//                                        SURI, 
-//                                        APPKEY, 
-//                                        [ProfileManager sharedInstance].profile.token, 
-//                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
-//                                       ]
-//                  ];
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    if (nil != self.etag){
-//        [request addRequestHeader:@"If-None-Match" value:self.etag];
-//    }
-//    //[request setValidatesSecureCertificate:NO];
-//    [request startSynchronous];
-//    
-//    NSError *error = [request error];
-//    if (!error) {
-//        if ([request responseStatusCode] == 200){
-//            
-//            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//            id data = [request responseData];
-//            id result = [jsonParser objectWithData:data];
-//            [jsonParser release];
-//            
-//            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
-//            self.myLouds = [result objectForKey:@"louds"];
-//            
-//        } else if (304 == [request responseStatusCode]){
-//            // done some thing
-//        } else if (400 == [request responseStatusCode]) {
-//            [Utils warningNotification:@"参数错误"];
-//        }else {
-//            [Utils warningNotification:@"非常规返回"];
-//        }
-//        
-//    }else{
-//        [Utils warningNotification:@"请求服务错误"];
-//    }
-
-}
-
-
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if (motion == UIEventSubtypeMotionShake)
-    {
-
-        if (_mylist){
-            
-            [self fetch3Louds];
-            
-            self.tmpList = self.louds;
-            self.louds = self.myLouds;
-
-            _mylist = NO;
-            
-        } else{
-            
-            self.louds = self.tmpList;
-            _mylist = YES;
-        }
-        
-        [self.tableView reloadData];
-    }
-}
+//#pragma mark - shake one
+//-(BOOL)canBecomeFirstResponder {
+//    return YES;
+//}
 
 #pragma mark - get update info
 - (void)fetchUpdatedInfo
@@ -785,26 +680,6 @@
 //        [Utils warningNotification:@"网络链接错误"];
 //    }
     
-}
-
-#pragma mark - dealloc 
-- (void)dealloc
-{
-    [louds_ release];
-    [myLouds_ release];
-    [tmpList_ release];
-    [_refreshHeaderView release];
-    [etag_ release];
-    [userEtag_ release];
-    [photoCache_ release];
-    [curCollection_ release];
-    [moreCell_ release];
-    [tapUser_ release];
-    [tapLoudLink_ release];
-    [tapIndexPath_ release];
-    [lastUpdated_ release];
-    [timer_ release];
-    [super dealloc];
 }
 
 @end

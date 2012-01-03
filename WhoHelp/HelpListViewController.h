@@ -12,46 +12,39 @@
 #import "OHAttributedLabel.h"
 #import "NSAttributedString+Attributes.h"
 #import "LoudTableCell.h"
+#import "UINavigationBar+CustomImage.h"
 
-@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, OHAttributedLabelDelegate>
+@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
 {
 @private
-    NSMutableArray *louds_, *myLouds_, *tmpList_;
+    NSMutableArray *louds_;
+    BOOL _reloading;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
-    BOOL _reloading;
-    BOOL _mylist;
     
     NSMutableDictionary *curCollection_;
     NSMutableDictionary *photoCache_;
     NSString *etag_, *userEtag_, *lastUpdated_;
     UITableViewCell *moreCell_;
     
-    
-    NSDictionary *tapUser_;
-    NSString *tapLoudLink_;
-    NSIndexPath *tapIndexPath_;
-    
     NSTimer *timer_;
 
 }
 
-@property (nonatomic, retain) NSMutableArray *louds, *myLouds, *tmpList;
+@property (nonatomic, retain) NSMutableArray *louds;
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, readonly) NSMutableDictionary *photoCache;
 @property (nonatomic, retain) NSString *etag, *userEtag, *lastUpdated;
 @property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain) NSDictionary *tapUser;
-@property (nonatomic, retain) NSIndexPath *tapIndexPath;
-@property (nonatomic, retain) NSString *tapLoudLink;
 @property (nonatomic, retain) NSTimer *timer;
 
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
+- (void)handleAvatarForCell: (LoudTableCell *)cell withUid: (NSString *)uid withImgLink: (NSString *)link;
+- (void)handleUserInfoForCell: (LoudTableCell *)cell withLink: (NSDictionary *)userLink;
 
 - (void)fetchLoudList;
-- (void)fetch3Louds;
 - (void)fetchNextLoudList;
 - (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;

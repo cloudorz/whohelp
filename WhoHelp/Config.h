@@ -10,10 +10,8 @@
 #define WhoHelp_Config_h
 
 
-#define APPSRT @"9e6306f58b705e44d585d61e500d884d"
 #define SENDURI @"https://n2u.in/l/"
 #define AUTHURI @"https://n2u.in/auth"
-#define USERURI @"https://n2u.in/u/"
 #define UPLOADURI @"https://n2u.in/upload"
 #define RESETURI @"https://n2u.in/reset/"
 #define SURI @"https://n2u.in/s"
@@ -26,6 +24,8 @@
 #define APPKEY @"apple2011122801"
 #define SECRET @"3afb9fb7f605476d92b9ee7000b41ba0"
 #define LOUDURI @"/l/"
+#define LOUDSEARCH @"/s"
+#define USERURI @"/u/"
 
 #define CELLAVATAR 5
 #define CELLNAME 1

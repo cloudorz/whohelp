@@ -10,4 +10,6 @@
 
 @interface HelpPrivateListViewController : UITableViewController
 
+- (void)fetch3Louds;
+
 @end
