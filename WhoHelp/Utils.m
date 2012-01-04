@@ -88,14 +88,11 @@
 #pragma mark - string to datetime
 + (NSDate *)dateFromISOStr:(NSString *)stringTime
 {
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-//    
-//    NSDate * date = [dateFormatter dateFromString:stringTime];
-//    [dateFormatter release];
-//    
-//    return date;
-    return [NSDate  dateFromISO8601:stringTime];
+    if ([stringTime characterAtIndex:stringTime.length - 1] != 'Z'){
+        stringTime = [NSString stringWithFormat:@"%@Z", stringTime];
+    }
+    
+    return [NSDate dateFromISO8601:stringTime];
 }
 
 #pragma mark - get upload the images

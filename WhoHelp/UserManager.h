@@ -23,7 +23,7 @@
 
 - (void)removePhotoCacheForSpaceCost;
 - (void)removeUserCacheForSpaceCost;
-- (void)fetchPhotoRequestWithUserId:(NSString *)uid withImgURL:(NSString *)urlString forBlock:(void (^)(NSData *))callback;
+- (void)fetchPhotoRequestWithLink:(NSDictionary *)userLink forBlock:(void (^)(NSData *))callback;
 - (void)fetchUserRequestWithLink:(NSDictionary *)userLink forBlock:(void (^)(NSDictionary *))callback;
 
 + (UserManager *)sharedInstance;

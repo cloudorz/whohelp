@@ -17,14 +17,14 @@
 @interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
 {
 @private
-    NSMutableArray *louds_;
+
     BOOL _reloading;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     
     NSMutableDictionary *curCollection_;
-    NSMutableDictionary *photoCache_;
-    NSString *etag_, *userEtag_, *lastUpdated_;
+    NSMutableArray *louds_;
+    NSString *etag_;
     UITableViewCell *moreCell_;
     
     NSTimer *timer_;
@@ -33,8 +33,7 @@
 
 @property (nonatomic, retain) NSMutableArray *louds;
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property (nonatomic, readonly) NSMutableDictionary *photoCache;
-@property (nonatomic, retain) NSString *etag, *userEtag, *lastUpdated;
+@property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSTimer *timer;
 
@@ -48,7 +47,5 @@
 - (void)fetchNextLoudList;
 - (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;
-- (NSData *)photoFromUser: (NSDictionary *)user;
-- (void)setPhotoAsync: (NSDictionary *)args;
 
 @end

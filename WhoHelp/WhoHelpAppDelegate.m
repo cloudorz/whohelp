@@ -28,6 +28,8 @@
     // select the middle post help tab bar item.
     self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
     self.tabBarController.delegate = self;
+    self.tabBarController.tabBar.opaque = YES;
+    
     // support the shake feature.
     //application.applicationSupportsShakeToEdit = YES;
     

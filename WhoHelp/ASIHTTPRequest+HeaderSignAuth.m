@@ -72,18 +72,28 @@
 - (NSString *)getNormalizedArgs: (NSDictionary *)authArgs
 {
     NSMutableDictionary *args = [NSMutableDictionary dictionaryWithDictionary:authArgs];
-    NSArray *argsPair = [[self.url query] componentsSeparatedByString:@"&"];
-    if (argsPair != nil){
-        for (NSString *e in argsPair) {
-            NSArray *items = [e componentsSeparatedByString:@"="];
-            if (nil == [args objectForKey:[items objectAtIndex:0]]){
-                // a=1&a=2 like this query string, get the a=1, cut a=2...
-                [args setObject:[[items objectAtIndex:1] URLDecodedString] 
-                         forKey:[[items objectAtIndex:0] URLDecodedString]
-                 ];
-            }
 
-            // FIXME bug# first sort by key, then by value. for two same key
+    NSString *queryStr = [self.url query];
+    if (nil != queryStr){
+        NSMutableString *query = [NSMutableString stringWithString:queryStr];
+        [query replaceOccurrencesOfString:@"+" 
+                               withString:@" " 
+                                  options:NSLiteralSearch 
+                                    range:NSMakeRange(0, [query length])];
+        
+        NSArray *argsPair = [query componentsSeparatedByString:@"&"];
+        if (argsPair != nil){
+            for (NSString *e in argsPair) {
+                NSArray *items = [e componentsSeparatedByString:@"="];
+                if (nil == [args objectForKey:[items objectAtIndex:0]]){
+                    // a=1&a=2 like this query string, get the a=1, cut a=2...
+                    [args setObject:[[items objectAtIndex:1] URLDecodedString] 
+                             forKey:[[items objectAtIndex:0] URLDecodedString]
+                     ];
+                }
+
+                // FIXME bug# first sort by key, then by value. for two same key
+            }
         }
     }
     
@@ -100,7 +110,8 @@
                                       ]];
     }
 
-    return [keyAndValuePairs componentsJoinedByString:@"&"];
+    NSString *res = [keyAndValuePairs componentsJoinedByString:@"&"];
+    return res;
 }
 
 - (NSString *)signatureWithArgs: (NSDictionary *)authArgs

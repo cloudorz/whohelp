@@ -78,9 +78,12 @@ static UserManager *sharedUserManager = nil;
     [self.photoCache removeObjectsForKeys:willCutKeys];
 }
 
-- (void)fetchPhotoRequestWithUserId:(NSString *)uid withImgURL:(NSString *)urlString forBlock:(void (^)(NSData *))callback
+- (void)fetchPhotoRequestWithLink:(NSDictionary *)userLink forBlock:(void (^)(NSData *))callback
 {
-    __block NSMutableDictionary *info = [self.photoCache objectForKey:uid];
+    NSString *uid = [userLink objectForKey:@"id"];
+    NSString *urlString = [userLink objectForKey:@"avatar_link"];
+    
+    NSMutableDictionary *info = [self.photoCache objectForKey:uid];
     
     if (nil == info){
         info = [[[NSMutableDictionary alloc] init] autorelease];
@@ -110,9 +113,11 @@ static UserManager *sharedUserManager = nil;
                     [self removePhotoCacheForSpaceCost];
                     // set the new avatar data
                     [info setObject:[request responseData] forKey:@"avatar"];
+
                 }
+
                 [info setObject: [[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
-                [info setObject:[NSDate date] forKey:@"exipred"];
+                [info setObject:[NSDate date] forKey:@"expired"];
                 [self.photoCache setObject:info forKey:uid];
                 
                 callback([info objectForKey:@"avatar"]);
@@ -122,7 +127,7 @@ static UserManager *sharedUserManager = nil;
         
         [request setFailedBlock:^{
             NSError *error = [request error];
-            NSLog(@"%@", [error localizedDescription]);
+            NSLog(@"Fetch avatar: %@", [error localizedDescription]);
             // do nothing
         }];
         
@@ -135,22 +140,18 @@ static UserManager *sharedUserManager = nil;
     NSString *uid = [userLink objectForKey:@"id"];
     NSString *urlString = [userLink objectForKey:@"link"];
     
-    __block NSMutableDictionary *info = [self.userCache objectForKey:uid];
-    
-    if (nil == info){
-        info = [[[NSMutableDictionary alloc] init] autorelease];
-    }
-    
+    NSMutableDictionary *info = [self.userCache objectForKey:uid];
+      
     if (nil != [info objectForKey:@"expired"] && abs([[info objectForKey:@"expired"] timeIntervalSinceNow]) < 6*60){
-        // perform the selector which can use avatar to do something.
+
         callback(info);
         
     } else{
         
         __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
         
-        if (nil != [info objectForKey:@"last"]){
-            [request addRequestHeader:@"If-Modified-Since" value:[info objectForKey:@"last"]];
+        if (nil != [info objectForKey:@"etag"]){
+            [request addRequestHeader:@"If-None-Match" value:[info objectForKey:@"etag"]];
         }
         
         [request setCompletionBlock:^{
@@ -158,29 +159,32 @@ static UserManager *sharedUserManager = nil;
             
             NSInteger code = [request responseStatusCode];
             
-            if (304 == code || 200 == code){
-                if (200 == code){
-                    // create new element of the cache 
-                    // remove the old old ones
-                    [self removeUserCacheForSpaceCost];
-                    // set the new avatar data
-                    info = [[request responseString] JSONValue];
-                }
-                [info setObject: [[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
-                [info setObject:[NSDate date] forKey:@"exipred"];
-                [self.userCache setObject:info forKey:uid];
+            if (200 == code){
+                // remove the old old ones
+                [self removeUserCacheForSpaceCost];
                 
-                callback(info);
+                // create new avatar data
+                NSMutableDictionary *curInfo = [[request responseString] JSONValue];
+
+                [curInfo setObject:[[request responseHeaders] objectForKey:@"Etag"] forKey:@"etag"];
+                [curInfo setObject:[NSDate date] forKey:@"expired"];
+                // cache it
+                [self.userCache setObject:curInfo forKey:uid];
+                
+                callback(curInfo);
+            } else if (304 == code){
+                // just modified old one
+                [info setObject:[NSDate date] forKey:@"expired"];
             }
             
         }];
         
         [request setFailedBlock:^{
             NSError *error = [request error];
-            NSLog(@"%@", [error localizedDescription]);
+            NSLog(@"Fetch User Info: %@", [error localizedDescription]);
             // do nothing
         }];
-        
+        [request signInHeader];
         [self.queue addOperation:request];
     }
 }

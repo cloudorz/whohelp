@@ -35,7 +35,7 @@
 #define CELLBG 6
 #define CELLARROW 7
 
-#define TEXTWIDTH 245.0f
+#define TEXTWIDTH 246.0f
 #define LEFTSPACE 11.0f
 #define BOTTOMSPACE 5.0f
 #define TOPSPACE 5.0f
