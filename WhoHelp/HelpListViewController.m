@@ -37,7 +37,32 @@
     [etag_ release];
     [curCollection_ release];
     [timer_ release];
+    [loudCates_ release];
+    
     [super dealloc];
+}
+
+- (NSDictionary *)loudCates
+{
+    if (nil == loudCates_){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
+        loudCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    }
+    
+    return loudCates_;
+}
+
+- (NSDictionary *)payCates
+{
+    if (nil == payCates_){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+        
+    }
+    
+    return payCates_;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -111,7 +136,7 @@
 //    //self.navigationItem.titleView = navHeaderImage;
 //    
 //    [self.navigationController.navigationBar addSubview:navHeaderImage];
-    
+
     // FIXME just for ios 5 
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navheader.png"] forBarMetrics:UIBarMetricsDefault];
     
@@ -141,7 +166,8 @@
 {
     [super viewWillAppear:animated];
     self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.separatorStyle = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorColor = [UIColor lightGrayColor];
     
 }
 
@@ -252,7 +278,7 @@
     
     NSDictionary *user = [loud objectForKey:@"user"];
     [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
-        
+        [cell retain]; // test TODO
         cell.nameLabel.text = [data objectForKey:@"name"];
         if (300 == [[data objectForKey:@"role"] intValue]){
             // administractor
@@ -260,11 +286,13 @@
         }else {
             cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
         }
-        
+        [cell release];
     }];
-    
+
     [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        cell.avatarImage.image = [UIImage imageNamed:@"avatar.png"];
+        [cell retain]; 
+        cell.avatarImage.image = [UIImage imageWithData: data];
+        [cell release];
     }];
     
     // content
@@ -288,6 +316,34 @@
         
     } else {
         cell.commentLabel.hidden = YES;
+    }
+    
+    // loud categories and pay categories
+    NSDictionary *loudcate = [self.loudCates objectForKey:[loud objectForKey:@"loudcate"]];
+    NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
+    
+    if (nil != loudcate){
+        NSArray *loudColor = [loudcate objectForKey:@"color"];
+        //NSLog(@"loudcate %@ color: %@,%@,%@", [loudcate objectForKey:@"label"], [loudColor objectAtIndex:0], [loudColor objectAtIndex:1], [loudColor objectAtIndex:2]);
+        cell.loudCateLabel.backgroundColor = [UIColor colorWithRed:[[loudColor objectAtIndex:0] intValue]/255.0 
+                                                             green:[[loudColor objectAtIndex:1] intValue]/255.0 
+                                                              blue:[[loudColor objectAtIndex:2] intValue]/255.0 
+                                                             alpha:1.0];
+        cell.loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
+    }
+    
+    if (nil != paycate){
+        //NSLog(@"paycate %@ %@,%@", [paycate objectForKey:@"label"], [paycate objectForKey:@"logo"], [paycate objectForKey:@"showPic"]);
+        cell.payCateImage.image = [UIImage imageNamed:[paycate objectForKey:@"showPic"]];
+    }
+    
+    // pay categories description
+    if ([NSNull null] == [loud objectForKey:@"paydesc"]){
+        cell.payCateDescLabel.text = [paycate objectForKey:@"text"];
+    } else{
+        cell.payCateDescLabel.text = [NSString stringWithFormat:@"%@, %@",
+                                      [paycate objectForKey:@"text"],
+                                      [loud objectForKey:@"paydesc"]];
     }
     
     return cell;
@@ -315,7 +371,7 @@
                                                    constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
                                                        lineBreakMode:UILineBreakModeWordWrap];
         
-        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 79;
+        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 79 - 10;
     } else{
         
         return 40.0f;
@@ -327,6 +383,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+    
     // Navigation logic may go here. Create and push another view controller.
     if (indexPath.row < [self.louds count]){
         

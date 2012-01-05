@@ -26,6 +26,7 @@
     NSMutableArray *louds_;
     NSString *etag_;
     UITableViewCell *moreCell_;
+    NSDictionary *loudCates_, *payCates_;
     
     NSTimer *timer_;
 
@@ -36,6 +37,7 @@
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
 
 
 - (void)reloadTableViewDataSource;

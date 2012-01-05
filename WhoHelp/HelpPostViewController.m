@@ -14,19 +14,14 @@
 - (NSArray *)helpCategories
 {
     if (helpCategories_ == nil){
-        helpCategories_ = [[NSArray alloc] initWithObjects:
-                           [NSArray arrayWithObjects:
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"顺路拼车", @"text", @"pingche", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"征人跑腿", @"text", @"delivery", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"随便问问", @"text", @"virtual", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"修理任务", @"text", @"handyman", @"label", @"avatar.png", @"pic", nil],
-//                            [NSDictionary dictionaryWithObjectsAndKeys:@"招贤纳士", @"text", @"jobs", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"打扫清理", @"text", @"cleaning", @"label", @"avatar.png", @"pic", nil],
-//                            [NSDictionary dictionaryWithObjectsAndKeys:@"吃喝指导", @"text", @"foods", @"label", @"avatar.png", @"pic", nil],
-//                            [NSDictionary dictionaryWithObjectsAndKeys:@"游行指导", @"text", @"travel", @"label", @"avatar.png", @"pic", nil],
-                            nil], 
-                           nil]; 
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
+        NSDictionary *loudCates = [NSDictionary dictionaryWithContentsOfFile:myFile];
+        
+        helpCategories_ = [[NSArray alloc] initWithObjects: [loudCates allValues], nil]; 
+        
     }
+    
     return helpCategories_;
 }
 

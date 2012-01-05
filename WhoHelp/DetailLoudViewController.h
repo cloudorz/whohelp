@@ -12,8 +12,10 @@
 {
 @private
     NSDictionary *loud_;
+    UITableView *commentTable_;
 }
 
 @property (nonatomic, retain) NSDictionary *loud;
+@property (nonatomic, retain) IBOutlet UITableView *commentTable;
 
 @end

@@ -7,14 +7,17 @@
 //
 
 #import "DetailLoudViewController.h"
+#import "Config.h"
 
 @implementation DetailLoudViewController
 
 @synthesize loud=loud_;
+@synthesize commentTable=commentTable_;
 
 - (void)dealloc
 {
     [loud_ release];
+    [commentTable_ release];
     [super dealloc];
 }
 
@@ -41,6 +44,77 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    // common variables
+    UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
+    
+    // root view
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    // tableview
+    self.commentTable.backgroundColor = bgColor;
+    self.commentTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    CGRect tableFrame = self.commentTable.frame;
+    self.commentTable.frame = tableFrame;
+    tableFrame.origin.y = 100;
+    
+    // user header
+    UILabel *userHeader = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 61)] autorelease];
+    userHeader.backgroundColor = bgColor;
+    
+    // user header - avatar
+    UIImageView *userAvatar = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 35, 35)] autorelease];
+    userAvatar.opaque = YES;
+    userAvatar.backgroundColor = [UIColor clearColor];
+    // set image
+    [userHeader addSubview:userAvatar];
+    
+    // user header - name
+    UILabel *userName = [[[UILabel alloc] initWithFrame:CGRectMake(58, 14, 100, 14)] autorelease];
+    userName.opaque = YES;
+    userName.textColor = [UIColor blackColor];
+    userName.backgroundColor = [UIColor clearColor];
+    userName.font = [UIFont boldSystemFontOfSize: NAMEFONTSIZE];
+    // set nameLabel text
+    [userHeader addSubview:userName];
+    
+    // user header - meta infomation
+    UILabel *userMeta = [[UILabel alloc] initWithFrame:CGRectMake(58, 24+NAMEFONTSIZE, 100, 12)];
+    userMeta.opaque = YES;
+    userMeta.textColor = [UIColor colorWithRed:166/255.0 green:157/255.0 blue:152/255.0 alpha:1.0];
+    userMeta.backgroundColor = [UIColor clearColor];
+    userMeta.font = [UIFont systemFontOfSize: 10.0f];
+    // set meta info
+    [userHeader addSubview:userMeta];
+    
+
+    UIImageView *offerHelpImage = [[[UIImageView alloc] initWithFrame:CGRectMake(204, 13, 28, 36)] autorelease];
+    offerHelpImage.opaque = YES;
+    offerHelpImage.backgroundColor = [UIColor clearColor];
+    // set image TODO
+    // set num indicator TODO
+    [userHeader addSubview:offerHelpImage];
+    
+    UIImageView *justLookImage = [[[UIImageView alloc] initWithFrame:CGRectMake(242, 13, 28, 36)] autorelease];
+    justLookImage.opaque = YES;
+    justLookImage.backgroundColor = [UIColor clearColor];
+    // set image TODO
+    // set num indicator TODO
+    [userHeader addSubview:justLookImage];
+    
+    UIImageView *helpDoneImage = [[[UIImageView alloc] initWithFrame:CGRectMake(280, 13, 28, 36)] autorelease]; // FIXME a button ?
+    helpDoneImage.opaque = YES;
+    helpDoneImage.backgroundColor = [UIColor clearColor];
+    // set image TODO
+    // set num indicator TODO
+    [userHeader addSubview:helpDoneImage];
+    
+    // TODO ....  set all value use usermanager 
+    // done butoong 
+    // is self?
+    
+    
+    
+ 
 }
 
 - (void)viewDidUnload
@@ -60,9 +134,8 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

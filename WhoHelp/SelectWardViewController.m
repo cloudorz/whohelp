@@ -24,18 +24,11 @@
 - (NSArray *)wardCategories
 {
     if (wardCategories_ == nil){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        NSDictionary *payCates = [NSDictionary dictionaryWithContentsOfFile:myFile];
         wardCategories_ = [[NSArray alloc] initWithObjects:                           
-                           [NSArray arrayWithObjects:
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"请你吃顿饭", @"text", @"eat", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"请你喝饮料", @"text", @"drink", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"请你看电影", @"text", @"movie", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"送你小礼物", @"text", @"gift", @"label", @"avatar.png", @"pic", nil],
-                            nil],
-                           [NSArray arrayWithObjects:
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"10元", @"text", @"pingche", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"20元", @"text", @"delivery", @"label", @"avatar.png", @"pic", nil],
-                            [NSDictionary dictionaryWithObjectsAndKeys:@"30元", @"text", @"virtual", @"label", @"avatar.png", @"pic", nil],
-                            nil], 
+                           [payCates allValues],
                            nil]; 
     }
     return wardCategories_;

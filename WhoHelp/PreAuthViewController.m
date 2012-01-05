@@ -124,7 +124,7 @@
     [authLinkDouban_ release];
     [authLinkRenren_ release];
     [authLinkWeibo_ release];
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
     [super dealloc];
 }
 

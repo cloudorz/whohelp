@@ -106,9 +106,11 @@
             // create the json parser 
             
             [[ProfileManager sharedInstance] saveUserInfo:[content JSONValue]];
-
-            [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...
+            
+            [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
             [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
+
+            
 
         }
         
@@ -120,6 +122,10 @@
 
 - (void)dealloc
 {
+    // must set delegate to nil
+    // or that's a bug, crash
+    self.webview.delegate = nil; 
+
     [webview_ release];
     [loading_ release];
     [baseURL_ release];

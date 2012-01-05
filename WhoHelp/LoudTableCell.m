@@ -35,28 +35,31 @@
     if (self) {
         
         self.contentView.backgroundColor = [UIColor clearColor];
-        self.selectionStyle = UITableViewCellSelectionStyleBlue;
+        //self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UIView *sbv = [[UIView alloc] init];
+        sbv.backgroundColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
+        sbv.opaque = YES;
+        self.selectedBackgroundView = sbv;
+        [sbv release];
         
         // all params 
         UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
         
-//            NSLog(@"print print %f", contentHeight);
     
         // avatar show
         UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrame.png"]] autorelease];
-        avatarFrame.frame = CGRectMake(12, 11.5, 35, 36);
+        avatarFrame.frame = CGRectMake(12, 12, 35, 36);
         avatarFrame.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:avatarFrame];
+    
         
-        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
+        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)] autorelease]; // show
         avatarImage.tag = 1;
         avatarImage.opaque = YES;
         avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-//            avatarImage.layer.borderWidth = 1;
-//            avatarImage.layer.borderColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
-        //avatarImage.backgroundColor = bgGray;
 
-        [self.contentView addSubview:avatarImage];
+        [avatarFrame addSubview:avatarImage];
+        [self.contentView addSubview:avatarFrame];
 
         // name show
         nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 12, 140, NAMEFONTSIZE+2)] autorelease]; // show
@@ -78,12 +81,6 @@
         timeLabel.backgroundColor = [UIColor clearColor];
         timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     
-        //timeLabel.backgroundColor = bgGray;
-        UIImageView *timeImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"time.png"]] autorelease];
-        timeImage.frame = CGRectMake(0, 0, SMALLFONTSIZE, SMALLFONTSIZE);
-        timeImage.backgroundColor = [UIColor clearColor];
-        [timeLabel addSubview:timeImage];
-    
         [self.contentView addSubview:timeLabel];
         
         // content
@@ -92,35 +89,38 @@
         cellText.textAlignment = UITextAlignmentLeft;
         cellText.lineBreakMode = UILineBreakModeWordWrap;
         cellText.numberOfLines = 0;
+        cellText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
         cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
         cellText.opaque = YES;
         cellText.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:cellText];
         
         // loud category color show
-        loudCateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)];
+        loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
         loudCateLabel.tag = 5;
         loudCateLabel.backgroundColor = [UIColor orangeColor]; // FIXME let me go
         loudCateLabel.opaque = YES;
         
-        payCateDescLabel = [[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)];
+        payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
         payCateDescLabel.tag = 6;
         payCateDescLabel.textAlignment = UITextAlignmentLeft;
         payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
+        payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
+        payCateDescLabel.textColor = [UIColor whiteColor];
         payCateDescLabel.numberOfLines = 1;
-        payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
         payCateDescLabel.backgroundColor = [UIColor clearColor];
         [loudCateLabel addSubview:payCateDescLabel];
     
         [self.contentView addSubview:loudCateLabel];
 
         // loud category and pay category image show
-        loudCateImage = [[UIImageView alloc] initWithFrame:CGRectMake(13.5, 30+NAMEFONTSIZE+contentHeight, 32, 32)];
+        loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 30+NAMEFONTSIZE+contentHeight, 32, 32)] autorelease];
         loudCateImage.tag = 7;
         loudCateImage.opaque = YES;
         loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
         
-        payCateImage = [[UIImageView alloc] initWithFrame:CGRectMake(3.5, 3.5, 25, 25)];
+        payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
         payCateImage.tag = 8;
         payCateImage.backgroundColor = [UIColor clearColor];
         
@@ -128,7 +128,7 @@
         [self.contentView addSubview:loudCateImage];
         
         // comment infomation
-        commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(268, 69+NAMEFONTSIZE+contentHeight, 70, SMALLFONTSIZE+2)] autorelease]; // show
+        commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 69+NAMEFONTSIZE+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
         commentLabel.tag = 9;
         commentLabel.opaque = YES;
         commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
@@ -139,14 +139,14 @@
         
         //timeLabel.backgroundColor = bgGray;
         UIImageView *commentImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"comment.png"]] autorelease];
-        commentImage.frame = CGRectMake(0, 0, SMALLFONTSIZE, SMALLFONTSIZE);
+        commentImage.frame = CGRectMake(0, 1, SMALLFONTSIZE, SMALLFONTSIZE);
         commentImage.backgroundColor = [UIColor clearColor];
         [commentLabel addSubview:commentImage];
         
         [self.contentView addSubview:commentLabel];
         
         // location descrtion
-        UILabel *locationLabel = [[UILabel alloc] initWithFrame:CGRectMake(58, 69+NAMEFONTSIZE+contentHeight, 180, SMALLFONTSIZE+2)];
+        UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 69+NAMEFONTSIZE+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
         locationLabel.backgroundColor = [UIColor clearColor];
         
         UIImageView *locationImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"location.png"]] autorelease];
@@ -154,7 +154,7 @@
         locationImage.backgroundColor = [UIColor clearColor];
         [locationLabel addSubview:locationImage];
         
-        locationDescLabel = [[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 150, SMALLFONTSIZE+2)];
+        locationDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 150, SMALLFONTSIZE+2)] autorelease];
         locationDescLabel.tag = 10;
         locationDescLabel.textAlignment = UITextAlignmentLeft;
         locationDescLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
@@ -168,9 +168,10 @@
         [self.contentView addSubview:locationLabel];
         
         // bottome line
-        UILabel *bottomLine = [[UILabel alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78+contentHeight, 320, 1)];
-        bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/225.0 alpha:1.0];
+        UILabel *bottomLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78-10+contentHeight, 320, 1)] autorelease];
+        bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0];
         bottomLine.opaque = YES;
+        [bottomLine setAlpha:1.0];
         [self.contentView addSubview:bottomLine];
             
             
