@@ -12,10 +12,13 @@
 {
 @private
     NSDictionary *loud_;
-    UITableView *commentTable_;
+    UITableView *tableview_;
+    BOOL isOwner;
+    NSDictionary *loudCates_, *payCates_;
 }
 
 @property (nonatomic, retain) NSDictionary *loud;
-@property (nonatomic, retain) IBOutlet UITableView *commentTable;
+@property (nonatomic, retain) IBOutlet UITableView *tableview;
+@property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
 
 @end

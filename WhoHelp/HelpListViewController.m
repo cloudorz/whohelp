@@ -28,6 +28,7 @@
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
 @synthesize timer=timer_;
+@synthesize tableView=tableView_;
 
 #pragma mark - dealloc 
 - (void)dealloc
@@ -38,6 +39,8 @@
     [curCollection_ release];
     [timer_ release];
     [loudCates_ release];
+    [payCates_ release];
+    [tableView_ release];
     
     [super dealloc];
 }
@@ -65,9 +68,9 @@
     return payCates_;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -104,6 +107,7 @@
 	}
     
     //self.navigationItem.title = @"附近的求助";
+    // FIXME custom navigation bar
     UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
     label.text = @"附近的求助";
     label.textAlignment = UITextAlignmentCenter;
@@ -112,33 +116,17 @@
     
     self.navigationItem.titleView = label;
     
-    // table view header view
+    // 
+    CGRect tableFrame = self.tableView.frame;
+    tableFrame.size.height -= 5;
+    tableFrame.origin.y += 5;
+    self.tableView.frame = tableFrame;
     
-//    UIImageView *headerImage = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
-//    headerImage.image = [UIImage imageNamed:@"tableheader.png"];
-//    headerImage.opaque = YES;
-//    
-//    self.tableView.tableHeaderView = headerImage;
-//    
-//    UIImageView *navHeaderImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navheader.png"]] autorelease];
-//    //navHeaderImage.image = ;
-//    navHeaderImage.frame = CGRectMake(0, 0, 320, 49);
-//    navHeaderImage.opaque = YES;
-//    
-//    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
-//    label.text = @"附近的求助";
-//    label.textAlignment = UITextAlignmentCenter;
-//    label.font = [UIFont systemFontOfSize:18.0f];
-//    label.backgroundColor = [UIColor clearColor];
-//    
-//    [navHeaderImage addSubview:label];
-//
-//    //self.navigationItem.titleView = navHeaderImage;
-//    
-//    [self.navigationController.navigationBar addSubview:navHeaderImage];
-
-    // FIXME just for ios 5 
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navheader.png"] forBarMetrics:UIBarMetricsDefault];
+    UIImageView *topLine = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tableheader.png"]] autorelease];
+    topLine.frame = CGRectMake(0, 0, 320, 5);
+    topLine.opaque = YES;
+    
+    [self.view addSubview:topLine];
     
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
@@ -240,17 +228,17 @@
     return self.moreCell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIImageView *bgHeader = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
-    bgHeader.image = [UIImage imageNamed:@"tableheader.png"];
-    return bgHeader;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 5.0f;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIImageView *bgHeader = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
+//    bgHeader.image = [UIImage imageNamed:@"tableheader.png"];
+//    return bgHeader;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 5.0f;
+//}
 
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -277,22 +265,31 @@
     // avatar
     
     NSDictionary *user = [loud objectForKey:@"user"];
+    
+    [cell retain]; // #{ for tableview may dealloc
     [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
-        [cell retain]; // test TODO
-        cell.nameLabel.text = [data objectForKey:@"name"];
-        if (300 == [[data objectForKey:@"role"] intValue]){
-            // administractor
-            cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-        }else {
-            cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+        
+        if (nil != data){
+            cell.nameLabel.text = [data objectForKey:@"name"];
+            if (300 == [[data objectForKey:@"role"] intValue]){
+                // administractor
+                cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+            }else {
+                cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+            }
         }
-        [cell release];
+        
+        [cell release]; // #}
     }];
-
+    
+    [cell retain]; // #{ for tableview may dealloc
     [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        [cell retain]; 
-        cell.avatarImage.image = [UIImage imageWithData: data];
-        [cell release];
+        
+        if (nil != data){
+            cell.avatarImage.image = [UIImage imageWithData: data];
+        }
+        
+        [cell release]; // #} relase it
     }];
     
     // content

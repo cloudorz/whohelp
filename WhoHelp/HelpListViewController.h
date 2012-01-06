@@ -14,7 +14,7 @@
 #import "LoudTableCell.h"
 #import "UINavigationBar+CustomImage.h"
 
-@interface HelpListViewController : UITableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
+@interface HelpListViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
 {
 @private
 
@@ -27,6 +27,7 @@
     NSString *etag_;
     UITableViewCell *moreCell_;
     NSDictionary *loudCates_, *payCates_;
+    UITableView *tableView_;
     
     NSTimer *timer_;
 
@@ -38,6 +39,7 @@
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 
 - (void)reloadTableViewDataSource;

@@ -48,17 +48,16 @@
         
     
         // avatar show
-        UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrame.png"]] autorelease];
-        avatarFrame.frame = CGRectMake(12, 12, 35, 36);
-        avatarFrame.backgroundColor = [UIColor clearColor];
-    
-        
-        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)] autorelease]; // show
+        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
         avatarImage.tag = 1;
         avatarImage.opaque = YES;
         avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
 
-        [avatarFrame addSubview:avatarImage];
+        [self.contentView addSubview:avatarImage];
+        
+        UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrame.png"]] autorelease];
+        avatarFrame.frame = CGRectMake(12, 12, 35, 36);
+        avatarFrame.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:avatarFrame];
 
         // name show
@@ -176,6 +175,7 @@
             
             
     }
+    
     return self;
 }
 

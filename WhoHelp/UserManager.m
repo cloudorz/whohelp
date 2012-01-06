@@ -41,8 +41,8 @@ static UserManager *sharedUserManager = nil;
     self = [super init];
     if (nil != self){
         // do some thing here
-        self.userCache = [[NSMutableDictionary alloc] init];
-        self.photoCache =  [[NSMutableDictionary alloc] init];
+        self.userCache = [[[NSMutableDictionary alloc] init] autorelease];
+        self.photoCache =  [[[NSMutableDictionary alloc] init] autorelease];
     }
     
     return self;
@@ -121,6 +121,8 @@ static UserManager *sharedUserManager = nil;
                 [self.photoCache setObject:info forKey:uid];
                 
                 callback([info objectForKey:@"avatar"]);
+            } else{
+                callback(nil); // just for relase 
             }
             
         }];
@@ -128,7 +130,7 @@ static UserManager *sharedUserManager = nil;
         [request setFailedBlock:^{
             NSError *error = [request error];
             NSLog(@"Fetch avatar: %@", [error localizedDescription]);
-            // do nothing
+            callback(nil); // must have for release
         }];
         
         [self.queue addOperation:request];
@@ -175,6 +177,9 @@ static UserManager *sharedUserManager = nil;
             } else if (304 == code){
                 // just modified old one
                 [info setObject:[NSDate date] forKey:@"expired"];
+                callback(info);
+            } else{
+                callback(nil);// just for release
             }
             
         }];
@@ -182,7 +187,7 @@ static UserManager *sharedUserManager = nil;
         [request setFailedBlock:^{
             NSError *error = [request error];
             NSLog(@"Fetch User Info: %@", [error localizedDescription]);
-            // do nothing
+            callback(nil); // must have for release
         }];
         [request signInHeader];
         [self.queue addOperation:request];

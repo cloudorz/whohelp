@@ -8,6 +8,7 @@
 
 #import "ProfileManager.h"
 #import "WhoHelpAppDelegate.h"
+#import "UserManager.h"
 #import "Utils.h"
 static ProfileManager *sharedProfileManager = nil;
 
@@ -90,8 +91,15 @@ static ProfileManager *sharedProfileManager = nil;
     self.profile.name = [data objectForKey:@"name"];
     self.profile.userkey = [data objectForKey:@"userkey"];
     self.profile.secret = [data objectForKey:@"secret"];
+    self.profile.link = [data objectForKey:@"link"];
+    self.profile.brief = [data objectForKey:@"brief"] == [NSNull null] ? nil : [data objectForKey:@"brief"];
+    self.profile.phone = [data objectForKey:@"phone"] == [NSNull null] ? nil : [data objectForKey:@"phone"];
+    self.profile.urn = [data objectForKey:@"id"];
     self.profile.updated = [Utils dateFromISOStr:[data objectForKey:@"updated"]];
     
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:data forBlock:^(NSData *data){
+        self.profile.avatar = data; 
+    }];
     //[self save];
     
     

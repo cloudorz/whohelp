@@ -103,7 +103,8 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.editButtonItem.action = @selector(sendButtonPressed:);
     self.editButtonItem.title = @"发送";
-    self.avatar.image = [UIImage imageNamed:@"avatar.png"];  
+    
+    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];  
 }
 
 - (BOOL)hidesBottomBarWhenPushed

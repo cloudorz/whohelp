@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="iOS 4.3">
     <entity name="Profile" representedClassName="Profile">
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="brief" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="secret" attributeType="String" syncable="YES"/>
         <attribute name="updated" optional="YES" attributeType="Date"/>
+        <attribute name="urn" attributeType="String" syncable="YES"/>
         <attribute name="userkey" attributeType="String" syncable="YES"/>
     </entity>
     <elements>

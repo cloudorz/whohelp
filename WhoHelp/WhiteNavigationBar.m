@@ -17,8 +17,9 @@
      else 
      */
     image= [UIImage imageNamed: @"navheader.png"];
-    
     [image drawInRect:rect];
 }
+
+// TODO custom whole bar items
 
 @end
