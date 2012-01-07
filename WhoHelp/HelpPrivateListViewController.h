@@ -7,8 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGORefreshTableHeaderView.h"
 
-@interface HelpPrivateListViewController : UITableViewController
+@interface HelpPrivateListViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
+{
+@private
+    UITableView *tableView_;
+    
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    
+    BOOL _reloading;
+}
+
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 - (void)fetch3Louds;
 

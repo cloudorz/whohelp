@@ -7,7 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGORefreshTableHeaderView.h"
 
-@interface HelpPrizeViewController : UITableViewController
+@interface HelpPrizeViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
+{
+@private
+    UITableView *tableView_;
+
+    EGORefreshTableHeaderView *_refreshHeaderView;
+
+    BOOL _reloading;
+}
+
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 @end

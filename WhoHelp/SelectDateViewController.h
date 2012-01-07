@@ -15,12 +15,13 @@
     UIDatePicker *duetimePicker_;
     HelpSendViewController *hlVC_;
     UILabel *timeLabel_;
+    
 }
 
 @property (nonatomic, retain) IBOutlet UIDatePicker *duetimePicker;
 @property (nonatomic, retain) HelpSendViewController *hlVC;
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
 
-- (IBAction)valueChanged:(id) sender;
+- (void)valueChanged:(id) sender;
 
 @end

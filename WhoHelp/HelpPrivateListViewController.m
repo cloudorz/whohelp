@@ -7,12 +7,24 @@
 //
 
 #import "HelpPrivateListViewController.h"
+#import "CustomItems.h"
 
 @implementation HelpPrivateListViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize tableView=tableView_;
+
+#pragma mark - dealloc 
+- (void)dealloc
 {
-    self = [super initWithStyle:style];
+
+    [tableView_ release];
+    
+    [super dealloc];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -32,17 +44,36 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    
+    if (_refreshHeaderView == nil) {
+		
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
+                                           initWithFrame:CGRectMake(0.0f, 
+                                                                    0.0f - self.tableView.bounds.size.height, 
+                                                                    self.view.frame.size.width, 
+                                                                    self.tableView.bounds.size.height)
+                                           ];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		[view release];
+		
+	}
+    
+    //  update the last update date
+	[_refreshHeaderView refreshLastUpdatedDate];
+    
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"我的求助"] autorelease];
+    
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
+    _refreshHeaderView=nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -197,6 +228,63 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
      */
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //  should be calling your tableviews data source model to reload
+    //[self fakeFetchLoudList];
+    // some more actions here TODO
+    _reloading = YES;
+    
+}
+
+- (void)doneLoadingTableViewData{
+    
+    //  model should call this when its done loading
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    [self reloadTableViewDataSource];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:2.0];
+    
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    return _reloading; // should return if data source model is reloading
+    
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+    
+    return [NSDate date]; // should return date data source was last changed
+    
 }
 
 @end

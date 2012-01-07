@@ -14,6 +14,7 @@
 #import "ProfileManager.h"
 #import "SelectDateViewController.h"
 #import "SelectWardViewController.h"
+#import "CustomItems.h"
 
 
 @implementation HelpSendViewController
@@ -40,7 +41,6 @@
 {
     [helpTextView_ release];
     [numIndicator_ release];
-//    [sendBarItem_ release];
     [loadingIndicator_ release];
     [placeholderLabel_ release];
     // new
@@ -99,12 +99,25 @@
     self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
     // new
-    self.navigationItem.title = [self.helpCategory valueForKey:@"text"];
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.editButtonItem.action = @selector(sendButtonPressed:);
-    self.editButtonItem.title = @"发送";
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:[self.helpCategory valueForKey:@"text"]] autorelease];
     
-    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];  
+    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar]; 
+    
+    
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(backAction:)] autorelease];
+    
+    self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initSendBarButtonItemWithTarget:self 
+                                              action:@selector(sendButtonPressed:)] autorelease];
+    
+}
+
+-(void)backAction:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)hidesBottomBarWhenPushed
@@ -181,14 +194,14 @@
         [self.helpTextView.text length] > 0 &&
         self.duetime != nil){
         
-        self.editButtonItem.enabled = YES;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     } else{
         
-        self.editButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
     }
 }
 
-- (IBAction)sendButtonPressed:(id)sender
+- (void)sendButtonPressed:(id)sender
 {
     [self fakePostHelpTextToRemoteServer];
     [self.loadingIndicator startAnimating];
@@ -200,7 +213,7 @@
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         //    self.sendBarItem.enabled = NO;
-        self.editButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
@@ -260,7 +273,7 @@
     // send ok cancel
     [self.loadingIndicator stopAnimating];
 //    self.sendBarItem.enabled = YES;
-    self.editButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     
 
 }
@@ -271,7 +284,7 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
 //    self.sendBarItem.enabled = YES;
-    self.editButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     // 
     [Utils warningNotification:[[request error] localizedDescription]];
 
@@ -402,7 +415,7 @@
 {
     if ([CLLocationManager locationServicesEnabled]){
 //        self.sendBarItem.enabled = NO;
-        self.editButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         [self performSelector:@selector(parsePosition) withObject:nil afterDelay:2.0];
     } else{

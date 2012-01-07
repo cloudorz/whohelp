@@ -35,6 +35,7 @@
     UIButton *wardButton_;
     NSString *wardText_;
     
+    
 }
 
 @property (nonatomic, retain) IBOutlet UITextView *helpTextView;
@@ -53,10 +54,8 @@
 @property (nonatomic, retain) NSDate *duetime;
 @property (nonatomic, retain) NSDictionary *wardCategory;
 @property (nonatomic, retain) NSString *wardText;
-//@property (nonatomic, retain) UIBarItem *sendBarItem;
 
-- (IBAction)cancelButtonPressed:(id)sender;
-- (IBAction)sendButtonPressed:(id)sender;
+- (void)sendButtonPressed:(id)sender;
 
 - (void)postHelpTextToRemoteServer;
 - (void)fakePostHelpTextToRemoteServer;

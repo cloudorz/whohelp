@@ -8,8 +8,19 @@
 
 #import "HelpPostViewController.h"
 #import "HelpSendViewController.h"
+#import "CustomItems.h"
 
 @implementation HelpPostViewController
+
+@synthesize tableView=tableView_;
+
+-(void)dealloc
+{
+    [helpCategories_ release];
+    [tableView_ release];
+    [super dealloc];
+}
+
 
 - (NSArray *)helpCategories
 {
@@ -17,17 +28,22 @@
         // read the plist loud category configure
         NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
         NSDictionary *loudCates = [NSDictionary dictionaryWithContentsOfFile:myFile];
+        NSArray *sortedArray = [[loudCates allValues] sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *d1, NSDictionary *d2){
+            int dnum1 = [[d1 objectForKey:@"no"] intValue];
+            int dnum2 = [[d2 objectForKey:@"no"] intValue];
+            return dnum1 > dnum2;
+        }];
         
-        helpCategories_ = [[NSArray alloc] initWithObjects: [loudCates allValues], nil]; 
+        helpCategories_ = [[NSArray alloc] initWithObjects: sortedArray, nil]; 
         
     }
     
     return helpCategories_;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -48,11 +64,9 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"求助"] autorelease];
+    
 }
 
 - (void)viewDidUnload
@@ -95,10 +109,10 @@
 //    return 10.0f;
 //}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 10.0f;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 10.0f;
+//}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -183,12 +197,6 @@
     [self.navigationController pushViewController:sendHelpVC animated:YES];
     [sendHelpVC release];
     
-}
-
--(void)dealloc
-{
-    [helpCategories_ release];
-    [super dealloc];
 }
 
 @end

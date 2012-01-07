@@ -8,13 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
-#import "Profile.h"
-#import "OHAttributedLabel.h"
-#import "NSAttributedString+Attributes.h"
 #import "LoudTableCell.h"
-#import "UINavigationBar+CustomImage.h"
 
-@interface HelpListViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, OHAttributedLabelDelegate>
+@interface HelpListViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
 {
 @private
 
@@ -44,12 +40,10 @@
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
-- (void)handleAvatarForCell: (LoudTableCell *)cell withUid: (NSString *)uid withImgLink: (NSString *)link;
-- (void)handleUserInfoForCell: (LoudTableCell *)cell withLink: (NSDictionary *)userLink;
 
 - (void)fetchLoudList;
 - (void)fetchNextLoudList;
-- (void)fetchUpdatedInfo;
+//- (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;
 
 @end

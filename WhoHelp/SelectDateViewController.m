@@ -7,6 +7,7 @@
 //
 
 #import "SelectDateViewController.h"
+#import "CustomItems.h"
 
 @implementation SelectDateViewController
 
@@ -53,9 +54,22 @@
     self.duetimePicker.timeZone = [NSTimeZone localTimeZone];
     [self.duetimePicker addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
     [self valueChanged:self.duetimePicker];
+    
+
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"设置有效期"] autorelease];
+    
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(backAction:)] autorelease];
 }
 
-- (IBAction)valueChanged:(id) sender
+- (void)backAction:(id)sender
+{
+    self.hlVC.duetime = self.duetimePicker.date;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)valueChanged:(id)sender
 {
     
     self.timeLabel.text = [NSDateFormatter localizedStringFromDate:self.duetimePicker.date 
@@ -74,7 +88,6 @@
 {
     [super viewWillDisappear:animated];
     //NSLog(@"%@", [self.duetimePicker.date descriptionWithLocale:[NSTimeZone localTimeZone]]);
-    self.hlVC.duetime = self.duetimePicker.date;
 
 }
 

@@ -4,6 +4,8 @@
 <dict>
 	<key>pinche</key>
 	<dict>
+		<key>no</key>
+		<integer>4</integer>
 		<key>text</key>
 		<string>顺路拼车</string>
 		<key>desc</key>
@@ -12,17 +14,23 @@
 		<string>pinche</string>
 		<key>color</key>
 		<array>
-			<integer>234</integer>
-			<integer>85</integer>
-			<integer>58</integer>
+			<integer>91</integer>
+			<integer>65</integer>
+			<integer>145</integer>
 		</array>
 		<key>colorPic</key>
-		<string>red.png</string>
+		<string>purple.png</string>
 		<key>logo</key>
 		<string>pinche.png</string>
+		<key>stripPic</key>
+		<string>strippurple.png</string>
+		<key>stickPic</key>
+		<string>stickpurple.png</string>
 	</dict>
 	<key>delivery</key>
 	<dict>
+		<key>no</key>
+		<integer>1</integer>
 		<key>text</key>
 		<string>征人跑腿</string>
 		<key>desc</key>
@@ -31,17 +39,23 @@
 		<string>delivery</string>
 		<key>color</key>
 		<array>
-			<integer>111</integer>
-			<integer>186</integer>
-			<integer>44</integer>
+			<integer>226</integer>
+			<integer>62</integer>
+			<integer>45</integer>
 		</array>
 		<key>colorPic</key>
-		<string>green.png</string>
+		<string>red.png</string>
 		<key>logo</key>
-		<string>runner.png</string>
+		<string>delivery.png</string>
+		<key>stripPic</key>
+		<string>stripred.png</string>
+		<key>stickPic</key>
+		<string>stickred.png</string>
 	</dict>
 	<key>virtual</key>
 	<dict>
+		<key>no</key>
+		<integer>2</integer>
 		<key>text</key>
 		<string>随便问问</string>
 		<key>desc</key>
@@ -50,17 +64,23 @@
 		<string>virtual</string>
 		<key>color</key>
 		<array>
-			<integer>0</integer>
-			<integer>160</integer>
-			<integer>202</integer>
+			<integer>95</integer>
+			<integer>176</integer>
+			<integer>34</integer>
 		</array>
 		<key>colorPic</key>
-		<string>blue.png</string>
+		<string>green.png</string>
 		<key>logo</key>
 		<string>virtual.png</string>
+		<key>stripPic</key>
+		<string>stripgreen.png</string>
+		<key>stickPic</key>
+		<string>stickgreen.png</string>
 	</dict>
 	<key>handyman</key>
 	<dict>
+		<key>no</key>
+		<integer>3</integer>
 		<key>text</key>
 		<string>来人修理</string>
 		<key>desc</key>
@@ -69,17 +89,23 @@
 		<string>handyman</string>
 		<key>color</key>
 		<array>
-			<integer>218</integer>
-			<integer>51</integer>
-			<integer>145</integer>
+			<integer>15</integer>
+			<integer>125</integer>
+			<integer>210</integer>
 		</array>
 		<key>colorPic</key>
-		<string>purple.png</string>
+		<string>blue.png</string>
 		<key>logo</key>
 		<string>handyman.png</string>
+		<key>stripPic</key>
+		<string>stripblue.png</string>
+		<key>stickPic</key>
+		<string>stickblue.png</string>
 	</dict>
 	<key>jobs</key>
 	<dict>
+		<key>no</key>
+		<integer>5</integer>
 		<key>text</key>
 		<string>招贤纳士</string>
 		<key>desc</key>
@@ -88,14 +114,43 @@
 		<string>jobs</string>
 		<key>color</key>
 		<array>
-			<integer>241</integer>
-			<integer>141</integer>
-			<integer>0</integer>
+			<integer>238</integer>
+			<integer>133</integer>
+			<integer>8</integer>
 		</array>
 		<key>colorPic</key>
 		<string>orange.png</string>
 		<key>logo</key>
 		<string>jobs.png</string>
+		<key>stripPic</key>
+		<string>striporange.png</string>
+		<key>stickPic</key>
+		<string>stickorange.png</string>
+	</dict>
+	<key>other</key>
+	<dict>
+		<key>no</key>
+		<integer>6</integer>
+		<key>text</key>
+		<string>其他</string>
+		<key>desc</key>
+		<string>其他各种求助</string>
+		<key>label</key>
+		<string>other</string>
+		<key>color</key>
+		<array>
+			<integer>238</integer>
+			<integer>133</integer>
+			<integer>8</integer>
+		</array>
+		<key>colorPic</key>
+		<string>tinypurple.png</string>
+		<key>logo</key>
+		<string>other.png</string>
+		<key>stripPic</key>
+		<string>striptinypurple.png</string>
+		<key>stickPic</key>
+		<string>sticktinypurple.png</string>
 	</dict>
 </dict>
 </plist>

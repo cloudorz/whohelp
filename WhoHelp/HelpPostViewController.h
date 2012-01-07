@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HelpPostViewController : UITableViewController
+@interface HelpPostViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 {
 @private
     NSArray *helpCategories_;
+    UITableView *tableView_;
 }
 
 @property (nonatomic, retain, readonly) NSArray *helpCategories;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 @end

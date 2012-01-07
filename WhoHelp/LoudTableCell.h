@@ -14,13 +14,13 @@
 @interface LoudTableCell : UITableViewCell
 {
 @private
-    UIImageView *avatarImage, *payCateImage, *loudCateImage;
-    UILabel *nameLabel, *timeLabel, *cellText, *loudCateLabel;
+    UIImageView *avatarImage, *payCateImage, *loudCateImage, *loudCateLabel;
+    UILabel *nameLabel, *timeLabel, *cellText;
     UILabel *payCateDescLabel, *commentLabel, *locationDescLabel;
 }
 
-@property (nonatomic, retain) UIImageView *avatarImage, *payCateImage, *loudCateImage;
-@property (nonatomic, retain) UILabel *nameLabel, *timeLabel, *cellText, *loudCateLabel;
+@property (nonatomic, retain) UIImageView *avatarImage, *payCateImage, *loudCateImage, *loudCateLabel;
+@property (nonatomic, retain) UILabel *nameLabel, *timeLabel, *cellText;
 @property (nonatomic, retain) UILabel *payCateDescLabel, *commentLabel, *locationDescLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight;

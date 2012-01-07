@@ -13,12 +13,12 @@
 #import "Utils.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
-#import "WhiteNavigationBar.h"
 // custom
 #import "NSString+URLEncoding.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "DetailLoudViewController.h"
 #import "UserManager.h"
+#import "CustomItems.h"
 
 
 @implementation HelpListViewController
@@ -106,27 +106,8 @@
 		
 	}
     
-    //self.navigationItem.title = @"附近的求助";
-    // FIXME custom navigation bar
-    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
-    label.text = @"附近的求助";
-    label.textAlignment = UITextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:18.0f];
-    label.backgroundColor = [UIColor clearColor];
-    
-    self.navigationItem.titleView = label;
-    
-    // 
-    CGRect tableFrame = self.tableView.frame;
-    tableFrame.size.height -= 5;
-    tableFrame.origin.y += 5;
-    self.tableView.frame = tableFrame;
-    
-    UIImageView *topLine = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tableheader.png"]] autorelease];
-    topLine.frame = CGRectMake(0, 0, 320, 5);
-    topLine.opaque = YES;
-    
-    [self.view addSubview:topLine];
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"附近的求助"] autorelease];
     
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
@@ -297,7 +278,6 @@
     
     // location infomation
     cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
-    //[loud setObject:cell.distanceLabel.text forKey:@"distanceInfo"]; something worng
     
     if (nil == [loud objectForKey:@"createdTime"]){
         [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
@@ -320,12 +300,7 @@
     NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
     
     if (nil != loudcate){
-        NSArray *loudColor = [loudcate objectForKey:@"color"];
-        //NSLog(@"loudcate %@ color: %@,%@,%@", [loudcate objectForKey:@"label"], [loudColor objectAtIndex:0], [loudColor objectAtIndex:1], [loudColor objectAtIndex:2]);
-        cell.loudCateLabel.backgroundColor = [UIColor colorWithRed:[[loudColor objectAtIndex:0] intValue]/255.0 
-                                                             green:[[loudColor objectAtIndex:1] intValue]/255.0 
-                                                              blue:[[loudColor objectAtIndex:2] intValue]/255.0 
-                                                             alpha:1.0];
+        cell.loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
         cell.loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
     }
     
@@ -385,7 +360,13 @@
     if (indexPath.row < [self.louds count]){
         
         DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
+        
         dlVC.loud = [self.louds objectAtIndex:indexPath.row];
+        
+        NSString *urn = [[dlVC.loud objectForKey:@"user"] objectForKey:@"id"];
+        dlVC.user = [[UserManager sharedInstance].userCache objectForKey:urn];
+        dlVC.avatar = [[[UserManager sharedInstance].photoCache objectForKey:urn] objectForKey:@"avatar"];
+        
         [self.navigationController pushViewController:dlVC animated:YES];
         [dlVC release];
     }

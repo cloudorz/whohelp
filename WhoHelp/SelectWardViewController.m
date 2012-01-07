@@ -7,17 +7,20 @@
 //
 
 #import "SelectWardViewController.h"
+#import "CustomItems.h"
 
 @implementation SelectWardViewController
 
 @synthesize hlVC=hlVC_;
 @synthesize wardTextField=wardTextField_;
+@synthesize tableView=tableView_;
 
 - (void)dealloc
 {
     [wardCategories_ release];
     [wardTextField_ release];
     [hlVC_ release];
+    [tableView_ release];
     [super dealloc];
 }
 
@@ -34,9 +37,9 @@
     return wardCategories_;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -56,14 +59,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-
-    self.navigationItem.title = @"选择你的报酬";
     
     // set table header view
     CGRect frame;
@@ -81,6 +76,20 @@
     self.wardTextField = wardDescView;
     self.tableView.tableHeaderView = wardDescView;
     
+    
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"选择你的报酬"] autorelease];
+    
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(backAction:)] autorelease];
+    
+}
+
+-(void)backAction:(id)sender
+{
+     self.hlVC.wardText = self.wardTextField.text;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload
@@ -110,7 +119,6 @@
 {
     [super viewDidDisappear:animated];
     // set back to send view controller ward desc text
-    self.hlVC.wardText = self.wardTextField.text;
     
 }
 

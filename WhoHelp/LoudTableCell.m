@@ -95,9 +95,10 @@
         [self.contentView addSubview:cellText];
         
         // loud category color show
-        loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
+        //loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
+        loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
         loudCateLabel.tag = 5;
-        loudCateLabel.backgroundColor = [UIColor orangeColor]; // FIXME let me go
+        loudCateLabel.backgroundColor = [UIColor clearColor]; // FIXME let me go
         loudCateLabel.opaque = YES;
         
         payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];

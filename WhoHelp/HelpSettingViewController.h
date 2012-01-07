@@ -7,17 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Profile.h"
 
-@interface HelpSettingViewController : UIViewController <UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface HelpSettingViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
 @private
     NSMutableArray *menu_;
     NSData *image_;
+    UITableView *tableView_;
 }
 
 @property (nonatomic, retain, readonly) NSMutableArray *menu;
 @property (nonatomic, retain) NSData *image;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 
 @end

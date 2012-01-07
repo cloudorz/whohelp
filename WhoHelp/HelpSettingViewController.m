@@ -13,9 +13,21 @@
 #import "Utils.h"
 #import "SBJson.h"
 #import "ProfileManager.h"
+#import "CustomItems.h"
 
 @implementation HelpSettingViewController
+
 @synthesize image=image_;
+@synthesize tableView=tableView_;
+
+
+- (void)dealloc
+{
+    [menu_ release];
+    [image_ release];
+    [tableView_ release];
+    [super dealloc];
+}
 
 - (NSMutableArray *)menu
 {
@@ -67,11 +79,9 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"设置"] autorelease];
+
 }
 
 - (void)viewDidUnload
@@ -275,14 +285,6 @@
     [self dismissModalViewControllerAnimated:YES];
     [picker release];
     
-}
-
-
-- (void)dealloc
-{
-    [menu_ release];
-    [image_ release];
-    [super dealloc];
 }
 
 @end

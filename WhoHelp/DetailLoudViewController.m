@@ -13,11 +13,19 @@
 //#import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
 #import "LocationController.h"
+#import "CustomItems.h"
+
+// lots
+#import "ToHelpViewController.h"
+#import "PrizeHelperViewController.h"
+#import "ProfileViewController.h"
 
 @implementation DetailLoudViewController
 
 @synthesize loud=loud_;
 @synthesize tableview=tableview_;
+@synthesize avatar=avatar_;
+@synthesize user=user_;
 
 - (void)dealloc
 {
@@ -25,6 +33,8 @@
     [tableview_ release];
     [loudCates_ release];
     [payCates_ release];
+    [user_ release];
+    [avatar_ release];
     [super dealloc];
 }
 
@@ -78,34 +88,23 @@
     UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
     UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
     
-    // common variables - current user
-    NSDictionary *userLink = [self.loud objectForKey:@"user"];
-    __block NSDictionary *user = nil;
-    [[UserManager sharedInstance] fetchUserRequestWithLink:userLink forBlock:^(NSDictionary *data){
-        user = data;
-    }];
-    
     // common variables - check is owner
-    isOwner = [[ProfileManager sharedInstance].profile.urn isEqual:[user objectForKey:@"id"]];
+    isOwner = [[ProfileManager sharedInstance].profile.urn isEqual:[self.user objectForKey:@"id"]];
     
     // navigation bar title
-    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)] autorelease];
-    label.text =[NSString stringWithFormat:@"%@的求助", 
-                 isOwner ? @"我" :[user objectForKey:@"name"]];
-    label.textAlignment = UITextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:18.0f];
-    label.backgroundColor = [UIColor clearColor];
-    self.navigationItem.titleView = label;
+    self.navigationItem.titleView = [[NavTitleLabel alloc] 
+                                     initWithTitle:[NSString stringWithFormat:@"%@的求助", isOwner ? @"我" :[self.user objectForKey:@"name"]]];
+    
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(backAction:)] autorelease];
+    if (isOwner){
+        self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                                   initDelBarButtonItemWithTarget:self action:@selector(delAction:)] autorelease];
+    }
     
     // root view
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    // top line 
-    UIImageView *topLine = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tableheader.png"]] autorelease];
-    topLine.frame = CGRectMake(0, 0, 320, 5);
-    topLine.opaque = YES;
-    
-    [self.view addSubview:topLine];
     
     
     // user header
@@ -117,25 +116,33 @@
     userAvatar.opaque = YES;
     userAvatar.backgroundColor = [UIColor clearColor];
     //userAvatar.layer.cornerRadius = .0;
-    [userAvatar retain];
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        userAvatar.image = [UIImage imageWithData:data];
-        [userAvatar release];
-    }];
+    userAvatar.image = [UIImage imageWithData:self.avatar];
+
     [userHeader addSubview:userAvatar];
     
     UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrameGray.png"]] autorelease];
     avatarFrame.frame = CGRectMake(12, 13, 35, 36);
     avatarFrame.backgroundColor = [UIColor clearColor];
+
     [userHeader addSubview:avatarFrame];
+    
+    // controller button
+    UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    avatarButton.backgroundColor = [UIColor clearColor];
+    avatarButton.opaque = NO;
+    avatarButton.frame = CGRectMake(12, 13, 35, 36);
+    [avatarButton addTarget:self action:@selector(avatarButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [userHeader addSubview:avatarButton];
     
     // user header - name
     UILabel *userName = [[[UILabel alloc] initWithFrame:CGRectMake(58, 14, 100, 14)] autorelease];
     userName.opaque = YES;
     userName.textColor = [UIColor blackColor];
     userName.backgroundColor = [UIColor clearColor];
+    userName.text = [self.user objectForKey:@"name"];
     userName.font = [UIFont boldSystemFontOfSize: NAMEFONTSIZE];
-    userName.text = [user objectForKey:@"name"];
+    
     [userHeader addSubview:userName];
     
     // user header - meta infomation
@@ -145,7 +152,10 @@
     userMeta.textColor = [UIColor colorWithRed:166/255.0 green:157/255.0 blue:152/255.0 alpha:1.0];
     userMeta.backgroundColor = [UIColor clearColor];
     userMeta.font = [UIFont systemFontOfSize: 10.0f];
-    userMeta.text = [NSString stringWithFormat:@"帮助 %@  好评 %@", [user objectForKey:@"to_help_num"], [user objectForKey:@"star_num"]];
+    userMeta.text = [NSString stringWithFormat:@"帮助 %@  好评 %@", 
+                     [self.user objectForKey:@"to_help_num"], 
+                     [self.user objectForKey:@"star_num"]];
+    
     [userHeader addSubview:userMeta];
     
     if (isOwner){
@@ -207,6 +217,15 @@
         
         [helpDoneImage addSubview:helpDoneLabel];
         [userHeader addSubview:helpDoneImage];
+        
+        // controller button
+        UIButton *helpDoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        helpDoneButton.backgroundColor = [UIColor clearColor];
+        helpDoneButton.opaque = NO;
+        helpDoneButton.frame = CGRectMake(280, 13, 28, 36);
+        [helpDoneButton addTarget:self action:@selector(helpDoneAction:) forControlEvents:UIControlEventTouchUpInside];
+        [userHeader addSubview:helpDoneButton];
+        
     } else{
         UIImageView *offerHelpImage = [[[UIImageView alloc] initWithFrame:CGRectMake(242, 13, 28, 36)] autorelease];
         offerHelpImage.opaque = YES;
@@ -226,6 +245,14 @@
         [offerHelpImage addSubview:offerHelpLabel];
         [userHeader addSubview:offerHelpImage];
         
+        // controller button
+        UIButton *offerHelpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        offerHelpButton.backgroundColor = [UIColor clearColor];
+        offerHelpButton.opaque = NO;
+        offerHelpButton.frame = CGRectMake(242, 13, 28, 36);
+        [offerHelpButton addTarget:self action:@selector(toHelpAction:) forControlEvents:UIControlEventTouchUpInside];
+        [userHeader addSubview:offerHelpButton];
+        
         UIImageView *justLookImage = [[[UIImageView alloc] initWithFrame:CGRectMake(280, 13, 28, 36)] autorelease];
         justLookImage.opaque = YES;
         justLookImage.backgroundColor = [UIColor clearColor];
@@ -243,6 +270,14 @@
         
         [justLookImage addSubview:justLookLabel];
         [userHeader addSubview:justLookImage];
+        
+        // controller button
+        UIButton *justLookButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        justLookButton.backgroundColor = [UIColor clearColor];
+        justLookButton.opaque = NO;
+        justLookButton.frame = CGRectMake(280, 13, 28, 36); 
+        [justLookButton addTarget:self action:@selector(justLookAction:) forControlEvents:UIControlEventTouchUpInside];
+        [userHeader addSubview:justLookButton];
     }
     
     // user header bottome line
@@ -400,10 +435,6 @@
     tableFrame.size.height -= 66;
     tableFrame.origin.y += 66;
     self.tableview.frame = tableFrame;
-    
-    // navigation item left
-   // self.navigationItem.leftBarButtonItem.image = [UIImage imageNamed:@"backup.png"];
-    self.navigationController.navigationItem.leftBarButtonItem.image = [UIImage imageNamed:@"backup.png"];
 
 }
 
@@ -418,6 +449,56 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - actions for button
+
+
+-(void)backAction:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)delAction:(id)sender
+{
+    NSLog(@"Pls. delete me");
+}
+
+-(void)avatarButtonAction:(id)sender
+{
+    ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
+    pvc.user = self.user;
+    pvc.avatar = self.avatar;
+    [self.navigationController pushViewController:pvc animated:YES];
+    [pvc release];
+    
+}
+
+-(void)helpDoneAction:(id)sender
+{
+    PrizeHelperViewController *pvc = [[PrizeHelperViewController alloc] initWithNibName:@"PrizeHelperViewController" bundle:nil];
+    pvc.user = self.user;
+    pvc.avatar = self.avatar;
+    [self.navigationController pushViewController:pvc animated:YES];
+    [pvc release];
+}
+
+-(void)toHelpAction:(id)sender
+{
+    ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
+    tpv.user = self.user;
+    tpv.isHelp = YES;
+    tpv.avatar = self.avatar;
+    [self.navigationController pushViewController:tpv animated:YES];
+}
+
+-(void)justLookAction:(id)sender
+{
+    ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
+    tpv.user = self.user;
+    tpv.isHelp = NO;
+    tpv.avatar = self.avatar;
+    [self.navigationController pushViewController:tpv animated:YES];
 }
 
 #pragma mark - Table view data source
