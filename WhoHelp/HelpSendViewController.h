@@ -7,16 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Profile.h"
-#import "LocationController.h"
-//#import <MapKit/MapKit.h>
-//#import "SSTextView.h"
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate>
 {
 @private
-
-//    UIBarItem *sendBarItem_;
     
     UIActivityIndicatorView *loadingIndicator_;
     
@@ -34,6 +28,8 @@
     UIButton *duetimeButton_;
     UIButton *wardButton_;
     NSString *wardText_;
+    
+    BOOL hasRenren, hasDouban, hasWeibo;
     
     
 }

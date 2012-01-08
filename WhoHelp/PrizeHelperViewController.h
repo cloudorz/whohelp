@@ -8,14 +8,27 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PrizeHelperViewController : UIViewController
+@interface PrizeHelperViewController : UIViewController <UITextViewDelegate>
 {
 @private
-    NSData *avatar_;
-    NSDictionary *user_;
+    NSDictionary *loud_;
+    BOOL hasStar_;
+    UIButton *selectUserButton_, *turnStarButton_;
+    UIImageView *avatar_;
+    UITextView *content_;
+    UILabel *numIndicator_;
+    UILabel *placeholderLabel_;
+    NSDictionary *toUser_;
 }
 
-@property (nonatomic, retain) NSData *avatar;
-@property (nonatomic, retain) NSDictionary *user;
+@property (nonatomic, retain) IBOutlet UIImageView *avatar;
+@property (nonatomic, retain) NSDictionary *loud, *toUser;
+@property (nonatomic, assign) BOOL hasStar;
+@property (nonatomic, retain) IBOutlet UIButton *selectUserButton, *turnStarButton;
+@property (nonatomic, retain) IBOutlet UITextView *content;
+@property (nonatomic, retain) IBOutlet UILabel *numIndicator;
+@property (nonatomic, retain) UILabel *placeholderLabel;
+
+- (void)sendPost;
 
 @end

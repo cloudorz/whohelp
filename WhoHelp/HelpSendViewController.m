@@ -15,6 +15,8 @@
 #import "SelectDateViewController.h"
 #import "SelectWardViewController.h"
 #import "CustomItems.h"
+#import "LocationController.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @implementation HelpSendViewController
@@ -82,9 +84,9 @@
     // display the keyboard
     // you might have to play around a little with numbers in CGRectMake method
     // they work fine with my settings
-    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(8, 2.5, self.helpTextView.frame.size.width - 20.0, 34.0)] autorelease];
-    self.placeholderLabel.text = @"描述一下你的问题";
-
+    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12, 9, self.helpTextView.frame.size.width - 20.0, 16.0)] autorelease];
+    self.placeholderLabel.text = @"请描述你的问题";
+    
     // placeholderLabel is instance variable retained by view controller
     self.placeholderLabel.backgroundColor = [UIColor clearColor];
     self.placeholderLabel.font = [UIFont systemFontOfSize: 14.0];
@@ -95,6 +97,14 @@
     
     [self.loadingIndicator stopAnimating];
     
+    self.helpTextView.clipsToBounds = NO;
+    [self.helpTextView.layer setShadowColor:[[UIColor blackColor] CGColor]];
+    [self.helpTextView.layer setShadowRadius:0.7f];
+    [self.helpTextView.layer setShadowOffset:CGSizeMake(0, 1)];
+    [self.helpTextView.layer setShadowOpacity:0.25f];
+    
+    [self.helpTextView.layer setCornerRadius:5.0f];
+    
     // hidden char numberindicator
     self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
@@ -102,9 +112,16 @@
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:[self.helpCategory valueForKey:@"text"]] autorelease];
     
-    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar]; 
+    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
     
+    // config buttons
+    [self.duetimeButton setImage:[UIImage imageNamed:@"duetime.png"] forState:UIControlStateNormal];
+    [self.duetimeButton setImage:[UIImage imageNamed:@"duetimedown.png"] forState:UIControlStateHighlighted];
     
+    [self.wardButton setImage:[UIImage imageNamed:@"ward.png"] forState:UIControlStateNormal];
+    [self.wardButton setImage:[UIImage imageNamed:@"warddown.png"] forState:UIControlStateHighlighted];
+    
+    // navigation item config
     self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
                                               action:@selector(backAction:)] autorelease];
@@ -112,6 +129,9 @@
     self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initSendBarButtonItemWithTarget:self 
                                               action:@selector(sendButtonPressed:)] autorelease];
+    
+    // init the weibo, renren, douban button enabled 
+    // TODO here
     
 }
 
@@ -261,7 +281,7 @@
 {
 
     if ([request responseStatusCode] == 201){
-        //[self dismissModalViewControllerAnimated:YES];
+
         [self.navigationController popViewControllerAnimated:YES];
         
     } else if (400 == [request responseStatusCode]) {
@@ -272,7 +292,6 @@
 
     // send ok cancel
     [self.loadingIndicator stopAnimating];
-//    self.sendBarItem.enabled = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
 
@@ -283,17 +302,12 @@
 {
     // notify the user
     [self.loadingIndicator stopAnimating];
-//    self.sendBarItem.enabled = YES;
+
     self.navigationItem.rightBarButtonItem.enabled = YES;
     // 
     [Utils warningNotification:[[request error] localizedDescription]];
 
 }
-
-//- (IBAction)addRewardButtonPressed:(id)sender
-//{
-//    self.helpTextView.text = [NSString stringWithFormat:@"%@%@", self.helpTextView.text, @"$"];
-//}
 
 #pragma mark - text view delegate
 
@@ -329,20 +343,15 @@
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    if ([text isEqualToString:@"\n"]){
+    NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if ([text isEqualToString:@"\n"] || inputedTextLength + [text length] > 70){
         return NO;
-    }
+    } 
     
     return YES;
 }
 
 #pragma mark - dimiss the keyboard
-//- (BOOL)textViewShouldEndEditing:(UITextView *)textView
-//{
-//    [textView resignFirstResponder];
-//    NSLog(@"fufufufufuck");
-//    return YES;
-//}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
@@ -355,29 +364,20 @@
 - (void)keyboardWillShow:(NSNotification *)notif
 {
     //keyboard will be shown now. depending for which textfield is active, move up or move down the view appropriately
-
+    
     NSValue *endingFrame = [[notif userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect frame;
     [endingFrame getValue:&frame];
     
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect contentFrame = self.helpTextView.frame;
-
-    if (frame.size.height == 480.0f){
-        // FIXME maybe work?
-        numIndicatorFrame.origin.y = 320.0f - 44.0f - (frame.size.width + 50.0f);
-        contentFrame.size.height = 320.0f - 44.0f - (frame.size.width + 50.0f);
-
-    } else {
-        
-        numIndicatorFrame.origin.y = 480.0f - 44.0f - (frame.size.height + 51.0f);
-        contentFrame.size.height = 480.0f - 44.0f - (frame.size.height + 48.0f);
-    }
+    
+    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 30.0f);
+    contentFrame.size.height = 411.0f - (frame.size.height + 23.0f);
     
     self.numIndicator.frame = numIndicatorFrame;
-
     self.helpTextView.frame = contentFrame;
-
+    
 }
 
 #pragma mark - actions
@@ -400,28 +400,41 @@
 
 - (IBAction)renrenAction:(id)sender
 {
+    UIButton *button = (UIButton *)sender;
+    if (hasRenren){
+        hasRenren = NO;
+        // do some thing here
+        [button setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
+    } else{
+        hasRenren = YES;
+        [button setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)weiboAction:(id)sender
 {
+    UIButton *button = (UIButton *)sender;
+    if (hasWeibo){
+        hasWeibo = NO;
+        // do some thing here
+        [button setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
+    } else{
+        hasWeibo = YES;
+        [button setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)doubanAction:(id)sender
 {
-}
-
-#pragma mark - get the address from lat and lon
-- (void)fakeParsePosition
-{
-    if ([CLLocationManager locationServicesEnabled]){
-//        self.sendBarItem.enabled = NO;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        [self performSelector:@selector(parsePosition) withObject:nil afterDelay:2.0];
+    UIButton *button = (UIButton *)sender;
+    if (hasDouban){
+        hasDouban = NO;
+        // do some thing here
+        [button setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
     } else{
-        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
-    } 
-    
+        hasDouban = YES;
+        [button setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
+    }
 }
 
 @end

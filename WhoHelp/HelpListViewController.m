@@ -209,18 +209,6 @@
     return self.moreCell;
 }
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UIImageView *bgHeader = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)] autorelease];
-//    bgHeader.image = [UIImage imageNamed:@"tableheader.png"];
-//    return bgHeader;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 5.0f;
-//}
-
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];

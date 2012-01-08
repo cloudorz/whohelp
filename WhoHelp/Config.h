@@ -26,6 +26,8 @@
 #define LOUDURI @"/l/"
 #define LOUDSEARCH @"/s"
 #define USERURI @"/u/"
+#define REPLYURI @"/reply/"
+#define PRIZEURI @"/prize/"
 
 #define TEXTWIDTH 246.0f
 

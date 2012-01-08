@@ -19,22 +19,48 @@
 #import "ToHelpViewController.h"
 #import "PrizeHelperViewController.h"
 #import "ProfileViewController.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "SBJson.h"
 
 @implementation DetailLoudViewController
 
 @synthesize loud=loud_;
-@synthesize tableview=tableview_;
+@synthesize tableView=tableView_;
 @synthesize avatar=avatar_;
 @synthesize user=user_;
+@synthesize toHelpNumIndicator=toHelpNumIndicator_;
+@synthesize starNumIndicator=starNumIndicator_;
+@synthesize helpNumIndicator=helpNumIndicator_;
+@synthesize justLookIndicaotr=justLookIndicaotr_;
+@synthesize otherUserView=otherUserView_;
+@synthesize myView=myView_;
+@synthesize avatarImage=avatarImage_;
+@synthesize name=name_;
+@synthesize replies=replies_;
+@synthesize curCollection=curCollection_;
+@synthesize etag=etag_;
+@synthesize moreCell=moreCell_;
 
 - (void)dealloc
 {
     [loud_ release];
-    [tableview_ release];
+    [tableView_ release];
     [loudCates_ release];
     [payCates_ release];
     [user_ release];
     [avatar_ release];
+    [toHelpNumIndicator_ release];
+    [starNumIndicator_ release];
+    [helpNumIndicator_ release];
+    [justLookIndicaotr_ release];
+    [otherUserView_ release];
+    [myView_ release];
+    [avatarImage_ release];
+    [name_ release];
+    [etag_ release];
+    [curCollection_ release];
+    [replies_ release];
+    [moreCell_ release];
     [super dealloc];
 }
 
@@ -105,190 +131,20 @@
     
     // root view
     self.view.backgroundColor = [UIColor whiteColor];
+    self.toHelpNumIndicator.text = [[self.user objectForKey:@"to_help_num"] description];
+    self.starNumIndicator.text = [[self.user objectForKey:@"star_num"] description];
     
-    
-    // user header
-    UIView *userHeader = [[[UIView alloc] initWithFrame:CGRectMake(0, 5, 320, 61)] autorelease];
-    userHeader.backgroundColor = bgColor;
-    
-    // user header - avatar
-    UIImageView *userAvatar = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 35, 35)] autorelease];
-    userAvatar.opaque = YES;
-    userAvatar.backgroundColor = [UIColor clearColor];
-    //userAvatar.layer.cornerRadius = .0;
-    userAvatar.image = [UIImage imageWithData:self.avatar];
-
-    [userHeader addSubview:userAvatar];
-    
-    UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrameGray.png"]] autorelease];
-    avatarFrame.frame = CGRectMake(12, 13, 35, 36);
-    avatarFrame.backgroundColor = [UIColor clearColor];
-
-    [userHeader addSubview:avatarFrame];
-    
-    // controller button
-    UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    avatarButton.backgroundColor = [UIColor clearColor];
-    avatarButton.opaque = NO;
-    avatarButton.frame = CGRectMake(12, 13, 35, 36);
-    [avatarButton addTarget:self action:@selector(avatarButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [userHeader addSubview:avatarButton];
-    
-    // user header - name
-    UILabel *userName = [[[UILabel alloc] initWithFrame:CGRectMake(58, 14, 100, 14)] autorelease];
-    userName.opaque = YES;
-    userName.textColor = [UIColor blackColor];
-    userName.backgroundColor = [UIColor clearColor];
-    userName.text = [self.user objectForKey:@"name"];
-    userName.font = [UIFont boldSystemFontOfSize: NAMEFONTSIZE];
-    
-    [userHeader addSubview:userName];
-    
-    // user header - meta infomation
-    UILabel *userMeta = [[[UILabel alloc] initWithFrame:CGRectMake(58, 24+NAMEFONTSIZE, 100, 12)] autorelease];
-    userMeta.opaque = YES;
-    
-    userMeta.textColor = [UIColor colorWithRed:166/255.0 green:157/255.0 blue:152/255.0 alpha:1.0];
-    userMeta.backgroundColor = [UIColor clearColor];
-    userMeta.font = [UIFont systemFontOfSize: 10.0f];
-    userMeta.text = [NSString stringWithFormat:@"帮助 %@  好评 %@", 
-                     [self.user objectForKey:@"to_help_num"], 
-                     [self.user objectForKey:@"star_num"]];
-    
-    [userHeader addSubview:userMeta];
-    
+    self.name.text = [self.user objectForKey:@"name"];
+    self.avatarImage.image = [UIImage imageWithData:self.avatar];
     if (isOwner){
+        self.myView.hidden = NO;
         int justlook_num = [[self.loud objectForKey:@"reply_num"] intValue] - [[self.loud objectForKey:@"help_num"] intValue];
-        
-        // offer help number
-        UIImageView *offerHelpImage = [[[UIImageView alloc] initWithFrame:CGRectMake(204, 13, 28, 36)] autorelease];
-        offerHelpImage.opaque = YES;
-        offerHelpImage.backgroundColor = [UIColor clearColor];
-        offerHelpImage.image = [UIImage imageNamed:@"offerhelpnum.png"];
-        
-        UILabel *offerHelpLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 22, 24, 10)];
-        offerHelpLabel.textAlignment = UITextAlignmentCenter;
-        offerHelpLabel.font = [UIFont boldSystemFontOfSize: SMALLFONTSIZE];
-        offerHelpLabel.textColor = [UIColor whiteColor];
-        offerHelpLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        offerHelpLabel.numberOfLines = 1;
-        offerHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        offerHelpLabel.backgroundColor = [UIColor clearColor];
-        offerHelpLabel.text = [NSString stringWithFormat:@"%@", [self.loud objectForKey:@"help_num"]];
-        
-        [offerHelpImage addSubview:offerHelpLabel];
-        [userHeader addSubview:offerHelpImage];
-        
-        // just look for fun number
-        UIImageView *justLookImage = [[[UIImageView alloc] initWithFrame:CGRectMake(242, 13, 28, 36)] autorelease];
-        justLookImage.opaque = YES;
-        justLookImage.backgroundColor = [UIColor clearColor];
-        justLookImage.image = [UIImage imageNamed:@"justlooknum.png"];
-       
-        UILabel *justLookLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 22, 24, 10)];
-        justLookLabel.textAlignment = UITextAlignmentCenter;
-        justLookLabel.font = [UIFont boldSystemFontOfSize: SMALLFONTSIZE];
-        justLookLabel.textColor = [UIColor whiteColor];
-        justLookLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        justLookLabel.numberOfLines = 1;
-        justLookLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        justLookLabel.backgroundColor = [UIColor clearColor];
-        justLookLabel.text = [NSString stringWithFormat:@"%d", justlook_num];
-        
-        [justLookImage addSubview:justLookLabel];
-        [userHeader addSubview:justLookImage];
-        
-        // help done
-        UIImageView *helpDoneImage = [[[UIImageView alloc] initWithFrame:CGRectMake(280, 13, 28, 36)] autorelease]; // FIXME a button ?
-        helpDoneImage.opaque = YES;
-        helpDoneImage.backgroundColor = [UIColor clearColor];
-        helpDoneImage.image = [UIImage imageNamed:@"helpdone.png"];
-        
-        UILabel *helpDoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 22, 24, 10)];
-        helpDoneLabel.textAlignment = UITextAlignmentCenter;
-        helpDoneLabel.font = [UIFont boldSystemFontOfSize: SMALLFONTSIZE];
-        helpDoneLabel.textColor = [UIColor whiteColor];
-        helpDoneLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        helpDoneLabel.numberOfLines = 1;
-        helpDoneLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        helpDoneLabel.backgroundColor = [UIColor clearColor];
-        helpDoneLabel.text = @"完成";
-        
-        [helpDoneImage addSubview:helpDoneLabel];
-        [userHeader addSubview:helpDoneImage];
-        
-        // controller button
-        UIButton *helpDoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        helpDoneButton.backgroundColor = [UIColor clearColor];
-        helpDoneButton.opaque = NO;
-        helpDoneButton.frame = CGRectMake(280, 13, 28, 36);
-        [helpDoneButton addTarget:self action:@selector(helpDoneAction:) forControlEvents:UIControlEventTouchUpInside];
-        [userHeader addSubview:helpDoneButton];
-        
+
+        [self.helpNumIndicator setTitle:[[self.loud objectForKey:@"help_num"] description] forState:UIControlStateNormal];
+        [self.justLookIndicaotr setTitle:[NSString stringWithFormat:@"%d", justlook_num] forState:UIControlStateNormal];
     } else{
-        UIImageView *offerHelpImage = [[[UIImageView alloc] initWithFrame:CGRectMake(242, 13, 28, 36)] autorelease];
-        offerHelpImage.opaque = YES;
-        offerHelpImage.backgroundColor = [UIColor clearColor];
-        offerHelpImage.image = [UIImage imageNamed:@"offerhelp.png"];
-        
-        UILabel *offerHelpLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 22, 24, 10)];
-        offerHelpLabel.textAlignment = UITextAlignmentCenter;
-        offerHelpLabel.font = [UIFont boldSystemFontOfSize: SMALLFONTSIZE];
-        offerHelpLabel.textColor = [UIColor whiteColor];
-        offerHelpLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        offerHelpLabel.numberOfLines = 1;
-        offerHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        offerHelpLabel.backgroundColor = [UIColor clearColor];
-        offerHelpLabel.text = @"帮助";
-        
-        [offerHelpImage addSubview:offerHelpLabel];
-        [userHeader addSubview:offerHelpImage];
-        
-        // controller button
-        UIButton *offerHelpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        offerHelpButton.backgroundColor = [UIColor clearColor];
-        offerHelpButton.opaque = NO;
-        offerHelpButton.frame = CGRectMake(242, 13, 28, 36);
-        [offerHelpButton addTarget:self action:@selector(toHelpAction:) forControlEvents:UIControlEventTouchUpInside];
-        [userHeader addSubview:offerHelpButton];
-        
-        UIImageView *justLookImage = [[[UIImageView alloc] initWithFrame:CGRectMake(280, 13, 28, 36)] autorelease];
-        justLookImage.opaque = YES;
-        justLookImage.backgroundColor = [UIColor clearColor];
-        justLookImage.image = [UIImage imageNamed:@"justlook.png"];
-        
-        UILabel *justLookLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 22, 24, 10)];
-        justLookLabel.textAlignment = UITextAlignmentCenter;
-        justLookLabel.font = [UIFont boldSystemFontOfSize: SMALLFONTSIZE];
-        justLookLabel.textColor = [UIColor whiteColor];
-        justLookLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        justLookLabel.numberOfLines = 1;
-        justLookLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        justLookLabel.backgroundColor = [UIColor clearColor];
-        justLookLabel.text = @"围观";
-        
-        [justLookImage addSubview:justLookLabel];
-        [userHeader addSubview:justLookImage];
-        
-        // controller button
-        UIButton *justLookButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        justLookButton.backgroundColor = [UIColor clearColor];
-        justLookButton.opaque = NO;
-        justLookButton.frame = CGRectMake(280, 13, 28, 36); 
-        [justLookButton addTarget:self action:@selector(justLookAction:) forControlEvents:UIControlEventTouchUpInside];
-        [userHeader addSubview:justLookButton];
+        self.otherUserView.hidden = NO;
     }
-    
-    // user header bottome line
-    UILabel *bottomLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, 60, 320, 1)] autorelease];
-    bottomLine.backgroundColor = [UIColor colorWithRed:233/255.0 green:229/255.0 blue:226/255.0 alpha:1.0];
-    bottomLine.opaque = YES;
-    
-    [userHeader addSubview:bottomLine];
-    
-    [self.view addSubview:userHeader];
-    
     
     // conetent  put below in table header view
     
@@ -428,13 +284,31 @@
     [tableHeaderView addSubview:cbottomLine];
     
     // tableview
-    self.tableview.backgroundColor = bgColor;
-    self.tableview.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableview.tableHeaderView = tableHeaderView;
-    CGRect tableFrame = self.tableview.frame;
-    tableFrame.size.height -= 66;
-    tableFrame.origin.y += 66;
-    self.tableview.frame = tableFrame;
+    self.tableView.backgroundColor = bgColor;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.tableHeaderView = tableHeaderView;
+//    CGRect tableFrame = self.tableview.frame;
+//    tableFrame.size.height -= 66;
+//    tableFrame.origin.y += 66;
+//    self.tableview.frame = tableFrame;
+    
+    if (_refreshHeaderView == nil) {
+		
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
+                                           initWithFrame:CGRectMake(0.0f, 
+                                                                    0.0f - self.tableView.bounds.size.height, 
+                                                                    self.view.frame.size.width, 
+                                                                    self.tableView.bounds.size.height)
+                                           ];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		[view release];
+		
+	}
+    
+    //  update the last update date
+	[_refreshHeaderView refreshLastUpdatedDate];
 
 }
 
@@ -464,7 +338,7 @@
     NSLog(@"Pls. delete me");
 }
 
--(void)avatarButtonAction:(id)sender
+-(IBAction)avatarButtonAction:(id)sender
 {
     ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
     pvc.user = self.user;
@@ -474,32 +348,92 @@
     
 }
 
--(void)helpDoneAction:(id)sender
+-(IBAction)helpDoneAction:(id)sender
 {
     PrizeHelperViewController *pvc = [[PrizeHelperViewController alloc] initWithNibName:@"PrizeHelperViewController" bundle:nil];
-    pvc.user = self.user;
-    pvc.avatar = self.avatar;
+    pvc.loud = self.loud;
     [self.navigationController pushViewController:pvc animated:YES];
     [pvc release];
 }
 
--(void)toHelpAction:(id)sender
+-(IBAction)toHelpAction:(id)sender
 {
     ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-    tpv.user = self.user;
+    tpv.loud = self.loud;
     tpv.isHelp = YES;
-    tpv.avatar = self.avatar;
     [self.navigationController pushViewController:tpv animated:YES];
 }
 
--(void)justLookAction:(id)sender
+-(IBAction)justLookAction:(id)sender
 {
     ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-    tpv.user = self.user;
+    tpv.loud = self.loud;
     tpv.isHelp = NO;
-    tpv.avatar = self.avatar;
     [self.navigationController pushViewController:tpv animated:YES];
 }
+
+#pragma mark - grap the comments
+- (void)fetchReplyList
+{
+    
+    NSURL *url = [NSURL URLWithString:[self.loud objectForKey:@"replies_link"]];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * collection = [body JSONValue];
+        
+        
+        self.curCollection = collection;
+        self.replies = [collection objectForKey:@"replies"];
+        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+        //[[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+        
+        
+    } else if (304 == code){
+        // do nothing
+    } else if (400 == code) {
+        
+        [Utils warningNotification:@"参数错误"];
+        
+    } else if (401 == code){
+        [Utils warningNotification:@"需授权认证"];
+    } else{
+        
+        [Utils warningNotification:@"服务器异常返回"];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request replies list: %@", [error localizedDescription]);
+    
+}
+
 
 #pragma mark - Table view data source
 
@@ -511,23 +445,113 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return self.replies.count + 1;
+}
+
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moretag"] autorelease];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
+    
+	if (nil == self.curCollection){
+        labelNumber.text = @"正在加载...";
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
+        labelNumber.text = @"";
+    } else {
+        labelNumber.text = @"获取更多";
+    }
+    
+	[labelNumber setTag:1];
+	labelNumber.backgroundColor = [UIColor clearColor];
+	labelNumber.font = [UIFont boldSystemFontOfSize:14];
+	[cell.contentView addSubview:labelNumber];
+	[labelNumber release];
+	
+    self.moreCell = cell;
+    
+    return self.moreCell;
+}
+
+- (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+    
+    static NSString *CellIdentifier;
+    CGFloat contentHeight= [[reply objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+                                                      constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
+                                                          lineBreakMode:UILineBreakModeWordWrap].height;
+    
+    CellIdentifier = [NSString stringWithFormat:@"replyEntry:%.0f", contentHeight];
+    
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    
+    if (cell == nil) {
+        
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                     reuseIdentifier:CellIdentifier 
+                                              /*height:contentHeight*/] autorelease];
+    } 
+    
+    
+    // avatar
+    
+    NSDictionary *user = [reply objectForKey:@"user"];
+    
+    [cell retain]; // #{ for tableview may dealloc
+    [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
+        
+        if (nil != data){
+//            cell.nameLabel.text = [data objectForKey:@"name"];
+//            if (300 == [[data objectForKey:@"role"] intValue]){
+//                // administractor
+//                cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+//            }else {
+//                cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+//            }
+        }
+        
+        [cell release]; // #}
+    }];
+    
+    [cell retain]; // #{ for tableview may dealloc
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
+        
+//        if (nil != data){
+//            cell.avatarImage.image = [UIImage imageWithData: data];
+//        }
+//        
+        [cell release]; // #} relase it
+    }];
+    
+    // content
+    cell.textLabel.text = [NSString stringWithFormat:@"%@,(%@),", [reply objectForKey:@"content"], [reply objectForKey:@"is_help"]];
+//    
+//    // location infomation
+//    cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
+//    
+//    if (nil == [reply objectForKey:@"createdTime"]){
+//        [reply setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
+//    }
+//    
+//    // date time
+//    cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
+    
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-    
-    // Configure the cell...
-    
-    return cell;
+    if (indexPath.row == [self.replies count]) {
+		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
+	}
 }
 
 /*
@@ -581,6 +605,68 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
      */
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //  should be calling your tableviews data source model to reload
+    [self fetchReplyList];
+    // some more actions here TODO
+    _reloading = YES;
+    
+}
+
+- (void)doneLoadingTableViewData{
+    
+    //  model should call this when its done loading
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    [self reloadTableViewDataSource];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:2.0];
+    
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    return _reloading; // should return if data source model is reloading
+    
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+    
+    return [NSDate date]; // should return date data source was last changed
+    
+}
+
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
 }
 
 @end

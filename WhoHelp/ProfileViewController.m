@@ -38,6 +38,11 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (BOOL)hidesBottomBarWhenPushed
+{ 
+    return TRUE; 
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
