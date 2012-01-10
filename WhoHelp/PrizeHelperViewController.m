@@ -15,6 +15,7 @@
 #import "Config.h"
 #import "SBJson.h"
 #import "Utils.h"
+#import "UserManager.h"
 
 @implementation PrizeHelperViewController
 
@@ -133,6 +134,12 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
+    
+    if (self.toUser != nil){
+        [[UserManager sharedInstance] fetchPhotoRequestWithLink:self.toUser forBlock:^(NSData *data){
+            [self.selectUserButton setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+        }];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -152,7 +159,7 @@
 
 -(void)sendButtonPressed:(id)sender
 {
-    [self sendPost];
+    [self sendPrizePost];
 }
 
 -(IBAction)turnStarAction:(id)sender
@@ -170,6 +177,8 @@
 -(IBAction)selectUserAction:(id)sender
 {
     SelectUserViewController *suvc = [[SelectUserViewController alloc] initWithNibName:@"SelectUserViewController" bundle:nil];
+    suvc.loudURN = [self.loud objectForKey:@"id"];
+    suvc.phvc = self;
     [self.navigationController pushViewController:suvc animated:YES];
     [suvc release];
 }
@@ -187,7 +196,7 @@
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect contentFrame = self.content.frame;
     
-    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 30.0f);
+    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 32.0f);
     contentFrame.size.height = 411.0f - (frame.size.height + 23.0f);
     
     self.numIndicator.frame = numIndicatorFrame;
@@ -197,14 +206,15 @@
 
 -(void)turnOnSendEnabled
 {
-    if ([self.content hasText] && self.toUser != nil){
+     NSInteger nonSpaceTextLength = [[self.content.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if (nonSpaceTextLength > 0 && self.toUser != nil){
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else{
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
 }
 
-- (void)sendPost
+- (void)sendPrizePost
 {
 
     //[self.loadingIndicator startAnimating];
@@ -278,8 +288,8 @@
         
     }
     
-    NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - nonSpaceTextLength/*[self.helpTextView.text length]*/];
+    //NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - /*nonSpaceTextLength*/[self.content.text length]];
     
     [self turnOnSendEnabled];
     
@@ -295,8 +305,8 @@
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    if ([text isEqualToString:@"\n"] || inputedTextLength + [text length] > 70){
+    //NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if ([text isEqualToString:@"\n"] || self.content.text.length + [text length] > 70){
         return NO;
     } 
     

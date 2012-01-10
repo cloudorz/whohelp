@@ -91,7 +91,7 @@
 							<object class="IBUITextView" id="358058107">
 								<reference key="NSNextResponder" ref="444472096"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{58, 13}, {250, 174}}</string>
+								<string key="NSFrame">{{58, 13}, {250, 172}}</string>
 								<reference key="NSSuperview" ref="444472096"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="979395037"/>
@@ -283,7 +283,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">感谢</string>
+								<string key="IBUIText">好评</string>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MC43NDUwOTgwMzkyIDAuNjk4MDM5MjE1NyAwLjY2NjY2NjY2NjcAA</bytes>

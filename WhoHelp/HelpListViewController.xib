@@ -40,6 +40,21 @@
 				<int key="NSvFlags">292</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="IBUIImageView" id="115502629">
+						<reference key="NSNextResponder" ref="893638867"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrameSize">{320, 5}</string>
+						<reference key="NSSuperview" ref="893638867"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="873029372"/>
+						<string key="NSReuseIdentifierKey">_NS:567</string>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">tableheader.png</string>
+						</object>
+					</object>
 					<object class="IBUITableView" id="873029372">
 						<reference key="NSNextResponder" ref="893638867"/>
 						<int key="NSvFlags">274</int>
@@ -48,7 +63,7 @@
 						<reference key="NSWindow"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MC45MwA</bytes>
+							<bytes key="NSWhite">MQA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -66,21 +81,6 @@
 						<float key="IBUIRowHeight">44</float>
 						<float key="IBUISectionHeaderHeight">22</float>
 						<float key="IBUISectionFooterHeight">22</float>
-					</object>
-					<object class="IBUIImageView" id="115502629">
-						<reference key="NSNextResponder" ref="893638867"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrameSize">{320, 5}</string>
-						<reference key="NSSuperview" ref="893638867"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="873029372"/>
-						<string key="NSReuseIdentifierKey">_NS:567</string>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">tableheader.png</string>
-						</object>
 					</object>
 				</object>
 				<string key="NSFrame">{{0, 64}, {320, 416}}</string>

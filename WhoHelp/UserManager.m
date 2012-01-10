@@ -6,6 +6,25 @@
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
+/*****
+ usage example:
+     [cell retain]; // #{ for tableview may dealloc
+     [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
+         
+         if (nil != data){
+             cell.nameLabel.text = [data objectForKey:@"name"];
+             if (300 == [[data objectForKey:@"role"] intValue]){
+                 // administractor
+                 cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+             }else {
+                 cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+             }
+         }
+         
+         [cell release]; // #}
+     }];
+ */
+
 #import "UserManager.h"
 #import "ASIHTTPRequest.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
@@ -89,7 +108,7 @@ static UserManager *sharedUserManager = nil;
         info = [[[NSMutableDictionary alloc] init] autorelease];
     }
     
-    if (nil != [info objectForKey:@"expired"] && abs([[info objectForKey:@"expired"] timeIntervalSinceNow]) < 6*60){
+    if (nil != [info objectForKey:@"expired"] && abs([[info objectForKey:@"expired"] timeIntervalSinceNow]) < PHOTODUE){
         // perform the selector which can use avatar to do something.
         callback([info objectForKey:@"avatar"]);
         
@@ -144,7 +163,7 @@ static UserManager *sharedUserManager = nil;
     
     NSMutableDictionary *info = [self.userCache objectForKey:uid];
       
-    if (nil != [info objectForKey:@"expired"] && abs([[info objectForKey:@"expired"] timeIntervalSinceNow]) < 6*60){
+    if (nil != [info objectForKey:@"expired"] && abs([[info objectForKey:@"expired"] timeIntervalSinceNow]) < USERDUE){
 
         callback(info);
         

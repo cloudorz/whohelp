@@ -7,16 +7,28 @@
 //
 
 #import "SelectUserViewController.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "SBJson.h"
+#import "Config.h"
 #import "CustomItems.h"
+#import "ProfileManager.h"
+#import "Utils.h"
+#import "UserManager.h"
 
 @implementation SelectUserViewController
 
 @synthesize tableView=tableView_;
+@synthesize loudURN=loudURN_;
+@synthesize users=users_;
+@synthesize phvc=phvc_;
 
 
 -(void)dealloc
 {
     [tableView_ release];
+    [loudURN_ release];
+    [users_ release];
+    [phvc_ release];
     [super dealloc];
 }
 
@@ -48,7 +60,7 @@
                                               initBackBarButtonItemWithTarget:self 
                                               action:@selector(backAction:)] autorelease];
     
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"选择帮助过你的人"] autorelease];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"谁帮了你?"] autorelease];
 }
 
 #pragma mark - actions
@@ -69,21 +81,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self fetchUserList];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -96,83 +100,119 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return self.users.count;
+}
+
+#pragma mark - RESTful request
+
+- (void)fetchUserList
+{
+    // get the loud id
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", HOST, USERLISTURI, self.loudURN]];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        self.users = [body JSONValue];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else if (400 == code) {
+        
+        [Utils warningNotification:@"参数错误"];
+        
+    } else if (401 == code){
+        [Utils warningNotification:@"授权失败"];
+    } else{
+        
+        [Utils warningNotification:@"服务器异常返回"];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request loud list: %@", [error localizedDescription]);
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UserTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UserTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
+    NSDictionary *user = [self.users objectAtIndex:indexPath.row];
+    
+    cell.name.text = [user objectForKey:@"name"];
+    
+    [cell retain]; //{#
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
+        if (data != nil){
+            cell.avatarImage.image = [UIImage imageWithData:data];  
+        }
+        [cell release]; //#}
+
+    }];
+
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return 27.0f;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    UIImageView *sectionView = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 27)] autorelease];
+    sectionView.image = [UIImage imageNamed:@"bar.png"];
+    UILabel *title = [[[UILabel alloc] initWithFrame:CGRectMake(12, 0, 100, 27)] autorelease];
+    title.backgroundColor = [UIColor clearColor];
+    title.opaque = NO;
+    title.font = [UIFont boldSystemFontOfSize:14.0f];
+    title.textColor = [UIColor whiteColor];
+    title.text = @"热心人士"; 
+    [sectionView addSubview:title];
+    
+    return sectionView;
+    
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+    
+    self.phvc.toUser = [self.users objectAtIndex:indexPath.row];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

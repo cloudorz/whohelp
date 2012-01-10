@@ -23,11 +23,8 @@
 
 @synthesize helpTextView=helpTextView_;
 @synthesize numIndicator=numIndicator_;
-//@synthesize sendBarItem=sendBarItem_;
 @synthesize loadingIndicator=loadingIndicator_;
 @synthesize placeholderLabel=placeholderLabel_;
-
-// new 
 @synthesize helpCategory=helpCategory_;
 @synthesize avatar=avatar_;
 @synthesize duetimeLabel=duetimeLabel_;
@@ -45,7 +42,6 @@
     [numIndicator_ release];
     [loadingIndicator_ release];
     [placeholderLabel_ release];
-    // new
     [helpCategory_ release];
     [avatar_ release];
     [wardLabel_ release];
@@ -104,6 +100,10 @@
     [self.helpTextView.layer setShadowOpacity:0.25f];
     
     [self.helpTextView.layer setCornerRadius:5.0f];
+    
+    // label round and radius
+    [self.duetimeLabel.layer setCornerRadius:5.0f];
+    [self.wardLabel.layer setCornerRadius:5.0f];
     
     // hidden char numberindicator
     self.numIndicator.hidden = YES;
@@ -164,16 +164,17 @@
     
     // show setting time
     if (nil != self.duetime){
-        [self.duetimeButton setTitle:[NSDateFormatter localizedStringFromDate:self.duetime
-                                                                    dateStyle:NSDateFormatterShortStyle 
-                                                                    timeStyle:NSDateFormatterShortStyle] 
-                            forState:UIControlStateNormal];
+        
+        // config buttons
+        [self.duetimeButton setImage:[UIImage imageNamed:@"duetimeon.png"] forState:UIControlStateNormal];
+        [self.duetimeButton setImage:[UIImage imageNamed:@"duetimeondown.png"] forState:UIControlStateHighlighted];
+
     }
     
     // show setting ward
     if (nil != self.wardCategory){
-        [self.wardButton setTitle:[self.wardCategory valueForKey:@"text"] 
-                         forState:UIControlStateNormal];
+        [self.wardButton setImage:[UIImage imageNamed:@"wardon.png"] forState:UIControlStateNormal];
+        [self.wardButton setImage:[UIImage imageNamed:@"wardondown.png"] forState:UIControlStateHighlighted];
     }
     
     // send status
@@ -209,9 +210,10 @@
 - (void)turnOnSendEnabled
 {
     // check the send button enabled 
+     NSInteger nonSpaceTextLength = [[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
     if (self.helpCategory != nil && 
         self.wardCategory != nil &&
-        [self.helpTextView.text length] > 0 &&
+        nonSpaceTextLength > 0 &&
         self.duetime != nil){
         
         self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -326,8 +328,8 @@
         
     }
         
-    NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - nonSpaceTextLength/*[self.helpTextView.text length]*/];
+    //NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - /*nonSpaceTextLength*/[self.helpTextView.text length]];
     
     [self turnOnSendEnabled];
 
@@ -343,8 +345,8 @@
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    if ([text isEqualToString:@"\n"] || inputedTextLength + [text length] > 70){
+    //NSInteger inputedTextLength = [textView.text length];
+    if ([text isEqualToString:@"\n"] || textView.text.length + [text length] > 70){
         return NO;
     } 
     
@@ -357,6 +359,16 @@
     [super touchesBegan:touches withEvent:event];
     
     [self.helpTextView resignFirstResponder];
+    
+    // change the size
+    CGRect numIndicatorFrame = self.numIndicator.frame;
+    CGRect contentFrame = self.helpTextView.frame;
+    
+    numIndicatorFrame.origin.y = 163.0f;
+    contentFrame.size.height = 172.0f;
+    
+    self.numIndicator.frame = numIndicatorFrame;
+    self.helpTextView.frame = contentFrame;
 }
 
 
@@ -372,7 +384,7 @@
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect contentFrame = self.helpTextView.frame;
     
-    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 30.0f);
+    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 32.0f);
     contentFrame.size.height = 411.0f - (frame.size.height + 23.0f);
     
     self.numIndicator.frame = numIndicatorFrame;

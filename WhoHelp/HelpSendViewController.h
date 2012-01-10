@@ -13,8 +13,6 @@
 @private
     
     UIActivityIndicatorView *loadingIndicator_;
-    
-    // new
     NSDictionary *helpCategory_;
     
     UIImageView *avatar_;
@@ -42,9 +40,6 @@
 @property (nonatomic, retain) UILabel *placeholderLabel;
 @property (nonatomic, retain) IBOutlet UIButton *duetimeButton;
 @property (nonatomic, retain) IBOutlet UIButton *wardButton;
-
-
-// new 
 @property (nonatomic, retain) NSDictionary *helpCategory;
 @property (nonatomic, retain) IBOutlet UIImageView *avatar;
 @property (nonatomic, retain) NSDate *duetime;

@@ -34,7 +34,6 @@
 - (void)dealloc
 {
     [louds_ release];
-    [_refreshHeaderView release];
     [etag_ release];
     [curCollection_ release];
     [timer_ release];
@@ -106,11 +105,13 @@
 		
 	}
     
-    // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"附近的求助"] autorelease];
-    
+       
 	//  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
+    
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"附近的求助"] autorelease];
+
     
     // timer
 //    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
@@ -134,9 +135,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.separatorColor = [UIColor lightGrayColor];
     
 }
 
@@ -235,21 +233,14 @@
     
     NSDictionary *user = [loud objectForKey:@"user"];
     
-    [cell retain]; // #{ for tableview may dealloc
-    [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
-        
-        if (nil != data){
-            cell.nameLabel.text = [data objectForKey:@"name"];
-            if (300 == [[data objectForKey:@"role"] intValue]){
-                // administractor
-                cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-            }else {
-                cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-            }
-        }
-        
-        [cell release]; // #}
-    }];
+    // name 
+    cell.nameLabel.text = [user objectForKey:@"name"];
+    if (300 == [[user objectForKey:@"role"] intValue]){
+        // administractor
+        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+    }else {
+        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+    }
     
     [cell retain]; // #{ for tableview may dealloc
     [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
@@ -350,11 +341,6 @@
         DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
         
         dlVC.loud = [self.louds objectAtIndex:indexPath.row];
-        
-        NSString *urn = [[dlVC.loud objectForKey:@"user"] objectForKey:@"id"];
-        dlVC.user = [[UserManager sharedInstance].userCache objectForKey:urn];
-        dlVC.avatar = [[[UserManager sharedInstance].photoCache objectForKey:urn] objectForKey:@"avatar"];
-        
         [self.navigationController pushViewController:dlVC animated:YES];
         [dlVC release];
     }
@@ -539,8 +525,6 @@
     UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
     label.text = @"正在加载..."; // bug no reload table not show it.
 
-    //[self performSelectorInBackground:@selector(fetchNextLoudList) withObject:nil];
-    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self fetchNextLoudList];
 }
 

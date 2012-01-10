@@ -29,6 +29,6 @@
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) UILabel *placeholderLabel;
 
-- (void)sendPost;
+- (void)sendPrizePost;
 
 @end

@@ -16,3 +16,6 @@
 #import "NavTitleLabel.h"
 #import "TopLine.h"
 #import "CustomBarButtonItem.h"
+#import "LoudTableCell.h"
+#import "ReplyTableCell.h"
+#import "UserTableCell.h"

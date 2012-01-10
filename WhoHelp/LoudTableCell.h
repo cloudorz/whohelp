@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
-#import "OHAttributedLabel.h"
-#import "NSAttributedString+Attributes.h"
 
 @interface LoudTableCell : UITableViewCell
 {

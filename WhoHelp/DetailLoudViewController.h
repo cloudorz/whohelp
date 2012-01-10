@@ -9,17 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
 
-@interface DetailLoudViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface DetailLoudViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
 @private
-    NSDictionary *loud_, *user_;
-    NSData *avatar_;
+    NSDictionary *loud_;
     
     UITableView *tableView_;
     BOOL isOwner;
     NSDictionary *loudCates_, *payCates_;
     UILabel *toHelpNumIndicator_, *starNumIndicator_;
-    UIButton *helpNumIndicator_, *justLookIndicaotr_;
+//    UIButton *helpNumIndicator_, *justLookIndicaotr_;
     
     UIView *otherUserView_, *myView_;
     UIImageView *avatarImage_;
@@ -33,14 +32,15 @@
     NSMutableArray *replies_;
     NSString *etag_;
     UITableViewCell *moreCell_;
+    
+    NSDictionary *tapUser_;
 }
 
-@property (nonatomic, retain) NSDictionary *loud, *user;
-@property (nonatomic, retain) NSData *avatar;
+@property (nonatomic, retain) NSDictionary *loud;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
 @property (nonatomic, retain) IBOutlet UILabel *toHelpNumIndicator, *starNumIndicator;
-@property (nonatomic, retain) IBOutlet UIButton *helpNumIndicator, *justLookIndicaotr;
+//@property (nonatomic, retain) IBOutlet UIButton *helpNumIndicator, *justLookIndicaotr;
 @property (nonatomic, retain) IBOutlet UIView *otherUserView, *myView;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 @property (nonatomic, retain) IBOutlet UILabel *name;
@@ -48,9 +48,14 @@
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
+@property (nonatomic, retain) NSDictionary *tapUser;
 
 -(void)avatarButtonAction:(id)sender;
 
+-(void)reloadTableViewDataSource;
+-(void)doneLoadingTableViewData;
+
 -(void)fetchReplyList;
+- (void)fetchNextReplyList;
 
 @end

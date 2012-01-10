@@ -25,7 +25,9 @@
 @synthesize content=content_;
 @synthesize numIndicator=numIndicator_;
 @synthesize placeholderLabel=placeholderLabel_;
-@synthesize phoneImage=phoneImage_;
+@synthesize toUser=toUser_;
+@synthesize phoneButton=phoneButton_;
+@synthesize isOwner;
 
 -(void)dealloc
 {
@@ -35,7 +37,8 @@
     [avatarImage_ release];
     [numIndicator_ release];
     [placeholderLabel_ release];
-    [phoneImage_ release];
+    [toUser_ release];
+    [phoneButton_ release];
     [super dealloc];
 }
 
@@ -75,18 +78,25 @@
     self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
                                                initSendBarButtonItemWithTarget:self 
                                                action:@selector(sendButtonPressed:)] autorelease];
+    NSString *titleString = nil;
+    if (self.isOwner || self.toUser != nil){
+        titleString = @"回复";
+    } else if (self.isHelp){
+        titleString = @"我来帮助";
+    } else{
+        titleString = @"我来围观";
+    }
     
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] 
-                                       initWithTitle:self.isHelp ? @"我来帮助" : @"我来围观"] autorelease];
-    
-    // 
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:titleString] autorelease];
 
     self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
-    if (self.isHelp) {
+    if (!self.isOwner) {
         self.phoneShow.hidden = NO;
         
-        if ([ProfileManager sharedInstance].profile.phone == nil){
-            self.phoneImage.image = [UIImage imageNamed:@"nophone.png"];
+        if (self.isHelp && [ProfileManager sharedInstance].profile.phone != nil){
+            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal];
+        } else{
+            self.isHelp = NO;
         }
     }
     // content text view
@@ -117,6 +127,7 @@
     
     // unabel the send button
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -126,6 +137,14 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
+    
+    // to user will be display it
+    if (self.toUser != nil){
+         NSString *preContent = [NSString stringWithFormat:@"@%@ ", [self.toUser objectForKey:@"name"]];
+        self.content.text = preContent;
+        [self.placeholderLabel removeFromSuperview];
+    }
+   
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -170,7 +189,7 @@
     CGRect numIndicatorFrame = self.numIndicator.frame;
     CGRect contentFrame = self.content.frame;
     
-    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 30.0f);
+    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 32.0f);
     contentFrame.size.height = 411.0f - (frame.size.height + 23.0f);
     
     self.numIndicator.frame = numIndicatorFrame;
@@ -180,10 +199,27 @@
 
 -(void)turnOnSendEnabled
 {
-    if ([self.content hasText] && self.isHelp ? [ProfileManager sharedInstance].profile.phone != nil : YES){
+    NSInteger nonSpaceTextLength = [[self.content.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if (nonSpaceTextLength > 0){
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else{
         self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+}
+
+-(IBAction)turnPhoneAction:(id)sender
+{
+    if (self.isHelp){
+        self.isHelp = NO;
+        [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
+    } else{
+        if ([ProfileManager sharedInstance].profile.phone == nil){
+            [Utils wrongInfoString:@"请在设置里填写你的电话号码"];
+        } else{
+            self.isHelp = YES;
+            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
+        }
+
     }
 }
 
@@ -284,8 +320,8 @@
         
     }
     
-    NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - nonSpaceTextLength/*[self.helpTextView.text length]*/];
+    //NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - /*nonSpaceTextLength*/[self.content.text length]];
     
     [self turnOnSendEnabled];
     
@@ -301,8 +337,8 @@
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    if ([text isEqualToString:@"\n"] || inputedTextLength + [text length] > 70){
+    //NSInteger inputedTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if ([text isEqualToString:@"\n"] || self.content.text.length + [text length] > 70){
         return NO;
     } 
 

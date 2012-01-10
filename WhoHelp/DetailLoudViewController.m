@@ -10,7 +10,6 @@
 #import "Config.h"
 #import "ProfileManager.h"
 #import "UserManager.h"
-//#import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
 #import "LocationController.h"
 #import "CustomItems.h"
@@ -26,12 +25,10 @@
 
 @synthesize loud=loud_;
 @synthesize tableView=tableView_;
-@synthesize avatar=avatar_;
-@synthesize user=user_;
 @synthesize toHelpNumIndicator=toHelpNumIndicator_;
 @synthesize starNumIndicator=starNumIndicator_;
-@synthesize helpNumIndicator=helpNumIndicator_;
-@synthesize justLookIndicaotr=justLookIndicaotr_;
+//@synthesize helpNumIndicator=helpNumIndicator_;
+//@synthesize justLookIndicaotr=justLookIndicaotr_;
 @synthesize otherUserView=otherUserView_;
 @synthesize myView=myView_;
 @synthesize avatarImage=avatarImage_;
@@ -40,6 +37,7 @@
 @synthesize curCollection=curCollection_;
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
+@synthesize tapUser=tapUser_;
 
 - (void)dealloc
 {
@@ -47,12 +45,10 @@
     [tableView_ release];
     [loudCates_ release];
     [payCates_ release];
-    [user_ release];
-    [avatar_ release];
     [toHelpNumIndicator_ release];
     [starNumIndicator_ release];
-    [helpNumIndicator_ release];
-    [justLookIndicaotr_ release];
+//    [helpNumIndicator_ release];
+//    [justLookIndicaotr_ release];
     [otherUserView_ release];
     [myView_ release];
     [avatarImage_ release];
@@ -111,15 +107,17 @@
     [super viewDidLoad];
     
     // common variables
-    UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
+    //UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
     UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
-    
+   
+    NSDictionary *user = [self.loud objectForKey:@"user"];
     // common variables - check is owner
-    isOwner = [[ProfileManager sharedInstance].profile.urn isEqual:[self.user objectForKey:@"id"]];
+    isOwner = [[ProfileManager sharedInstance].profile.urn isEqual:[user objectForKey:@"id"]];
     
     // navigation bar title
-    self.navigationItem.titleView = [[NavTitleLabel alloc] 
-                                     initWithTitle:[NSString stringWithFormat:@"%@的求助", isOwner ? @"我" :[self.user objectForKey:@"name"]]];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] 
+                                     initWithTitle:[NSString stringWithFormat:@"%@的求助", isOwner ? @"我" :[user objectForKey:@"name"]]] 
+                                     autorelease];
     
     self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
@@ -129,19 +127,24 @@
                                                    initDelBarButtonItemWithTarget:self action:@selector(delAction:)] autorelease];
     }
     
-    // root view
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.toHelpNumIndicator.text = [[self.user objectForKey:@"to_help_num"] description];
-    self.starNumIndicator.text = [[self.user objectForKey:@"star_num"] description];
+
+    self.toHelpNumIndicator.text = [[user objectForKey:@"to_help_num"] description];
+    self.starNumIndicator.text = [[user objectForKey:@"star_num"] description];
     
-    self.name.text = [self.user objectForKey:@"name"];
-    self.avatarImage.image = [UIImage imageWithData:self.avatar];
+    self.name.text = [user objectForKey:@"name"];
+    
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
+        if (data != nil){
+            self.avatarImage.image = [UIImage imageWithData:data];
+        }
+    }];
+    
     if (isOwner){
         self.myView.hidden = NO;
-        int justlook_num = [[self.loud objectForKey:@"reply_num"] intValue] - [[self.loud objectForKey:@"help_num"] intValue];
-
-        [self.helpNumIndicator setTitle:[[self.loud objectForKey:@"help_num"] description] forState:UIControlStateNormal];
-        [self.justLookIndicaotr setTitle:[NSString stringWithFormat:@"%d", justlook_num] forState:UIControlStateNormal];
+//        int justlook_num = [[self.loud objectForKey:@"reply_num"] intValue] - [[self.loud objectForKey:@"help_num"] intValue];
+//
+//        [self.helpNumIndicator setTitle:[[self.loud objectForKey:@"help_num"] description] forState:UIControlStateNormal];
+//        [self.justLookIndicaotr setTitle:[NSString stringWithFormat:@"%d", justlook_num] forState:UIControlStateNormal];
     } else{
         self.otherUserView.hidden = NO;
     }
@@ -154,7 +157,7 @@
     CGFloat contentHeight = theSize.height;
     CGFloat heightForAll = 67 + contentHeight + SMALLFONTSIZE;
     
-    UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 61, 320, heightForAll)];
+    UIView *tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0, 61, 320, heightForAll)] autorelease];
     tableHeaderView.backgroundColor = [UIColor whiteColor];
     
     UILabel *contentText = [[[UILabel alloc] initWithFrame:CGRectMake(58,  10, TEXTWIDTH, contentHeight)] autorelease];
@@ -170,9 +173,9 @@
     [tableHeaderView addSubview:contentText];
     
     // loud category color show
-    UILabel *loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 20+contentHeight, 320, 24)] autorelease];
-    loudCateLabel.backgroundColor = [UIColor orangeColor]; 
-    loudCateLabel.opaque = YES;
+    UIImageView *loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 20+contentHeight, 320, 24)] autorelease];
+    loudCateLabel.backgroundColor = [UIColor clearColor]; 
+    loudCateLabel.opaque = NO;
     
     UILabel *payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
     payCateDescLabel.textAlignment = UITextAlignmentLeft;
@@ -199,17 +202,11 @@
     NSDictionary *paycate = [self.payCates objectForKey:[self.loud objectForKey:@"paycate"]];
     
     if (nil != loudcate){
-        NSArray *loudColor = [loudcate objectForKey:@"color"];
-        //NSLog(@"loudcate %@ color: %@,%@,%@", [loudcate objectForKey:@"label"], [loudColor objectAtIndex:0], [loudColor objectAtIndex:1], [loudColor objectAtIndex:2]);
-        loudCateLabel.backgroundColor = [UIColor colorWithRed:[[loudColor objectAtIndex:0] intValue]/255.0 
-                                                        green:[[loudColor objectAtIndex:1] intValue]/255.0 
-                                                         blue:[[loudColor objectAtIndex:2] intValue]/255.0 
-                                                        alpha:1.0];
+        loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
         loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
     }
     
     if (nil != paycate){
-        //NSLog(@"paycate %@ %@,%@", [paycate objectForKey:@"label"], [paycate objectForKey:@"logo"], [paycate objectForKey:@"showPic"]);
         payCateImage.image = [UIImage imageNamed:[paycate objectForKey:@"showPic"]];
     }
     
@@ -266,7 +263,7 @@
     // comments 
     if ([[self.loud objectForKey:@"reply_num"] intValue] >= 0){
         commentLabel.hidden = NO;
-        commentLabel.text = [NSString stringWithFormat:@"%d条评论", [[self.loud objectForKey:@"reply_num"] intValue]];
+        commentLabel.text = [NSString stringWithFormat:@"%d 条评论", [[self.loud objectForKey:@"reply_num"] intValue]];
         
     } else {
         commentLabel.hidden = YES;
@@ -284,14 +281,9 @@
     [tableHeaderView addSubview:cbottomLine];
     
     // tableview
-    self.tableView.backgroundColor = bgColor;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.tableHeaderView = tableHeaderView;
-//    CGRect tableFrame = self.tableview.frame;
-//    tableFrame.size.height -= 66;
-//    tableFrame.origin.y += 66;
-//    self.tableview.frame = tableFrame;
-    
+
+    // loading data 
     if (_refreshHeaderView == nil) {
 		
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
@@ -340,9 +332,16 @@
 
 -(IBAction)avatarButtonAction:(id)sender
 {
+    UIButton *button = (UIButton *)sender;
+    NSDictionary *user = nil;
+    if (button.tag == -1){
+        user = [self.loud objectForKey:@"user"];
+    } else{
+        user = [[self.replies objectAtIndex:button.tag] objectForKey:@"user"];
+    }
+    
     ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
-    pvc.user = self.user;
-    pvc.avatar = self.avatar;
+    pvc.user = user;
     [self.navigationController pushViewController:pvc animated:YES];
     [pvc release];
     
@@ -361,7 +360,9 @@
     ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
     tpv.loud = self.loud;
     tpv.isHelp = YES;
+    tpv.isOwner = isOwner;
     [self.navigationController pushViewController:tpv animated:YES];
+    [tpv release];
 }
 
 -(IBAction)justLookAction:(id)sender
@@ -369,7 +370,9 @@
     ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
     tpv.loud = self.loud;
     tpv.isHelp = NO;
+    tpv.isOwner = isOwner;
     [self.navigationController pushViewController:tpv animated:YES];
+    [tpv release];
 }
 
 #pragma mark - grap the comments
@@ -434,6 +437,50 @@
     
 }
 
+- (void)fetchNextReplyList
+{
+    if (nil == self.replies || nil == [self.curCollection objectForKey:@"next"]){
+        return;
+    }
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestNextListDone:)];
+    [request setDidFailSelector:@selector(requestNextListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+    
+}
+
+- (void)requestNextListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        
+        NSString *body = [request responseString];
+        // create the json parser 
+        NSMutableDictionary *collection = [body JSONValue];
+        
+        self.curCollection = collection;
+        [self.replies addObjectsFromArray:[collection objectForKey:@"replies"]];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else if (400 == code) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"服务器异常返回"];
+    }
+    
+}
+
+- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request next loud list: %@", [error localizedDescription]);
+    
+}
 
 #pragma mark - Table view data source
 
@@ -479,67 +526,60 @@
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+    NSDictionary *user = [reply objectForKey:@"user"];
+    NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
     
     static NSString *CellIdentifier;
-    CGFloat contentHeight= [[reply objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
-                                                      constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
+    CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                                      constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
                                                           lineBreakMode:UILineBreakModeWordWrap].height;
     
     CellIdentifier = [NSString stringWithFormat:@"replyEntry:%.0f", contentHeight];
     
-    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    ReplyTableCell *cell = (ReplyTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     
     if (cell == nil) {
         
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+        cell = [[[ReplyTableCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                      reuseIdentifier:CellIdentifier 
-                                              /*height:contentHeight*/] autorelease];
+                                              height:contentHeight] autorelease];
     } 
     
     
     // avatar
-    
-    NSDictionary *user = [reply objectForKey:@"user"];
-    
-    [cell retain]; // #{ for tableview may dealloc
-    [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
-        
-        if (nil != data){
-//            cell.nameLabel.text = [data objectForKey:@"name"];
-//            if (300 == [[data objectForKey:@"role"] intValue]){
-//                // administractor
-//                cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-//            }else {
-//                cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-//            }
-        }
-        
-        [cell release]; // #}
-    }];
-    
     [cell retain]; // #{ for tableview may dealloc
     [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
         
-//        if (nil != data){
-//            cell.avatarImage.image = [UIImage imageWithData: data];
-//        }
-//        
+        if (nil != data){
+            cell.avatarImage.image = [UIImage imageWithData: data];
+        }
+        
         [cell release]; // #} relase it
     }];
     
+    cell.button.tag = indexPath.row;
+    [cell.button addTarget:self action:@selector(avatarButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
     // content
-    cell.textLabel.text = [NSString stringWithFormat:@"%@,(%@),", [reply objectForKey:@"content"], [reply objectForKey:@"is_help"]];
-//    
-//    // location infomation
-//    cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
-//    
-//    if (nil == [reply objectForKey:@"createdTime"]){
-//        [reply setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
-//    }
-//    
-//    // date time
-//    cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
+    cell.contentLabel.text = lenContent;
+    
+    // show phone logo
+    if (1 == [[reply objectForKey:@"is_help"] intValue]){
+        cell.phoneLogo.hidden = NO;
+    } else{
+        cell.phoneLogo.hidden = YES;
+    }
+    
+    // location infomation
+    cell.locationLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:reply];
+    
+    
+    // date time
+    if (nil == [reply objectForKey:@"createdTime"]){
+        [reply setObject:[Utils dateFromISOStr:[reply objectForKey:@"created"]] forKey:@"createdTime"];
+    }
+    cell.timeLabel.text = [Utils descriptionForTime:[reply objectForKey:@"createdTime"]];
     
     return cell;
 }
@@ -553,6 +593,47 @@
 		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
 	}
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //return [indexPath row] * 20;
+    if (indexPath.row < [self.replies count]){
+        
+        NSDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+        NSDictionary *user = [reply objectForKey:@"user"];
+        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        
+        CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                      constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
+                                          lineBreakMode:UILineBreakModeWordWrap].height;
+        
+        return contentHeight + 55;
+    } else{
+        
+        return 40.0f;
+    }
+}
+
+- (void)loadNextReplyList
+{
+    UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
+    label.text = @"正在加载..."; // bug no reload table not show it.
+    
+    [self fetchNextReplyList];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (nil != self.curCollection && 
+        indexPath.row == [self.replies count] && 
+        nil != [self.curCollection objectForKey:@"next"]) 
+    {
+        
+        [self performSelector:@selector(loadNextReplyList) withObject:nil afterDelay:0.2];
+    }
+}
+
 
 /*
  // Override to support conditional editing of the table view.
@@ -597,15 +678,85 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    if (indexPath.row < [self.replies count]){
+        
+        NSDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+        NSDictionary *user= [reply objectForKey:@"user"];
+        if (isOwner && 1 == [[reply objectForKey:@"is_help"] intValue]){
+            // contact the loud's owner.
+            UIDevice *device = [UIDevice currentDevice];
+            UIActionSheet *contactSheet = nil;
+            if ([[device model] isEqualToString:@"iPhone"] ) {
+                
+                contactSheet = [[UIActionSheet alloc] 
+                                               initWithTitle:nil
+                                               delegate:self 
+                                               cancelButtonTitle:@"取消" 
+                                               destructiveButtonTitle:nil 
+                                               otherButtonTitles:@"电话", @"短信", @"回复", nil];
+            } else {
+                
+                contactSheet = [[UIActionSheet alloc] 
+                                               initWithTitle:[NSString stringWithFormat:@"%@: %@", @"联系", [user objectForKey:@"phone"]]
+                                               delegate:self 
+                                               cancelButtonTitle:@"取消" 
+                                               destructiveButtonTitle:nil 
+                                               otherButtonTitles:@"回复", nil];
+            }
+            
+            //contactSheet.tag = 1;
+            [contactSheet showFromTabBar:self.tabBarController.tabBar];
+            [contactSheet release];
+            
+            self.tapUser = user;
+        } else{
+            ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
+            tpv.loud = self.loud;
+            tpv.isHelp = NO;
+            tpv.toUser = user;
+            tpv.isOwner = isOwner;
+            [self.navigationController pushViewController:tpv animated:YES];
+            [tpv release];
+        }
+        
+        
+    }
+
 }
+
+#pragma mark - actionsheetp delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex){
+        return;
+    }
+    
+    UIDevice *device = [UIDevice currentDevice];
+    if ([[device model] isEqualToString:@"iPhone"] && buttonIndex < 2) {
+        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
+                                               buttonIndex == 0 ? @"tel" : @"sms", 
+                                               [self.tapUser objectForKey:@"phone"]]
+                          ];
+        
+        [[UIApplication sharedApplication] openURL:callURL];
+    } else {
+        
+        ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
+        tpv.loud = self.loud;
+        tpv.isHelp = NO;
+        tpv.toUser = self.tapUser;
+        tpv.isOwner = isOwner;
+        [self.navigationController pushViewController:tpv animated:YES];
+        [tpv release];
+         
+    }
+    
+    
+}
+
+
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

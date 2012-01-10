@@ -27,5 +27,6 @@
 + (NSMutableAttributedString *)colorContent: (NSString *)rawString;
 + (NSString *)genRandStringLength:(int)len;
 + (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud;
++(NSMutableAttributedString *)descWithName:(NSString *)name content:(NSString *)content;
 
 @end

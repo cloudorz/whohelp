@@ -48,12 +48,12 @@
         
     
         // avatar show
-        avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
-        avatarImage.tag = 1;
-        avatarImage.opaque = YES;
-        avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
+        self.avatarImage.tag = 1;
+        self.avatarImage.opaque = YES;
+        self.avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
 
-        [self.contentView addSubview:avatarImage];
+        [self.contentView addSubview:self.avatarImage];
         
         UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrame.png"]] autorelease];
         avatarFrame.frame = CGRectMake(12, 12, 35, 36);
@@ -61,89 +61,89 @@
         [self.contentView addSubview:avatarFrame];
 
         // name show
-        nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 12, 140, NAMEFONTSIZE+2)] autorelease]; // show
-        nameLabel.tag = 2;
-        nameLabel.opaque = YES;
-        nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
-        nameLabel.textAlignment = UITextAlignmentLeft;
-        nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        nameLabel.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:nameLabel];
+        self.nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 12, 140, NAMEFONTSIZE+2)] autorelease]; // show
+        self.nameLabel.tag = 2;
+        self.nameLabel.opaque = YES;
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
+        self.nameLabel.textAlignment = UITextAlignmentLeft;
+        self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.nameLabel.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:self.nameLabel];
     
         // time description
-        timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(248, 12, 60, SMALLFONTSIZE+2)] autorelease]; // show
-        timeLabel.tag = 3;
-        timeLabel.opaque = YES;
-        timeLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
-        timeLabel.textAlignment = UITextAlignmentRight;
-        timeLabel.textColor = smallFontColor;
-        timeLabel.backgroundColor = [UIColor clearColor];
-        timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(248, 12, 60, SMALLFONTSIZE+2)] autorelease]; // show
+        self.timeLabel.tag = 3;
+        self.timeLabel.opaque = YES;
+        self.timeLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
+        self.timeLabel.textAlignment = UITextAlignmentRight;
+        self.timeLabel.textColor = smallFontColor;
+        self.timeLabel.backgroundColor = [UIColor clearColor];
+        self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     
-        [self.contentView addSubview:timeLabel];
+        [self.contentView addSubview:self.timeLabel];
         
         // content
-        cellText = [[[UILabel alloc] initWithFrame:CGRectMake(58,  12+NAMEFONTSIZE+10, TEXTWIDTH, contentHeight)] autorelease];
-        cellText.tag = 4;
-        cellText.textAlignment = UITextAlignmentLeft;
-        cellText.lineBreakMode = UILineBreakModeWordWrap;
-        cellText.numberOfLines = 0;
-        cellText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
-        cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        cellText.opaque = YES;
-        cellText.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:cellText];
+        self.cellText = [[[UILabel alloc] initWithFrame:CGRectMake(58,  12+NAMEFONTSIZE+10, TEXTWIDTH, contentHeight)] autorelease];
+        self.cellText.tag = 4;
+        self.cellText.textAlignment = UITextAlignmentLeft;
+        self.cellText.lineBreakMode = UILineBreakModeWordWrap;
+        self.cellText.numberOfLines = 0;
+        self.cellText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
+        self.cellText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.cellText.opaque = YES;
+        self.cellText.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:self.cellText];
         
         // loud category color show
         //loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
-        loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
-        loudCateLabel.tag = 5;
-        loudCateLabel.backgroundColor = [UIColor clearColor]; // FIXME let me go
-        loudCateLabel.opaque = YES;
+        self.loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
+        self.loudCateLabel.tag = 5;
+        self.loudCateLabel.backgroundColor = [UIColor clearColor]; // FIXME let me go
+        self.loudCateLabel.opaque = YES;
         
-        payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
-        payCateDescLabel.tag = 6;
-        payCateDescLabel.textAlignment = UITextAlignmentLeft;
-        payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
-        payCateDescLabel.textColor = [UIColor whiteColor];
-        payCateDescLabel.numberOfLines = 1;
-        payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
-        payCateDescLabel.backgroundColor = [UIColor clearColor];
-        [loudCateLabel addSubview:payCateDescLabel];
+        self.payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
+        self.payCateDescLabel.tag = 6;
+        self.payCateDescLabel.textAlignment = UITextAlignmentLeft;
+        self.payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
+        self.payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
+        self.payCateDescLabel.textColor = [UIColor whiteColor];
+        self.payCateDescLabel.numberOfLines = 1;
+        self.payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
+        self.payCateDescLabel.backgroundColor = [UIColor clearColor];
+        [self.loudCateLabel addSubview:self.payCateDescLabel];
     
-        [self.contentView addSubview:loudCateLabel];
+        [self.contentView addSubview:self.loudCateLabel];
 
         // loud category and pay category image show
-        loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 30+NAMEFONTSIZE+contentHeight, 32, 32)] autorelease];
-        loudCateImage.tag = 7;
-        loudCateImage.opaque = YES;
-        loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 30+NAMEFONTSIZE+contentHeight, 32, 32)] autorelease];
+        self.loudCateImage.tag = 7;
+        self.loudCateImage.opaque = YES;
+        self.loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
         
-        payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
-        payCateImage.tag = 8;
-        payCateImage.backgroundColor = [UIColor clearColor];
+        self.payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
+        self.payCateImage.tag = 8;
+        self.payCateImage.backgroundColor = [UIColor clearColor];
         
-        [loudCateImage addSubview:payCateImage];
-        [self.contentView addSubview:loudCateImage];
+        [self.loudCateImage addSubview:self.payCateImage];
+        [self.contentView addSubview:self.loudCateImage];
         
         // comment infomation
-        commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 69+NAMEFONTSIZE+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
-        commentLabel.tag = 9;
-        commentLabel.opaque = YES;
-        commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
-        commentLabel.textAlignment = UITextAlignmentRight;
-        commentLabel.textColor = smallFontColor;
-        commentLabel.backgroundColor = [UIColor clearColor];
-        commentLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 69+NAMEFONTSIZE+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
+        self.commentLabel.tag = 9;
+        self.commentLabel.opaque = YES;
+        self.commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
+        self.commentLabel.textAlignment = UITextAlignmentRight;
+        self.commentLabel.textColor = smallFontColor;
+        self.commentLabel.backgroundColor = [UIColor clearColor];
+        self.commentLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
         
         //timeLabel.backgroundColor = bgGray;
         UIImageView *commentImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"comment.png"]] autorelease];
         commentImage.frame = CGRectMake(0, 1, SMALLFONTSIZE, SMALLFONTSIZE);
         commentImage.backgroundColor = [UIColor clearColor];
-        [commentLabel addSubview:commentImage];
+        [self.commentLabel addSubview:commentImage];
         
-        [self.contentView addSubview:commentLabel];
+        [self.contentView addSubview:self.commentLabel];
         
         // location descrtion
         UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 69+NAMEFONTSIZE+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
@@ -154,16 +154,16 @@
         locationImage.backgroundColor = [UIColor clearColor];
         [locationLabel addSubview:locationImage];
         
-        locationDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 150, SMALLFONTSIZE+2)] autorelease];
-        locationDescLabel.tag = 10;
-        locationDescLabel.textAlignment = UITextAlignmentLeft;
-        locationDescLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
-        locationDescLabel.textColor = smallFontColor;
-        locationDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        locationDescLabel.numberOfLines = 1;
-        locationDescLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        locationDescLabel.backgroundColor = [UIColor clearColor];
-        [locationLabel addSubview:locationDescLabel];
+        self.locationDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 150, SMALLFONTSIZE+2)] autorelease];
+        self.locationDescLabel.tag = 10;
+        self.locationDescLabel.textAlignment = UITextAlignmentLeft;
+        self.locationDescLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
+        self.locationDescLabel.textColor = smallFontColor;
+        self.locationDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
+        self.locationDescLabel.numberOfLines = 1;
+        self.locationDescLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+        self.locationDescLabel.backgroundColor = [UIColor clearColor];
+        [locationLabel addSubview:self.locationDescLabel];
         
         [self.contentView addSubview:locationLabel];
         
@@ -171,7 +171,6 @@
         UILabel *bottomLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78-10+contentHeight, 320, 1)] autorelease];
         bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0];
         bottomLine.opaque = YES;
-        [bottomLine setAlpha:1.0];
         [self.contentView addSubview:bottomLine];
             
             

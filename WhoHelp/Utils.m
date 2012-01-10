@@ -213,6 +213,20 @@
     return attributedString;
 }
 
++(NSMutableAttributedString *)descWithName:(NSString *)name content:(NSString *)content
+{
+    NSMutableAttributedString *nameAndContent = [NSMutableAttributedString attributedStringWithString:
+                                                 [NSString stringWithFormat:@"%@说: ", name]];
+    [nameAndContent setFont:[UIFont boldSystemFontOfSize:14.0f]];
+    
+    NSMutableAttributedString *contentAttr = [NSMutableAttributedString attributedStringWithString:content];
+    [contentAttr setFont:[UIFont systemFontOfSize:14.0f]];
+    
+    [nameAndContent appendAttributedString:contentAttr];
+    
+    return nameAndContent;
+}
+
 
 #pragma mark - random number
 

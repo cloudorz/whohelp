@@ -28,6 +28,7 @@
 #define USERURI @"/u/"
 #define REPLYURI @"/reply/"
 #define PRIZEURI @"/prize/"
+#define USERLISTURI @"/offer-help-users/"
 
 #define TEXTWIDTH 246.0f
 
@@ -35,5 +36,8 @@
 #define SMALLFONTSIZE 9.0f
 #define TEXTFONTSIZE 15.0f
 
+// cache time
+#define PHOTODUE 6*60
+#define USERDUE 60
 #endif
 
