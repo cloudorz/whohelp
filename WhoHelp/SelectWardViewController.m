@@ -29,10 +29,14 @@
     if (wardCategories_ == nil){
         // read the plist loud category configure
         NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
-        NSDictionary *payCates = [NSDictionary dictionaryWithContentsOfFile:myFile];
-        wardCategories_ = [[NSArray alloc] initWithObjects:                           
-                           [payCates allValues],
-                           nil]; 
+        NSDictionary *payCates = [NSDictionary dictionaryWithContentsOfFile:myFile]; 
+        NSArray *sortedArray = [[payCates allValues] sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *d1, NSDictionary *d2){
+            int dnum1 = [[d1 objectForKey:@"no"] intValue];
+            int dnum2 = [[d2 objectForKey:@"no"] intValue];
+            return dnum1 > dnum2;
+        }];
+        
+        wardCategories_ = [[NSArray alloc] initWithObjects: sortedArray, nil]; 
     }
     return wardCategories_;
 }
@@ -60,25 +64,9 @@
 {
     [super viewDidLoad];
     
-    // set table header view
-    CGRect frame;
-    frame = CGRectMake(0, 0, 320, 40);
-
-    UITextField *wardDescView = [[[UITextField alloc] initWithFrame:frame] autorelease];
-    wardDescView.placeholder = @"意思一下总是要的嘛";
-    wardDescView.font = [UIFont systemFontOfSize:18.0f];
-    wardDescView.opaque = YES;
-    wardDescView.keyboardType = UIKeyboardTypeDefault;
-    wardDescView.keyboardAppearance = UIKeyboardAppearanceDefault;
-    wardDescView.returnKeyType = UIReturnKeyDone;
-    wardDescView.delegate = self;
-    
-    self.wardTextField = wardDescView;
-    self.tableView.tableHeaderView = wardDescView;
-    
     
     // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"选择你的报酬"] autorelease];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"你的报酬"] autorelease];
     
     self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
@@ -99,39 +87,41 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    // add event to detect the keyboard show.
+    // so it can change the size of the text input.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
+                                                 name:UIKeyboardWillShowNotification object:self.view.window];
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
+-(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+# pragma mark - keyboard show event for resize the UI
+- (void)keyboardWillShow:(NSNotification *)notif
 {
-    [super viewDidDisappear:animated];
-    // set back to send view controller ward desc text
+    //keyboard will be shown now. depending for which textfield is active, move up or move down the view appropriately
+    
+    NSValue *endingFrame = [[notif userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect frame;
+    [endingFrame getValue:&frame];
+    
+    CGRect tableFrame = self.tableView.frame;
+    
+    tableFrame.size.height = 370.0f - frame.size.height;
+    
+    self.tableView.frame = tableFrame;
     
 }
 
 #pragma mark - dimiss the keyboard
-
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-////    [textField resignFirstResponder];
-//    NSLog(@"fuck fuck fuck");
-//    return YES;
-//}
-
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
@@ -163,88 +153,43 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"payCateCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    PayCateTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[PayCateTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
-    NSDictionary *helpCategory = [[self.wardCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cell.textLabel.text = [helpCategory valueForKey:@"text"];
-    //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    NSDictionary *wardCategory = [[self.wardCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    cell.title.text = [wardCategory objectForKey:@"text"];
+    cell.logo.image = [UIImage imageNamed:[wardCategory objectForKey:@"logo"]];
     
     return cell;
 }
 
 #pragma mark - Table view data source
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    if (section == [self.wardCategories count] - 1){
-//        return 10.0f;
-//    }
-//    return 0.0f;
-//}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 10.0f;
+    return 27.0f;
 }
 
-//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    CGRect frame;
-//    
-//    
-//    frame = CGRectMake(0, 0, 320, 40);
-//    UIImageView *imageView = [[[UIImageView alloc] initWithFrame:frame] autorelease];
-//    imageView.image = [UIImage imageNamed:@"avatar.png"];
-//    imageView.opaque = YES;
-//    
-//    
-//    return imageView;
-//}
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    UIImageView *sectionView = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 27)] autorelease];
+    sectionView.image = [UIImage imageNamed:@"bar.png"];
+    UILabel *title = [[[UILabel alloc] initWithFrame:CGRectMake(12, 0, 100, 27)] autorelease];
+    title.backgroundColor = [UIColor clearColor];
+    title.opaque = NO;
+    title.font = [UIFont boldSystemFontOfSize:14.0f];
+    title.textColor = [UIColor whiteColor];
+    title.text = @"选择报酬类型"; 
+    [sectionView addSubview:title];
+    
+    return sectionView;
+    
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -252,6 +197,7 @@
 {
 
     self.hlVC.wardCategory = [[self.wardCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    //[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     //[self.navigationController popViewControllerAnimated:YES];
 }
 

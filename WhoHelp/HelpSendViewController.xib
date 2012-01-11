@@ -319,6 +319,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
+								<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 								<string key="IBUINormalTitle">人</string>
 								<reference key="IBUIHighlightedTitleColor" ref="165125948"/>
 								<object class="NSColor" key="IBUINormalTitleColor">
@@ -346,13 +347,13 @@
 								<string key="NSFrame">{{288, 377}, {20, 21}}</string>
 								<reference key="NSSuperview" ref="767492252"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<reference key="IBUIBackgroundColor" ref="619424390"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
+								<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 								<string key="IBUINormalTitle">浪</string>
 								<reference key="IBUIHighlightedTitleColor" ref="165125948"/>
 								<object class="NSColor" key="IBUINormalTitleColor">
@@ -380,6 +381,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
+								<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 								<string key="IBUINormalTitle">豆</string>
 								<reference key="IBUIHighlightedTitleColor" ref="165125948"/>
 								<object class="NSColor" key="IBUINormalTitleColor">

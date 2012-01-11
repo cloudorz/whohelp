@@ -481,7 +481,6 @@
 						<string key="NSFrame">{{0, 66}, {320, 350}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:418</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -580,6 +579,38 @@
 						<reference key="destination" ref="237410387"/>
 					</object>
 					<int key="connectionID">53</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">justLookButton1</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="898728012"/>
+					</object>
+					<int key="connectionID">56</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">justLookButton2</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="317622973"/>
+					</object>
+					<int key="connectionID">57</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">helpDoneButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="946999833"/>
+					</object>
+					<int key="connectionID">58</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">offerHelpButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="4015559"/>
+					</object>
+					<int key="connectionID">59</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -819,7 +850,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">55</int>
+			<int key="maxID">59</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -828,8 +859,12 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="avatarImage">UIImageView</string>
+						<string key="helpDoneButton">UIButton</string>
+						<string key="justLookButton1">UIButton</string>
+						<string key="justLookButton2">UIButton</string>
 						<string key="myView">UIView</string>
 						<string key="name">UILabel</string>
+						<string key="offerHelpButton">UIButton</string>
 						<string key="otherUserView">UIView</string>
 						<string key="starNumIndicator">UILabel</string>
 						<string key="tableView">UITableView</string>
@@ -840,6 +875,18 @@
 							<string key="name">avatarImage</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="helpDoneButton">
+							<string key="name">helpDoneButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="justLookButton1">
+							<string key="name">justLookButton1</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="justLookButton2">
+							<string key="name">justLookButton2</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="myView">
 							<string key="name">myView</string>
 							<string key="candidateClassName">UIView</string>
@@ -847,6 +894,10 @@
 						<object class="IBToOneOutletInfo" key="name">
 							<string key="name">name</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="offerHelpButton">
+							<string key="name">offerHelpButton</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="otherUserView">
 							<string key="name">otherUserView</string>

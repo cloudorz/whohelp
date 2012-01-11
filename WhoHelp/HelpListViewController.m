@@ -136,6 +136,17 @@
 {
     [super viewWillAppear:animated];
     
+    // filter the non show louds, clean
+    if (self.louds != nil) {
+        NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
+            
+            return [[loud objectForKey:@"status"] intValue] == 200;
+            
+        }];
+        [self.louds filterUsingPredicate:p];
+        [self.tableView reloadData];
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -482,8 +493,6 @@
     NSLog(@"request next loud list: %@", [error localizedDescription]);
     
 }
-
-
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

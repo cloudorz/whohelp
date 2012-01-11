@@ -76,26 +76,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -103,16 +83,6 @@
 }
 
 #pragma mark - Table view data source
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    return 10.0f;
-//}
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 10.0f;
-//}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -130,17 +100,19 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"loudCateCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    LoudCateTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[LoudCateTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
     NSDictionary *helpCategory = [[self.helpCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cell.textLabel.text = [helpCategory valueForKey:@"text"];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.logo.image = [UIImage imageNamed:[helpCategory objectForKey:@"logo"]];
+    cell.title.text = [helpCategory objectForKey:@"text"];
+    cell.subtitle.text = [helpCategory objectForKey:@"desc"];
+    cell.stickPic.image = [UIImage imageNamed:[helpCategory objectForKey:@"stickPic"]];
     
     return cell;
 }
@@ -189,7 +161,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-                
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];            
+    
     HelpSendViewController *sendHelpVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
     sendHelpVC.helpCategory = [[self.helpCategories objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     

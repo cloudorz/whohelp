@@ -48,9 +48,10 @@
         
         
         // bottome line
-        UILabel *bottomLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, 54, 320, 1)] autorelease];
-        bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0];
-        bottomLine.opaque = YES;
+        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 54, 320, 1)] autorelease];
+        //bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0];
+        bottomLine.opaque = NO;
+        bottomLine.image = [UIImage imageNamed:@"sepline.png"];
         [self.contentView addSubview:bottomLine];
     }
     return self;

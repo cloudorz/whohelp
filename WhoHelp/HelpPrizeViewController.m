@@ -7,18 +7,39 @@
 //
 
 #import "HelpPrizeViewController.h"
+#import "UserManager.h"
+#import "Config.h"
+#import "Utils.h"
+#import "ProfileManager.h"
 #import "CustomItems.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "NSString+URLEncoding.h"
+#import "SBJson.h"
+#import "ProfileViewController.h"
 
 @implementation HelpPrizeViewController
 
 @synthesize tableView=tableView_;
+@synthesize etag=etag_;
+@synthesize prizes=prizes_;
+@synthesize curCollection=curCollection_;
+@synthesize moreCell=moreCell_;
+@synthesize helpotherIndicator=helpotherIndicator_;
+@synthesize goodjosIndicator=goodjosIndicator_;
+@synthesize sectionView=sectionView_;
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
     
     [tableView_ release];
-    
+    [etag_ release];
+    [prizes_ release];
+    [curCollection_ release];
+    [moreCell_ release];
+    [goodjosIndicator_ release];
+    [helpotherIndicator_ release];
+    [sectionView_ release];
     [super dealloc];
 }
 
@@ -78,26 +99,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -108,70 +109,150 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+
     // Return the number of rows in the section.
-    return 0;
+    return self.prizes.count + 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+	
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moretag"] autorelease];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+	if (nil == self.curCollection){
+        labelNumber.text = @"正在加载...";
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
+        labelNumber.text = @"";
+    } else {
+        labelNumber.text = @"获取更多";
     }
     
-    // Configure the cell...
+	[labelNumber setTag:1];
+	labelNumber.backgroundColor = [UIColor clearColor];
+	labelNumber.font = [UIFont boldSystemFontOfSize:14];
+	[cell.contentView addSubview:labelNumber];
+	[labelNumber release];
+	
+    self.moreCell = cell;
+    
+    return self.moreCell;
+}
+
+- (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *prize = [self.prizes objectAtIndex:indexPath.row];
+    NSDictionary *user = [prize objectForKey:@"provider"];
+    NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [prize objectForKey:@"content"]];
+    
+    static NSString *CellIdentifier;
+    CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                  constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
+                                      lineBreakMode:UILineBreakModeWordWrap].height;
+    
+    CellIdentifier = [NSString stringWithFormat:@"prizeEntry:%.0f", contentHeight];
+    
+    PrizeTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    
+    if (cell == nil) {
+        
+        cell = [[[PrizeTableCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                      reuseIdentifier:CellIdentifier 
+                                               height:contentHeight] autorelease];
+    } 
+    
+    
+    // avatar
+    [cell retain]; // #{ for tableview may dealloc
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
+        
+        if (nil != data){
+            cell.avatarImage.image = [UIImage imageWithData: data];
+        }
+        
+        [cell release]; // #} relase it
+    }];
+    
+    cell.button.tag = indexPath.row;
+    [cell.button addTarget:self action:@selector(avatarButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    // content
+    cell.contentLabel.text = lenContent;
+    
+    // show phone logo
+    if (1 == [[prize objectForKey:@"has_star"] intValue]){
+        cell.starLogo.hidden = NO;
+    } else{
+        cell.starLogo.hidden = YES;
+    }
+    
+    // date time
+    if (nil == [prize objectForKey:@"createdTime"]){
+        [prize setObject:[Utils dateFromISOStr:[prize objectForKey:@"created"]] forKey:@"createdTime"];
+    }
+    cell.timeLabel.text = [Utils descriptionForTime:[prize objectForKey:@"createdTime"]];
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    if (indexPath.row == [self.prizes count]) {
+		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
+	}
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    //return [indexPath row] * 20;
+    if (indexPath.row < [self.prizes count]){
+        
+        NSDictionary *reply = [self.prizes objectAtIndex:indexPath.row];
+        NSDictionary *user = [reply objectForKey:@"user"];
+        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        
+        CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                      constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
+                                          lineBreakMode:UILineBreakModeWordWrap].height;
+        
+        return contentHeight + 55;
+    } else{
+        
+        return 40.0f;
+    }
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+- (void)loadNextReplyList
 {
+    UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
+    label.text = @"正在加载..."; // bug no reload table not show it.
+    
+    [self fetchNextPrizeList];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    
+    if (nil != self.curCollection && 
+        indexPath.row == [self.prizes count] && 
+        nil != [self.curCollection objectForKey:@"next"]) 
+    {
+        
+        [self performSelector:@selector(loadNextReplyList) withObject:nil afterDelay:0.2];
+    }
 }
-*/
 
 #pragma mark - Table view delegate
 
@@ -187,6 +268,147 @@
      */
 }
 
+#pragma mark - actions
+-(void)avatarButtonAction:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    
+    ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
+    pvc.user = [[self.prizes objectAtIndex:button.tag] objectForKey:@"provider"];;
+    [self.navigationController pushViewController:pvc animated:YES];
+    [pvc release];
+    
+}
+
+#pragma mark - grap the comments
+- (void)fetchPrizeList
+{
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?qs=%@&st=%d&qn=%d", 
+                                       HOST,
+                                       PRIZEURI,
+                                       [@"created desc" URLEncodedString],
+                                       0, 20
+                                       ]];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * collection = [body JSONValue];
+        
+        
+        self.curCollection = collection;
+        // set tile nums
+        self.goodjosIndicator.text = [[collection objectForKey:@"stars"] description];
+        self.helpotherIndicator.text = [[collection objectForKey:@"total"] description];
+        
+        self.prizes = [collection objectForKey:@"prizes"];
+        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+        //[[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+        
+        
+    } else if (304 == code){
+        // do nothing
+    } else if (400 == code) {
+        
+        [Utils warningNotification:@"参数错误"];
+        
+    } else if (401 == code){
+        [Utils warningNotification:@"需授权认证"];
+    } else{
+        
+        [Utils warningNotification:@"服务器异常返回"];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request replies list: %@", [error localizedDescription]);
+    
+}
+
+- (void)fetchNextPrizeList
+{
+    if (nil == self.prizes || nil == [self.curCollection objectForKey:@"next"]){
+        return;
+    }
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestNextListDone:)];
+    [request setDidFailSelector:@selector(requestNextListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+    
+}
+
+- (void)requestNextListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        
+        NSString *body = [request responseString];
+        // create the json parser 
+        NSMutableDictionary *collection = [body JSONValue];
+        
+        self.curCollection = collection;
+        [self.prizes addObjectsFromArray:[collection objectForKey:@"prizes"]];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else if (400 == code) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"服务器异常返回"];
+    }
+    
+}
+
+//- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
+//{
+//    NSError *error = [request error];
+//    NSLog(@"request next loud list: %@", [error localizedDescription]);
+//    
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 42.0f;
+//}
+//
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//
+//    self.goodjosIndicator.text = @"9";
+//    self.helpotherIndicator.text = @"0";
+//    return self.sectionView;
+//    
+//}
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -194,8 +416,8 @@
 - (void)reloadTableViewDataSource{
     
     //  should be calling your tableviews data source model to reload
-    //[self fakeFetchLoudList];
-    // some more actions here TODO
+    [self fetchPrizeList];
+    // some more actions here
     _reloading = YES;
     
 }

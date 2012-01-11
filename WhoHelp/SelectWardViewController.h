@@ -21,7 +21,7 @@
 
 @property (nonatomic, retain, readonly) NSArray *wardCategories;
 @property (nonatomic, retain) HelpSendViewController *hlVC;
-@property (nonatomic, retain) UITextField *wardTextField;
+@property (nonatomic, retain) IBOutlet UITextField *wardTextField;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 @end

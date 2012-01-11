@@ -19,3 +19,6 @@
 #import "LoudTableCell.h"
 #import "ReplyTableCell.h"
 #import "UserTableCell.h"
+#import "PrizeTableCell.h"
+#import "LoudCateTableCell.h"
+#import "PayCateTableCell.h"

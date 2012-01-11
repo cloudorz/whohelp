@@ -11,18 +11,18 @@
 @interface PrizeHelperViewController : UIViewController <UITextViewDelegate>
 {
 @private
-    NSDictionary *loud_;
+    NSMutableDictionary *loud_;
     BOOL hasStar_;
     UIButton *selectUserButton_, *turnStarButton_;
     UIImageView *avatar_;
     UITextView *content_;
     UILabel *numIndicator_;
     UILabel *placeholderLabel_;
-    NSDictionary *toUser_;
+    NSMutableDictionary *toUser_;
 }
 
 @property (nonatomic, retain) IBOutlet UIImageView *avatar;
-@property (nonatomic, retain) NSDictionary *loud, *toUser;
+@property (nonatomic, retain) NSMutableDictionary *loud, *toUser;
 @property (nonatomic, assign) BOOL hasStar;
 @property (nonatomic, retain) IBOutlet UIButton *selectUserButton, *turnStarButton;
 @property (nonatomic, retain) IBOutlet UITextView *content;

@@ -38,6 +38,7 @@
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
+@synthesize justLookButton1, justLookButton2, helpDoneButton, offerHelpButton;
 
 - (void)dealloc
 {
@@ -311,6 +312,24 @@
     // e.g. self.myOutlet = nil;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // check the operation enable or unable
+    int loudStatusCode = [[self.loud objectForKey:@"status"] intValue];
+    if (200 != loudStatusCode || -100 == loudStatusCode){
+        self.justLookButton1.enabled = NO;
+        self.justLookButton2.enabled = NO;
+        self.offerHelpButton.enabled = NO;
+    }
+    
+    if (300 == loudStatusCode || -100 == loudStatusCode){
+        self.helpDoneButton.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -327,7 +346,7 @@
 
 -(void)delAction:(id)sender
 {
-    NSLog(@"Pls. delete me");
+    [self deleteLoud];
 }
 
 -(IBAction)avatarButtonAction:(id)sender
@@ -479,6 +498,41 @@
 {
     NSError *error = [request error];
     NSLog(@"request next loud list: %@", [error localizedDescription]);
+    
+}
+
+
+- (void)deleteLoud
+{
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.loud objectForKey:@"link"]]];
+    [request setDelegate:self];
+    [request setRequestMethod:@"DELETE"];
+    [request setDidFinishSelector:@selector(requestDeleteLoudDone:)];
+    [request setDidFailSelector:@selector(requestDeleteLoudWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+-(void)requestDeleteLoudDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        
+        [self.loud setValue:[NSNumber numberWithInt:-100] forKey:@"status"];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } else if (400 == code) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"服务器异常返回"];
+    }
+}
+
+-(void)requestDeleteLoudWentWrong:(ASIHTTPRequest *)request
+{
+    
+    NSError *error = [request error];
+    NSLog(@"request delete loud: %@", [error localizedDescription]);
     
 }
 
@@ -635,55 +689,16 @@
 }
 
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-    if (indexPath.row < [self.replies count]){
+    if (indexPath.row < [self.replies count] && 200 == [[self.loud objectForKey:@"status"] intValue]){
         
-        NSDictionary *reply = [self.replies objectAtIndex:indexPath.row];
-        NSDictionary *user= [reply objectForKey:@"user"];
+        NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+        NSMutableDictionary *user= [reply objectForKey:@"user"];
         if (isOwner && 1 == [[reply objectForKey:@"is_help"] intValue]){
             // contact the loud's owner.
             UIDevice *device = [UIDevice currentDevice];
@@ -741,7 +756,7 @@
                           ];
         
         [[UIApplication sharedApplication] openURL:callURL];
-    } else {
+    } else{
         
         ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
         tpv.loud = self.loud;

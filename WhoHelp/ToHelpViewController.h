@@ -11,8 +11,8 @@
 @interface ToHelpViewController : UIViewController <UITextViewDelegate>
 {
 @private
-    NSDictionary *loud_;
-    NSDictionary *toUser_;
+    NSMutableDictionary *loud_;
+    NSMutableDictionary *toUser_;
     BOOL isHelp_, isOwner;
     
     UIImageView *avatarImage_;
@@ -24,7 +24,7 @@
     UILabel *placeholderLabel_;
 }
 
-@property (nonatomic, retain) NSDictionary *loud, *toUser;
+@property (nonatomic, retain) NSMutableDictionary *loud, *toUser;
 @property (nonatomic, assign) BOOL isHelp;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 @property (nonatomic, retain) IBOutlet UIView *phoneShow;

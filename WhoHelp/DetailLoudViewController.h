@@ -12,7 +12,7 @@
 @interface DetailLoudViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
 @private
-    NSDictionary *loud_;
+    NSMutableDictionary *loud_;
     
     UITableView *tableView_;
     BOOL isOwner;
@@ -33,10 +33,12 @@
     NSString *etag_;
     UITableViewCell *moreCell_;
     
-    NSDictionary *tapUser_;
+    NSMutableDictionary *tapUser_;
+    
+    UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *offerHelpButton;
 }
 
-@property (nonatomic, retain) NSDictionary *loud;
+@property (nonatomic, retain) NSMutableDictionary *loud;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
 @property (nonatomic, retain) IBOutlet UILabel *toHelpNumIndicator, *starNumIndicator;
@@ -48,7 +50,8 @@
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain) NSDictionary *tapUser;
+@property (nonatomic, retain) NSMutableDictionary *tapUser;
+@property (nonatomic, retain) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *offerHelpButton;
 
 -(void)avatarButtonAction:(id)sender;
 
@@ -56,6 +59,7 @@
 -(void)doneLoadingTableViewData;
 
 -(void)fetchReplyList;
-- (void)fetchNextReplyList;
+-(void)fetchNextReplyList;
+-(void)deleteLoud;
 
 @end

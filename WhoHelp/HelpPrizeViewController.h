@@ -17,8 +17,25 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
 
     BOOL _reloading;
+    
+    NSMutableDictionary *curCollection_;
+    NSMutableArray *prizes_;
+    NSString *etag_;
+    UITableViewCell *moreCell_;
+    
+    UIView *sectionView_;
+    UILabel *helpotherIndicator_, *goodjosIndicator_;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) NSMutableDictionary *curCollection;
+@property (nonatomic, retain) NSMutableArray *prizes;
+@property (nonatomic, retain) NSString *etag;
+@property (nonatomic, retain) UITableViewCell *moreCell;
+@property (nonatomic, retain) IBOutlet UILabel *helpotherIndicator, *goodjosIndicator;
+@property (nonatomic, retain) IBOutlet UIView *sectionView;
+
+-(void)fetchPrizeList;
+-(void)fetchNextPrizeList;
 
 @end

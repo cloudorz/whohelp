@@ -141,9 +141,7 @@
         
         [Utils warningNotification:@"参数错误"];
         
-    } else if (401 == code){
-        [Utils warningNotification:@"授权失败"];
-    } else{
+    }else{
         
         [Utils warningNotification:@"服务器异常返回"];
         
@@ -159,7 +157,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"userListCell";
     
     UserTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {

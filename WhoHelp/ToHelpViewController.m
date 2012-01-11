@@ -272,17 +272,44 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    
-    if ([request responseStatusCode] == 201){
+    NSInteger code = [request responseStatusCode];
+    if (201 == code){
 
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (400 == [request responseStatusCode]) {
+    } else if (400 == code) {
+        
         [Utils warningNotification:@"参数错误"];
+        
+    } else if (412 == code) {
+        
+        NSString *body = [request responseString];
+        NSDictionary *reason = [body JSONValue];
+        [self.loud setValuesForKeysWithDictionary:reason];        
+        
+        // notification
+        int statusCode = [[reason objectForKey:@"status"] intValue];
+        if (300 == statusCode){
+            [Utils warningNotification:@"求助已完成，请更新求助列表信息"];
+            
+        } else if (100 == statusCode){
+            [Utils warningNotification:@"求助已过期，无法操作，请更新信息"];
+            
+        }
+        
+    } else if (404 == code) {
+        
+        NSString *desc = [request responseString];
+        [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
+        
+        [Utils warningNotification:desc];
+        
     } else{
+        
         [Utils warningNotification:@"非正常返回"];
+        
     }
-    
+
     // send ok cancel
     //[self.loadingIndicator stopAnimating];
 

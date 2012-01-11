@@ -168,9 +168,10 @@
         [self.contentView addSubview:locationLabel];
         
         // bottome line
-        UILabel *bottomLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78-10+contentHeight, 320, 1)] autorelease];
-        bottomLine.backgroundColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0];
-        bottomLine.opaque = YES;
+        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78-10+contentHeight, 320, 1)] autorelease];
+        bottomLine.backgroundColor = [UIColor clearColor];
+        bottomLine.image = [UIImage imageNamed:@"sepline.png"];
+        bottomLine.opaque = NO;
         [self.contentView addSubview:bottomLine];
             
             
