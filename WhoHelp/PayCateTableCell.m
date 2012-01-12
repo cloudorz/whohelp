@@ -51,7 +51,7 @@
         [self.contentView addSubview:self.title];
         
         // bottome line
-        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 40, 320, 1)] autorelease];
+        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 41, 320, 1)] autorelease];
         bottomLine.backgroundColor = [UIColor clearColor];
         bottomLine.image = [UIImage imageNamed:@"sepline.png"];
         bottomLine.opaque = NO;

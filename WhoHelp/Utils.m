@@ -7,7 +7,7 @@
 //
 
 #import "Utils.h"
-#import "ASIHTTPRequest.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "ASIFormDataRequest.h"
 #import "NSAttributedString+Attributes.h"
 #import "Config.h"
@@ -85,6 +85,36 @@
     return dateString;
 }
 
+#pragma mark - date formate to human readable
++ (NSString *)pastDueTimeDesc:(NSDate *)date
+{
+    // convert the time formate to human reading.
+    // i18n FIXME
+    NSInteger timePassed = [date timeIntervalSinceNow];
+    
+    NSString *dateString = nil;
+    if (timePassed <= 0) {
+       
+        dateString = [NSString stringWithFormat:@"已过期", timePassed];
+        
+    } else if (timePassed < 60*60){
+        
+        dateString = [NSString stringWithFormat:@"%d分钟后过期", timePassed/60];
+
+    } else if (timePassed < 24*60*60){
+        
+        
+         dateString = [NSString stringWithFormat:@"%d小时后过期", timePassed/(60*60)];
+        
+    } else{
+        
+        dateString = [NSString stringWithFormat:@"%d天后过期", timePassed/(60*60*24)];
+        
+    }
+    
+    return dateString;
+}
+
 #pragma mark - string to datetime
 + (NSDate *)dateFromISOStr:(NSString *)stringTime
 {
@@ -111,10 +141,12 @@
     return nil;
 }
 
-+ (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone
++ (void)uploadImageFromData:(NSData *)avatarData
 {
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@?ak=%@", UPLOADURI, APPKEY]]];
-    [request setData:avatarData withFileName:[NSString stringWithFormat:@"%@.jpg", phone] andContentType:@"image/jpg" forKey:@"photo"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UPLOADURI]]];
+    [request setData:avatarData withFileName:@"avatar.jpg" andContentType:@"image/jpg" forKey:@"photo"];
+    [request setRequestMethod:@"POST"]; // set this, otherwise sign dismatch
+    [request signInHeader];
     [request startSynchronous];
     
     NSError *error = [request error];

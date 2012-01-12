@@ -65,7 +65,7 @@
 	[_refreshHeaderView refreshLastUpdatedDate];
     
     // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"我的求助"] autorelease];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"我的消息"] autorelease];
     
 }
 

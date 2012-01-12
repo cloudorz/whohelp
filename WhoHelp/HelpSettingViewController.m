@@ -7,53 +7,59 @@
 //
 
 #import "HelpSettingViewController.h"
-#import "LawViewController.h"
+//#import "LawViewController.h"
 #import "ASIFormDataRequest.h"
 #import "Config.h"
 #import "Utils.h"
 #import "SBJson.h"
 #import "ProfileManager.h"
 #import "CustomItems.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "NSString+URLEncoding.h"
+#import "DetailLoudViewController.h"
+#import "MyProfileViewController.h"
+#import "UserManager.h"
 
 @implementation HelpSettingViewController
 
-@synthesize image=image_;
 @synthesize tableView=tableView_;
+@synthesize louds=louds_;
+@synthesize curCollection=curCollection_;
+@synthesize etag=etag_;
+@synthesize moreCell=moreCell_;
+@synthesize toHelpIndicator=toHelpIndicator_;
+@synthesize beHelpedIndicator=beHelpedIndicator_;
+@synthesize starIndciator=starIndciator_;
+@synthesize avatarImage=avatarImage_;
+@synthesize nameLabel=nameLabel_;
 
 
+#pragma mark - dealloc 
 - (void)dealloc
 {
-    [menu_ release];
-    [image_ release];
+    [louds_ release];
+    [etag_ release];
+    [curCollection_ release];
+    [loudCates_ release];
     [tableView_ release];
+    [tableView_ release];
+    [toHelpIndicator_ release];
+    [beHelpedIndicator_ release];
+    [starIndciator_ release];
+    [avatarImage_ release];
+    [nameLabel_ release];
     [super dealloc];
 }
 
-- (NSMutableArray *)menu
+- (NSDictionary *)loudCates
 {
-    if (nil == menu_){
-        menu_ = [[NSMutableArray alloc] init];
-        
-        NSMutableArray *tmp;
-        
-        tmp = [[[NSMutableArray alloc] init] autorelease];
-        [tmp addObject:@"修改昵称"];
-        [tmp addObject:@"修改头像"];
-        [tmp addObject:@"修改密码"];
-        [menu_ addObject:tmp];
-        
-        tmp = [[[NSMutableArray alloc] init] autorelease];
-        [tmp addObject:@"退出登录"];
-        [tmp addObject:@"注销帐号"];
-        [menu_ addObject:tmp];
-        
-        tmp = [[[NSMutableArray alloc] init] autorelease];
-        [tmp addObject:@"免责声明"];
-        [menu_ addObject:tmp];
-
+    if (nil == loudCates_){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
+        loudCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
     }
     
-    return menu_;
+    return loudCates_;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -78,15 +84,34 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    if (_refreshHeaderView == nil) {
+		
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
+                                           initWithFrame:CGRectMake(0.0f, 
+                                                                    0.0f - self.tableView.bounds.size.height, 
+                                                                    self.view.frame.size.width, 
+                                                                    self.tableView.bounds.size.height)
+                                           ];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		[view release];
+		
+	}
+    
+    
+	//  update the last update date
+	[_refreshHeaderView refreshLastUpdatedDate];
     // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"设置"] autorelease];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"关于我"] autorelease];
 
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    _refreshHeaderView = nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -94,21 +119,33 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    // filter the non show louds, clean
+    if (self.louds != nil) {
+        NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
+            
+            return [[loud objectForKey:@"status"] intValue] == 200;
+            
+        }];
+        [self.louds filterUsingPredicate:p];
+        [self.tableView reloadData];
+    }
+    
+    // reinit the user info
+    self.nameLabel.text = [ProfileManager sharedInstance].profile.name;
+    self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
+    NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:[ProfileManager sharedInstance].profile.urn, @"id", 
+                          [ProfileManager sharedInstance].profile.link, @"link",
+                          nil];
+    [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
+        self.toHelpIndicator.text = [[data objectForKey:@"to_help_num"] description];
+        self.beHelpedIndicator.text = [[data objectForKey:@"be_helped_num"] description];
+        self.starIndciator.text = [[data objectForKey:@"star_num"] description];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -117,173 +154,346 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - actions
+-(IBAction)profileAction:(id)sender
+{
+    MyProfileViewController *mpvc = [[MyProfileViewController alloc] initWithNibName:@"MyProfileViewController" bundle:nil];
+    [self.navigationController pushViewController:mpvc animated:YES];
+    [mpvc release];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 
     // Return the number of sections.
-    return 4;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 
     // Return the number of rows in the section.
-    if (0 == section){
-        return 3;
-    } else if (1 == section){
-        return 2;
-    } else if (2 == section){
-        return 1;
-    } 
     
-    return 0;
+    return self.louds.count + 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+	
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moretag"] autorelease];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+	if (nil == self.curCollection){
+        labelNumber.text = @"正在加载...";
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
+        labelNumber.text = @"";
+    } else {
+        labelNumber.text = @"获取更多";
     }
-    // Configure the cell...
-    NSString *menuString = [[self.menu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]; 
-    cell.textLabel.text = menuString;
-    if (![menuString isEqualToString:@"退出登录"] && 
-        ![menuString isEqualToString:@"修改头像"]){
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+	[labelNumber setTag:1];
+	labelNumber.backgroundColor = [UIColor clearColor];
+	labelNumber.font = [UIFont boldSystemFontOfSize:14];
+	[cell.contentView addSubview:labelNumber];
+	[labelNumber release];
+	
+    self.moreCell = cell;
+    
+    return self.moreCell;
+}
+
+- (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+    
+    static NSString *CellIdentifier;
+    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                                      constrainedToSize:CGSizeMake(228, CGFLOAT_MAX) 
+                                                          lineBreakMode:UILineBreakModeWordWrap].height;
+    
+    CellIdentifier = [NSString stringWithFormat:@"helpEntry:%.0f", contentHeight];
+    
+    MyLoudTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    
+    if (cell == nil) {
+        
+        cell = [[[MyLoudTableCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                     reuseIdentifier:CellIdentifier 
+                                              height:contentHeight] autorelease];
+    }
+    
+    // content
+    cell.contentLabel.text = [loud objectForKey:@"content"];
+    
+        // date time
+    if (nil == [loud objectForKey:@"expiredTime"]){
+
+        [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"expired"]] forKey:@"expiredTime"];
+    }
+    cell.timeLabel.text = [Utils pastDueTimeDesc:[loud objectForKey:@"expiredTime"]];
+    
+    // comments 
+    if ([[loud objectForKey:@"reply_num"] intValue] >= 0){
+        cell.commentLabel.hidden = NO;
+        cell.commentLabel.text = [NSString stringWithFormat:@"%d条评论", [[loud objectForKey:@"reply_num"] intValue]];
+        
+    } else {
+        cell.commentLabel.hidden = YES;
+    }
+    
+    // loud categories and pay categories
+    NSDictionary *loudcate = [self.loudCates objectForKey:[loud objectForKey:@"loudcate"]];
+    
+    if (nil != loudcate){
+        cell.logoImage.image = [UIImage imageNamed:[loudcate objectForKey:@"logo"]];
     }
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+// Customize the appearance of table view cells.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    return 10.0f;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 10.0f;
+    
+    if (indexPath.row == [self.louds count]) {
+		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
+	}
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     
-//    if(0 == indexPath.section && 0 == indexPath.row){
-//        ChangNameViewController *changNameVC = [[ChangNameViewController alloc] initWithNibName:@"ChangNameViewController" bundle:nil];
-//        // Pass the selected object to the new view controller.
-//        [self.navigationController pushViewController:changNameVC animated:YES];
-//        [changNameVC release];
-//    } else if(0 == indexPath.section && 1 == indexPath.row){
-//        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-//            UIActionSheet *photoSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照", @"从相册中选取", nil];
-//            photoSheet.tag = 1;
-//            [photoSheet showFromTabBar:self.tabBarController.tabBar];
-//            [photoSheet release];
-//        } else {
-//            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//            picker.delegate = self;
-//            picker.allowsEditing = YES;
-//            [self presentModalViewController:picker animated:YES];
-//        }
-//    } else if (0 == indexPath.section && 2 == indexPath.row){
-//        ChangPassswordViewController *changPassVC = [[ChangPassswordViewController alloc] initWithNibName:@"ChangPassswordViewController" bundle:nil];
-//        // Pass the selected object to the new view controller.
-//        [self.navigationController pushViewController:changPassVC animated:YES];
-//        [changPassVC release];
-//
-//    } else if(1 == indexPath.section && 1 == indexPath.row){
-//        DeleteAccountViewController *deleteAccountVC = [[DeleteAccountViewController alloc] initWithNibName:@"DeleteAccountViewController" bundle:nil];
-//        // Pass the selected object to the new view controller.
-//        [self.navigationController pushViewController:deleteAccountVC animated:YES];
-//        [deleteAccountVC release];
-//    } else if(1 == indexPath.section && 0 == indexPath.row){
-//        UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"退出登录", nil];
-//        logoutSheet.tag = 2;
-//        [logoutSheet showFromTabBar:self.tabBarController.tabBar];
-//        [logoutSheet release];
-//    } else if (2 == indexPath.section && 0 == indexPath.row){
-//        LawViewController *lawVC = [[LawViewController alloc] initWithNibName:@"LawViewController" bundle:nil];
-//        [self.navigationController pushViewController:lawVC animated:YES];
-//        [lawVC release];
-//    }
-//     
+    // Navigation logic may go here. Create and push another view controller.
+    if (indexPath.row < [self.louds count]){
+        
+        DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
+        
+        dlVC.loud = [self.louds objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:dlVC animated:YES];
+        [dlVC release];
+    }
+    
 }
 
-#pragma mark - actionsheetp delegate
-//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    NSLog(@"click the button on action sheet");
-//}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (buttonIndex == actionSheet.cancelButtonIndex){
+    //return [indexPath row] * 20;
+    if (indexPath.row < [self.louds count]){
+        
+        NSDictionary *reply = [self.louds objectAtIndex:indexPath.row];
+        NSDictionary *user = [reply objectForKey:@"user"];
+        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        
+        CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                      constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
+                                          lineBreakMode:UILineBreakModeWordWrap].height;
+        
+        return contentHeight + 65;
+    } else{
+        
+        return 40.0f;
+    }
+}
+
+- (void)fetchLoudList
+{
+    
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=author:%@&qs=%@&st=%d&qn=%d", 
+                                       HOST,
+                                       LOUDSEARCH,
+                                       [ProfileManager sharedInstance].profile.userkey,
+                                       [@"created desc" URLEncodedString],
+                                       0, 6
+                                       ]];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * collection = [body JSONValue];
+        
+        
+        self.curCollection = collection;
+        self.louds = [collection objectForKey:@"louds"];
+        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+        [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+        
+        
+    } else if (304 == code){
+        // do nothing
+    } else if (400 == code) {
+        
+        [Utils warningNotification:@"参数错误"];
+        
+    } else if (401 == code){
+        [Utils warningNotification:@"授权失败"];
+    } else{
+        
+        [Utils warningNotification:@"服务器异常返回"];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request loud list: %@", [error localizedDescription]);
+    
+}
+
+
+- (void)fetchNextLoudList
+{
+    if (nil == self.louds || nil == [self.curCollection objectForKey:@"next"]){
         return;
     }
     
-//    if (1 == actionSheet.tag) {
-//        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//        picker.delegate = self;
-//        picker.allowsEditing = YES;
-//        // handle photo
-//        switch (buttonIndex) {
-//            case 0:
-//                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//                if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]){
-//                    picker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-//                } else {
-//                    picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-//                }
-//                
-//                break;
-//            case 1:
-//                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//                break;
-//        }
-//        [self presentModalViewController:picker animated:YES];
-//        
-//    } else if (2 == actionSheet.tag) {
-//        switch (buttonIndex) {
-//            case 0:
-//                [[ProfileManager sharedInstance] logout];
-//                if ([ProfileManager sharedInstance].profile.isLogin == NO){
-//                    LoginViewController *helpLoginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-//                    [self.tabBarController presentModalViewController:helpLoginVC animated:YES];
-//                    [helpLoginVC release];
-//                }
-//                break;
-//                
-//        }
-//
-//    }
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestNextListDone:)];
+    [request setDidFailSelector:@selector(requestNextListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
     
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [self dismissModalViewControllerAnimated:YES];
-    [picker release];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (void)requestNextListDone:(ASIHTTPRequest *)request
 {
-
-    self.image = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
-
-//    [Utils uploadImageFromData:self.image phone:[[ProfileManager sharedInstance].profile.phone stringValue]];
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        
+        NSString *body = [request responseString];
+        // create the json parser 
+        NSMutableDictionary *collection = [body JSONValue];
+        
+        self.curCollection = collection;
+        [self.louds addObjectsFromArray:[collection objectForKey:@"louds"]];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else if (400 == code) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"服务器异常返回"];
+    }
     
-    [self dismissModalViewControllerAnimated:YES];
-    [picker release];
+}
+
+- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request next loud list: %@", [error localizedDescription]);
+    
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //  should be calling your tableviews data source model to reload
+    [self fetchLoudList];
+    // some more actions here 
+    _reloading = YES;
+    
+}
+
+- (void)doneLoadingTableViewData{
+    
+    //  model should call this when its done loading
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    
+}
+
+- (void)loadNextLoudList
+{
+    UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
+    label.text = @"正在加载..."; // bug no reload table not show it.
+    
+    [self fetchNextLoudList];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (nil != self.curCollection && 
+        indexPath.row == [self.louds count] && 
+        nil != [self.curCollection objectForKey:@"next"]) 
+    {
+        
+        [self performSelector:@selector(loadNextLoudList) withObject:nil afterDelay:0.2];
+    }
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    [self reloadTableViewDataSource];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:2.0];
+    
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    return _reloading; // should return if data source model is reloading
+    
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+    
+    return [NSDate date]; // should return date data source was last changed
     
 }
 

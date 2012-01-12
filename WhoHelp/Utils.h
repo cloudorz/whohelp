@@ -21,12 +21,13 @@
 + (NSData *)fetchImage: (NSString *)imageURI;
 
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;
-+ (void)uploadImageFromData:(NSData *)avatarData phone:(NSString *)phone;
++ (void)uploadImageFromData:(NSData *)avatarData;
 + (UIImage *)thumbnailWithImage:(UIImage *)image size:(CGSize)asize;
 + (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString;
 + (NSMutableAttributedString *)colorContent: (NSString *)rawString;
 + (NSString *)genRandStringLength:(int)len;
 + (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud;
 +(NSMutableAttributedString *)descWithName:(NSString *)name content:(NSString *)content;
++ (NSString *)pastDueTimeDesc:(NSDate *)date;
 
 @end

@@ -12,7 +12,7 @@
 
 #define SENDURI @"https://n2u.in/l/"
 #define AUTHURI @"https://n2u.in/auth"
-#define UPLOADURI @"https://n2u.in/upload"
+
 #define RESETURI @"https://n2u.in/reset/"
 #define SURI @"https://n2u.in/s"
 #define CODEURI @"https://n2u.in/code"
@@ -29,6 +29,7 @@
 #define REPLYURI @"/reply/"
 #define PRIZEURI @"/prize/"
 #define USERLISTURI @"/offer-help-users/"
+#define UPLOADURI @"/upload"
 
 #define TEXTWIDTH 246.0f
 

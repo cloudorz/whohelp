@@ -277,7 +277,7 @@
     cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
     
     // comments 
-    if ([[loud objectForKey:@"reply_num"] intValue] >= 0){
+    if ([[loud objectForKey:@"reply_num"] intValue] > 0){
         cell.commentLabel.hidden = NO;
         cell.commentLabel.text = [NSString stringWithFormat:@"%d条评论", [[loud objectForKey:@"reply_num"] intValue]];
         

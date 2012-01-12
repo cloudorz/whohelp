@@ -15,7 +15,7 @@
     self = [super init];
     if (self != nil){
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(0, 0, 30, 24);
+        button.frame = CGRectMake(0, 0, 30, 21);
         button.backgroundColor = [UIColor clearColor];
         [button setBackgroundImage:[UIImage imageNamed:@"backup.png"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"backdown.png"] forState:UIControlStateHighlighted];
@@ -32,7 +32,7 @@
     self = [super init];
     if (self != nil){
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(0, 0, 30, 24);
+        button.frame = CGRectMake(0, 0, 30, 20);
         button.backgroundColor = [UIColor clearColor];
         [button setBackgroundImage:[UIImage imageNamed:@"sendup.png"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"senddown.png"] forState:UIControlStateHighlighted];
@@ -49,10 +49,27 @@
     self = [super init];
     if (self != nil){
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(0, 0, 30, 24);
+        button.frame = CGRectMake(0, 0, 22, 24);
         button.backgroundColor = [UIColor clearColor];
         [button setBackgroundImage:[UIImage imageNamed:@"delup.png"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"deldown.png"] forState:UIControlStateHighlighted];
+        [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+        
+        self.customView = button;
+    }
+    
+    return self; 
+}
+
+-(id)initSaveBarButtonItemWithTarget:(id)target action:(SEL)action
+{
+    self = [super init];
+    if (self != nil){
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(0, 0, 27, 21);
+        button.backgroundColor = [UIColor clearColor];
+        [button setBackgroundImage:[UIImage imageNamed:@"saveiconup.png"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"saveicondown.png"] forState:UIControlStateHighlighted];
         [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
         
         self.customView = button;

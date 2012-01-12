@@ -50,6 +50,7 @@
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MC45MwA</bytes>
@@ -77,7 +78,7 @@
 					<string key="IBUITitle">private</string>
 					<object class="IBUITabBarItem" key="IBUITabBarItem" id="244440883">
 						<int key="IBUITag">12</int>
-						<string key="IBUITitle">我的求助</string>
+						<string key="IBUITitle">我的消息</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">mylist.png</string>
@@ -107,7 +108,7 @@
 						<object class="IBUIViewController" id="1044631630">
 							<string key="IBUITitle">private</string>
 							<object class="IBUINavigationItem" key="IBUINavigationItem" id="505305433">
-								<string key="IBUITitle">我的求助</string>
+								<string key="IBUITitle">我的消息</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 							<reference key="IBUIParentViewController" ref="360165028"/>
@@ -267,7 +268,7 @@
 						<string key="IBUITitle">setting</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="1045924927">
 							<int key="IBUITag">15</int>
-							<string key="IBUITitle">设置</string>
+							<string key="IBUITitle">关于我</string>
 							<object class="NSCustomResource" key="IBUIImage">
 								<string key="NSClassName">NSImage</string>
 								<string key="NSResourceName">setting.png</string>
@@ -297,7 +298,7 @@
 							<object class="IBUIViewController" id="725441436">
 								<string key="IBUITitle">setting</string>
 								<object class="IBUINavigationItem" key="IBUINavigationItem" id="1011298708">
-									<string key="IBUITitle">设置</string>
+									<string key="IBUITitle">关于我</string>
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								</object>
 								<reference key="IBUIParentViewController" ref="504099910"/>
@@ -316,6 +317,7 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 431}, {320, 49}}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSNextKeyView"/>
 					<string key="NSReuseIdentifierKey">_NS:447</string>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>

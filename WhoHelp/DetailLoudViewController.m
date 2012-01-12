@@ -318,7 +318,7 @@
     
     // check the operation enable or unable
     int loudStatusCode = [[self.loud objectForKey:@"status"] intValue];
-    if (200 != loudStatusCode || -100 == loudStatusCode){
+    if (200 != loudStatusCode){
         self.justLookButton1.enabled = NO;
         self.justLookButton2.enabled = NO;
         self.offerHelpButton.enabled = NO;
@@ -328,6 +328,12 @@
         self.helpDoneButton.enabled = NO;
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
+    
+//    if ((isOwner && (300 == loudStatusCode || -100 == loudStatusCode))
+//        || (!isOwner && 200 != loudStatusCode)){
+//        NSLog(@"fuck here i'm ");
+//        [self.navigationController popViewControllerAnimated:NO];
+//    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

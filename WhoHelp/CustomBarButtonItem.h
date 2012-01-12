@@ -13,5 +13,6 @@
 -(id)initBackBarButtonItemWithTarget:(id)target action:(SEL)action;
 -(id)initSendBarButtonItemWithTarget:(id)target action:(SEL)action;
 -(id)initDelBarButtonItemWithTarget:(id)target action:(SEL)action;
+-(id)initSaveBarButtonItemWithTarget:(id)target action:(SEL)action;
 
 @end

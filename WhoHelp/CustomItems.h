@@ -22,3 +22,4 @@
 #import "PrizeTableCell.h"
 #import "LoudCateTableCell.h"
 #import "PayCateTableCell.h"
+#import "MyLoudTableCell.h"
