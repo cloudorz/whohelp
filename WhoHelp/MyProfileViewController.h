@@ -16,6 +16,7 @@
     UIImageView *avatarImage, *doubanImage, *renrenImage, *weiboImage;
     UITextView *descContentView;
     UITextField *nameField, *phoneField;
+    UISwitch *weiboSwitch, *doubanSwitch, *renrenSwitch;
 
 }
 
@@ -24,5 +25,12 @@
 @property (nonatomic, retain) IBOutlet UITextView *descContentView;
 @property (nonatomic, retain) IBOutlet UITextField *nameField, *phoneField;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage, *doubanImage, *renrenImage, *weiboImage;
+@property (nonatomic, retain) IBOutlet UISwitch *weiboSwitch, *doubanSwitch, *renrenSwitch;
+
+-(void)uploadImageFromData:(NSData *)avatarData;
+-(BOOL)testPhoneNumber:(NSString *)num;
+-(void)updateUserInfo;
+- (void)authRequest: (NSString *)path;
+-(void)delAuthRequest:(NSString *)urlString block:(void (^)(BOOL))callback;
 
 @end

@@ -219,9 +219,9 @@
     //return [indexPath row] * 20;
     if (indexPath.row < [self.prizes count]){
         
-        NSDictionary *reply = [self.prizes objectAtIndex:indexPath.row];
-        NSDictionary *user = [reply objectForKey:@"user"];
-        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        NSDictionary *prize = [self.prizes objectAtIndex:indexPath.row];
+        NSDictionary *user = [prize objectForKey:@"user"];
+        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [prize objectForKey:@"content"]];
         
         CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
                                       constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
@@ -389,26 +389,6 @@
     
 }
 
-//- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
-//{
-//    NSError *error = [request error];
-//    NSLog(@"request next loud list: %@", [error localizedDescription]);
-//    
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 42.0f;
-//}
-//
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//
-//    self.goodjosIndicator.text = @"9";
-//    self.helpotherIndicator.text = @"0";
-//    return self.sectionView;
-//    
-//}
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

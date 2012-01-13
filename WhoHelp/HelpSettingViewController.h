@@ -22,7 +22,7 @@
     NSMutableArray *louds_;
     NSString *etag_;
     UITableViewCell *moreCell_;
-    NSDictionary *loudCates_;
+    NSDictionary *loudCates_, *payCates_;
     
     UIImageView *avatarImage_;
     UILabel *nameLabel_, *toHelpIndicator_, *beHelpedIndicator_, *starIndciator_;
@@ -33,7 +33,7 @@
 @property (nonatomic, retain) NSMutableDictionary *curCollection;
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain, readonly) NSDictionary *loudCates;
+@property (nonatomic, retain, readonly) NSDictionary *loudCates,  *payCates;
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel, *toHelpIndicator, *beHelpedIndicator, *starIndciator;
 @property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
 

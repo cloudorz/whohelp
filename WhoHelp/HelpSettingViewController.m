@@ -41,6 +41,7 @@
     [etag_ release];
     [curCollection_ release];
     [loudCates_ release];
+    [payCates_ release];
     [tableView_ release];
     [tableView_ release];
     [toHelpIndicator_ release];
@@ -60,6 +61,18 @@
     }
     
     return loudCates_;
+}
+
+- (NSDictionary *)payCates
+{
+    if (nil == payCates_){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+        
+    }
+    
+    return payCates_;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -122,8 +135,9 @@
     // filter the non show louds, clean
     if (self.louds != nil) {
         NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
-            
-            return [[loud objectForKey:@"status"] intValue] == 200;
+
+            int status = [[loud objectForKey:@"status"] intValue];
+            return status != 300 && status != -100;
             
         }];
         [self.louds filterUsingPredicate:p];
@@ -209,13 +223,24 @@
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+    NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
+    NSString *payDesc = nil;
+    // pay categories description
+    if ([NSNull null] == [loud objectForKey:@"paydesc"]){
+        payDesc = [paycate objectForKey:@"text"];
+    } else{
+        payDesc = [NSString stringWithFormat:@"%@, %@",
+                                      [paycate objectForKey:@"text"],
+                                      [loud objectForKey:@"paydesc"]];
+    }
     
-    static NSString *CellIdentifier;
-    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+    NSString *content = [NSString stringWithFormat:@"%@ 报酬: %@", [loud objectForKey:@"content"], payDesc];
+    
+    CGFloat contentHeight= [content sizeWithFont:[UIFont systemFontOfSize:14.0f] 
                                                       constrainedToSize:CGSizeMake(228, CGFLOAT_MAX) 
                                                           lineBreakMode:UILineBreakModeWordWrap].height;
-    
-    CellIdentifier = [NSString stringWithFormat:@"helpEntry:%.0f", contentHeight];
+    static NSString *CellIdentifier;
+    CellIdentifier = [NSString stringWithFormat:@"myHelpEntry:%.0f", contentHeight];
     
     MyLoudTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -228,7 +253,7 @@
     }
     
     // content
-    cell.contentLabel.text = [loud objectForKey:@"content"];
+    cell.contentLabel.text = content;
     
         // date time
     if (nil == [loud objectForKey:@"expiredTime"]){
@@ -291,11 +316,22 @@
     //return [indexPath row] * 20;
     if (indexPath.row < [self.louds count]){
         
-        NSDictionary *reply = [self.louds objectAtIndex:indexPath.row];
-        NSDictionary *user = [reply objectForKey:@"user"];
-        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+        NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
+       
+        NSString *payDesc = nil;
+        // pay categories description
+        if ([NSNull null] == [loud objectForKey:@"paydesc"]){
+            payDesc = [paycate objectForKey:@"text"];
+        } else{
+            payDesc = [NSString stringWithFormat:@"%@, %@",
+                       [paycate objectForKey:@"text"],
+                       [loud objectForKey:@"paydesc"]];
+        }
         
-        CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+        NSString *content = [NSString stringWithFormat:@"%@ 报酬: %@", [loud objectForKey:@"content"], payDesc];
+        
+        CGFloat contentHeight= [content sizeWithFont:[UIFont systemFontOfSize:14.0f] 
                                       constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
                                           lineBreakMode:UILineBreakModeWordWrap].height;
         

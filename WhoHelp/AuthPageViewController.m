@@ -1,30 +1,29 @@
 //
-//  DoubanAuthViewController.m
+//  AuthPageViewController.m
 //  WhoHelp
 //
-//  Created by Dai Cloud on 11-12-23.
-//  Copyright (c) 2011年 __MyCompanyName__. All rights reserved.
+//  Created by Dai Cloud on 12-1-14.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
-#import "DoubanAuthViewController.h"
-#import "Config.h"
-#import "Utils.h"
+#import "AuthPageViewController.h"
 #import "SBJson.h"
+#import "Utils.h"
+#import "CustomItems.h"
+#import "Config.h"
 #import "ProfileManager.h"
 
-@implementation DoubanAuthViewController
+@implementation AuthPageViewController
 
 @synthesize webview=webview_;
 @synthesize loading=loading_;
 @synthesize baseURL=baseURL_;
 @synthesize body=body_;
 
-
 - (void)dealloc
 {
     // must set delegate to nil
     // or that's a bug, crash
-    self.webview.delegate = nil; 
     
     [webview_ release];
     [loading_ release];
@@ -56,11 +55,18 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    // Do any additional setup after loading the view from its nib.
     self.webview.scalesPageToFit =NO;
     self.webview.delegate = self;
     [self.loading stopAnimating];
     
     [self.webview loadHTMLString:self.body baseURL:self.baseURL];
+    
+    // navigation item config
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(backAction:)] autorelease];
 }
 
 - (void)viewDidUnload
@@ -70,19 +76,16 @@
     // e.g. self.myOutlet = nil;
 }
 
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - back action
-- (IBAction)cancelAuth:(id)sender
+#pragma mark - actions
+-(void)backAction:(id)sender
 {
-  
-    [self dismissModalViewControllerAnimated:YES];
-
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - web view delegates
@@ -110,13 +113,13 @@
     if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:HOST]){
         NSError *error;
         NSString *content = [NSString stringWithContentsOfURL:[request URL] 
-                                                  encoding:NSUTF8StringEncoding
-                                                     error:&error];
+                                                     encoding:NSUTF8StringEncoding
+                                                        error:&error];
         
         if (!error){
             [Utils warningNotification:[error localizedDescription]];
         } else {
-             //NSLog(@"fuck: %@", content);
+            //NSLog(@"fuck: %@", content);
             // create the json parser 
             NSMutableDictionary *authInfo = [content JSONValue];
             if (authInfo != nil && authInfo.count > 0 && 
@@ -126,17 +129,13 @@
                 [[ProfileManager sharedInstance] saveUserInfo:authInfo];
             }
             
+            [self.navigationController popViewControllerAnimated:YES];
             
-            [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
-            [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
-
-            
-
         }
         
         return NO;
     }
-
+    
     return YES;
 }
 

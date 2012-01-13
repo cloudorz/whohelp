@@ -140,7 +140,9 @@
     if (self.louds != nil) {
         NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
             
-            return [[loud objectForKey:@"status"] intValue] == 200;
+            int interval = [[Utils dateFromISOStr:[loud objectForKey:@"expired"]] timeIntervalSinceNow];
+            
+            return [[loud objectForKey:@"status"] intValue] == 200 && interval > 0;
             
         }];
         [self.louds filterUsingPredicate:p];
@@ -277,7 +279,7 @@
     cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
     
     // comments 
-    if ([[loud objectForKey:@"reply_num"] intValue] > 0){
+    if ([[loud objectForKey:@"reply_num"] intValue] >= 0){
         cell.commentLabel.hidden = NO;
         cell.commentLabel.text = [NSString stringWithFormat:@"%d条评论", [[loud objectForKey:@"reply_num"] intValue]];
         

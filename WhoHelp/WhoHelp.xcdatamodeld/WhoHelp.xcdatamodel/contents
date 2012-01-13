@@ -3,15 +3,18 @@
     <entity name="Profile" representedClassName="Profile">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="brief" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="douban" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="renren" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="secret" attributeType="String" syncable="YES"/>
         <attribute name="updated" optional="YES" attributeType="Date"/>
         <attribute name="urn" attributeType="String" syncable="YES"/>
         <attribute name="userkey" attributeType="String" syncable="YES"/>
+        <attribute name="weibo" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Profile" positionX="160" positionY="117" width="128" height="105"/>
+        <element name="Profile" positionX="160" positionY="117" width="128" height="225"/>
     </elements>
 </model>

@@ -97,6 +97,12 @@ static ProfileManager *sharedProfileManager = nil;
     self.profile.urn = [data objectForKey:@"id"];
     self.profile.updated = [Utils dateFromISOStr:[data objectForKey:@"updated"]];
     
+    NSMutableDictionary *auths = [data objectForKey:@"auths"];
+    self.profile.weibo = [auths objectForKey:@"weibo"];
+    self.profile.douban = [auths objectForKey:@"douban"];
+    self.profile.renren = [auths objectForKey:@"renren"];
+    
+    
     [[UserManager sharedInstance] fetchPhotoRequestWithLink:data forBlock:^(NSData *data){
         self.profile.avatar = data; 
     }];

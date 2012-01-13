@@ -27,13 +27,12 @@
 @synthesize placeholderLabel=placeholderLabel_;
 @synthesize helpCategory=helpCategory_;
 @synthesize avatar=avatar_;
-@synthesize duetimeLabel=duetimeLabel_;
-@synthesize wardLabel=wardLabel_;
 @synthesize wardCategory=wardCategory_; 
 @synthesize duetime=duetime_;
 @synthesize duetimeButton=duetimeButton_;
 @synthesize wardButton=wardButton_;
 @synthesize wardText=wardText_;
+@synthesize renrenButton, doubanButton, weiboButton;
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -44,13 +43,14 @@
     [placeholderLabel_ release];
     [helpCategory_ release];
     [avatar_ release];
-    [wardLabel_ release];
-    [duetimeLabel_ release];
     [duetime_ release];
     [wardCategory_ release];
     [wardButton_ release];
     [duetimeButton_ release];
     [wardText_ release];
+    [renrenButton release];
+    [doubanButton release];
+    [weiboButton release];
     [super dealloc];
 }
 
@@ -101,10 +101,6 @@
     
     [self.helpTextView.layer setCornerRadius:5.0f];
     
-    // label round and radius
-    [self.duetimeLabel.layer setCornerRadius:5.0f];
-    [self.wardLabel.layer setCornerRadius:5.0f];
-    
     // hidden char numberindicator
     self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
@@ -131,7 +127,40 @@
                                               action:@selector(sendButtonPressed:)] autorelease];
     
     // init the weibo, renren, douban button enabled 
-    // TODO here
+   
+    if ([ProfileManager sharedInstance].profile.renren != nil){
+        
+        hasRenren = YES;
+        [self.renrenButton setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
+
+    } else{
+        hasRenren = NO;
+        [self.renrenButton setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
+    }
+
+
+    if ([ProfileManager sharedInstance].profile.weibo != nil){
+        
+        hasWeibo = YES;
+        [self.weiboButton setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
+
+    } else{
+        
+        hasWeibo = NO;
+        [self.weiboButton setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
+    }
+
+
+    if ([ProfileManager sharedInstance].profile.douban != nil){
+        
+        hasDouban = YES;
+        [self.doubanButton setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
+
+    } else{
+        hasDouban = NO;
+        [self.doubanButton setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
+    }
+
     
 }
 
@@ -346,7 +375,25 @@
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     //NSInteger inputedTextLength = [textView.text length];
-    if ([text isEqualToString:@"\n"] || textView.text.length + [text length] > 70){
+    if ([text isEqualToString:@"\n"]){
+
+        [textView resignFirstResponder];
+        
+        // change the size
+        CGRect numIndicatorFrame = self.numIndicator.frame;
+        CGRect contentFrame = self.helpTextView.frame;
+        
+        numIndicatorFrame.origin.y = 163.0f;
+        contentFrame.size.height = 172.0f;
+        
+        self.numIndicator.frame = numIndicatorFrame;
+        self.helpTextView.frame = contentFrame;
+        
+        return NO;
+    }
+    
+    if (textView.text.length + [text length] > 70){
+        
         return NO;
     } 
     

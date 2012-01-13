@@ -2,7 +2,7 @@
 //  Profile.m
 //  WhoHelp
 //
-//  Created by Dai Cloud on 12-1-6.
+//  Created by Dai Cloud on 12-1-13.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
@@ -11,14 +11,17 @@
 
 @implementation Profile
 
+@dynamic avatar;
+@dynamic brief;
+@dynamic link;
 @dynamic name;
+@dynamic phone;
 @dynamic secret;
 @dynamic updated;
-@dynamic userkey;
 @dynamic urn;
-@dynamic brief;
-@dynamic phone;
-@dynamic link;
-@dynamic avatar;
+@dynamic userkey;
+@dynamic weibo;
+@dynamic douban;
+@dynamic renren;
 
 @end

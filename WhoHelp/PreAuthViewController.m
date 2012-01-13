@@ -14,10 +14,13 @@
 #import "DoubanAuthViewController.h"
 #import "WhoHelpAppDelegate.h"
 
+
 @implementation PreAuthViewController
+
 @synthesize authLinkWeibo=authLinkWeibo_;
 @synthesize authLinkDouban=authLinkDouban_;
 @synthesize authLinkRenren=authLinkRenren_;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,7 +52,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCurrentViewAction:) name:@"DismissPreAuthVC" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(dismissCurrentViewAction:) 
+                                                 name:@"DismissPreAuthVC" 
+                                               object:nil];
+    
 }
 
 - (void)viewDidUnload
@@ -57,7 +64,9 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:@"DismissPreAuthVC" 
+                                                  object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -79,7 +88,7 @@
 
 - (IBAction)linkToAuthRenren:(id)sender
 {
-    [self authRequest:@"/douban/auth"];
+    //[self authRequest:@"/douban/auth"];
 }
 
 

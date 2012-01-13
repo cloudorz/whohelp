@@ -18,8 +18,6 @@
     UIImageView *avatar_;
     UILabel *placeholderLabel_;
     UILabel *numIndicator_;
-    UILabel *duetimeLabel_;
-    UILabel *wardLabel_;
     UITextView *helpTextView_;
     NSDate *duetime_;
     NSDictionary *wardCategory_;
@@ -28,6 +26,7 @@
     NSString *wardText_;
     
     BOOL hasRenren, hasDouban, hasWeibo;
+    UIButton *renrenButton, *doubanButton, *weiboButton;
     
     
 }
@@ -35,8 +34,6 @@
 @property (nonatomic, retain) IBOutlet UITextView *helpTextView;
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) IBOutlet UILabel *duetimeLabel;
-@property (nonatomic, retain) IBOutlet UILabel *wardLabel;
 @property (nonatomic, retain) UILabel *placeholderLabel;
 @property (nonatomic, retain) IBOutlet UIButton *duetimeButton;
 @property (nonatomic, retain) IBOutlet UIButton *wardButton;
@@ -45,6 +42,7 @@
 @property (nonatomic, retain) NSDate *duetime;
 @property (nonatomic, retain) NSDictionary *wardCategory;
 @property (nonatomic, retain) NSString *wardText;
+@property (nonatomic, retain) IBOutlet UIButton *renrenButton, *doubanButton, *weiboButton;
 
 - (void)sendButtonPressed:(id)sender;
 

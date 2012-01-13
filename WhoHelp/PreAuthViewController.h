@@ -15,6 +15,7 @@
     UIButton *authLinkWeibo_;
     UIButton *authLinkRenren_;
 
+
 }
 
 @property (nonatomic, retain) UIButton *authLinkDouban;

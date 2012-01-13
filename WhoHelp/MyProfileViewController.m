@@ -8,17 +8,22 @@
 
 #import "MyProfileViewController.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "ASIFormDataRequest.h"
 #import "Utils.h"
+#import "Config.h"
 #import "CustomItems.h"
 #import "SBJson.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ProfileManager.h"
+#import "UserManager.h"
+#import "AuthPageViewController.h"
 
 @implementation MyProfileViewController
 
 @synthesize image=image_;
-@synthesize  appView, contentView, descContentView, mainView, nameField, phoneField;
-@synthesize  avatarImage, doubanImage, renrenImage, weiboImage;
+@synthesize appView, contentView, descContentView, mainView, nameField, phoneField;
+@synthesize avatarImage, doubanImage, renrenImage, weiboImage;
+@synthesize weiboSwitch, doubanSwitch, renrenSwitch;
 
 -(void)dealloc
 {
@@ -33,6 +38,9 @@
     [doubanImage release];
     [renrenImage release];
     [weiboImage release];
+    [weiboSwitch release];
+    [doubanSwitch release];
+    [renrenSwitch release];
     [super dealloc];
 }
 
@@ -93,7 +101,8 @@
     self.descContentView.text = [ProfileManager sharedInstance].profile.brief;
     self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
     
-
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    
 }
 
 - (void)viewDidUnload
@@ -107,18 +116,90 @@
 {
     [super viewWillAppear:animated];
     // init the third party
-    // TODO
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(textFieldDidChange:)
+                                                 name:UITextFieldTextDidChangeNotification 
+                                               object:self.nameField];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(textFieldDidChange:)
+                                                 name:UITextFieldTextDidChangeNotification 
+                                               object:self.phoneField];
+    
+    // init the auths
+    if ([ProfileManager sharedInstance].profile.weibo != nil) {
+        self.weiboImage.image = [UIImage imageNamed:@"weiboo.png"];
+        self.weiboSwitch.on = YES;
+    } else{
+        self.weiboImage.image = [UIImage imageNamed:@"weibox.png"];
+        self.weiboSwitch.on = NO;
+    }
+    
+    if ([ProfileManager sharedInstance].profile.douban != nil) {
+        self.doubanImage.image = [UIImage imageNamed:@"doubano.png"];
+        self.doubanSwitch.on = YES;
+    } else{
+        self.doubanImage.image = [UIImage imageNamed:@"doubanx.png"];
+        self.doubanSwitch.on = NO;
+    } 
+    
+    if ([ProfileManager sharedInstance].profile.renren != nil) {
+        self.renrenImage.image = [UIImage imageNamed:@"renreno.png"];
+        self.renrenSwitch.on = YES;
+    } else{
+        self.renrenImage.image = [UIImage imageNamed:@"renrenx.png"];
+        self.renrenSwitch.on = NO;
+    }
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:UITextFieldTextDidChangeNotification 
+                                                  object:self.nameField];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:UITextFieldTextDidChangeNotification 
+                                                  object:self.phoneField];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(BOOL)testPhoneNumber:(NSString *)num
+{
+    NSString *decimalRegex = @"^[0-9]{11}$";
+    NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
+    return [decimalTest evaluateWithObject:num];
+}
+
+-(NSString *)nilToEmptyString:(id)obj
+{
+    if (obj == nil){
+        return @"";
+    }
+    
+    return obj;
+}
+
+-(void)turnSaveButtonEnable
+{
+    BOOL nameStatus = [[self nilToEmptyString:[ProfileManager sharedInstance].profile.name ] isEqual:self.nameField.text];
+    BOOL phoneStatus = [[self nilToEmptyString:[ProfileManager sharedInstance].profile.phone ] isEqual:self.phoneField.text];
+    BOOL briefStatus = [[self nilToEmptyString:[ProfileManager sharedInstance].profile.brief ] isEqual:self.descContentView.text];
+    
+    if (!(nameStatus && phoneStatus && briefStatus)) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else{
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
 }
 
 #pragma mark - actions
@@ -130,7 +211,21 @@
 -(void)saveButtonPressed:(id)sender
 {
     //[self.navigationController popViewControllerAnimated:YES];
-    NSLog(@"save it now");
+    if ([[self.nameField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] isEqualToString:@""]){
+        [Utils warningNotification:@"昵称不能为空"];
+        return;
+    }
+    
+    if (![self.phoneField.text isEqualToString:@""] && ![self testPhoneNumber:self.phoneField.text]) {
+        
+        [Utils warningNotification:@"填写的手机号无效"];
+        return;
+    } 
+    
+    // send it no
+
+    [self updateUserInfo];
+
 }
 
 - (BOOL)hidesBottomBarWhenPushed
@@ -140,17 +235,69 @@
 
 -(IBAction)doubanAction:(id)sender
 {
-    NSLog(@"I'm douban");
+
+    UISwitch *sw = (UISwitch *)sender;
+    if (sw.on) {
+        
+        [self authRequest:@"/douban/auth"];
+        
+    } else{
+        [self delAuthRequest:[ProfileManager sharedInstance].profile.douban block:^(BOOL success){
+            if (success) {
+                [ProfileManager sharedInstance].profile.douban = nil;
+                self.doubanImage.image = [UIImage imageNamed:@"doubanx.png"];
+            } else {
+                self.doubanSwitch.on = YES;
+            }
+
+            
+        }];
+    }
+ 
 }
 
 -(IBAction)renrenAction:(id)sender
 {
-    NSLog(@"I'm renren");
+
+    UISwitch *sw = (UISwitch *)sender;
+    if (sw.on) {
+        
+        [self authRequest:@"/renren/auth"];
+        
+    } else{
+        [self delAuthRequest:[ProfileManager sharedInstance].profile.renren block:^(BOOL success){
+            if (success) {
+                [ProfileManager sharedInstance].profile.renren = nil;
+                self.renrenImage.image = [UIImage imageNamed:@"renrenx.png"];
+            } else {
+                self.renrenSwitch.on = YES;
+            }
+            
+            
+        }];
+    }
 }
 
 -(IBAction)weiboAction:(id)sender
 {
-    NSLog(@"I'm weibo");
+    
+    UISwitch *sw = (UISwitch *)sender;
+    if (sw.on) {
+        
+        [self authRequest:@"/weibo/auth"];
+        
+    } else{
+        [self delAuthRequest:[ProfileManager sharedInstance].profile.weibo block:^(BOOL success){
+            if (success) {
+                [ProfileManager sharedInstance].profile.weibo = nil;
+                self.weiboImage.image = [UIImage imageNamed:@"weibox.png"];
+            } else {
+                self.weiboSwitch.on = YES;
+            }
+            
+            
+        }];
+    }
 }
 
 -(IBAction)avatarAction:(id)sender
@@ -175,6 +322,140 @@
         }
 }
 
+
+#pragma mark - remote operations
+
+-(void)delAuthRequest:(NSString *)urlString block:(void (^)(BOOL))callback
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request setCompletionBlock:^{
+        
+        NSInteger code = [request responseStatusCode];
+        if (200 == code){
+            
+            callback(YES);
+            
+        } else if (412 == code){
+            callback(NO);
+            [Utils warningNotification:@"至少保留一个授权"];
+        } else{
+            callback(NO);
+            [Utils warningNotification:@"取消授权失败"];
+        }
+        
+    }];
+    
+    [request setFailedBlock:^{
+        
+        NSError *error = [request error];
+        [Utils warningNotification:[error description]];
+        callback(NO);
+        NSLog(@"%@", [error description]);
+        
+    }];
+    [request setRequestMethod:@"DELETE"];
+    [request signInHeader];
+    [request startAsynchronous]; 
+}
+
+- (void)authRequest: (NSString *)path
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, path]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setDelegate:self];
+    [request setDidFailSelector:@selector(requestAuthFailed:)];
+    [request setDidFinishSelector:@selector(requestAuthFinished:)];
+    [request signInHeader]; // must have this
+    [request startAsynchronous];
+}
+
+- (void)requestAuthFinished:(ASIHTTPRequest *)request
+{
+    // Use when fetching text data
+    NSString *responseString = [request responseString];
+    
+    
+    // Use when fetching binary data
+    //NSData *responseData = [request responseData];
+    
+    AuthPageViewController *webVC = [[AuthPageViewController alloc] initWithNibName:@"AuthPageViewController" bundle:nil];
+    
+    webVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    webVC.baseURL = request.url;
+    webVC.body = responseString;
+    [self.navigationController pushViewController:webVC animated:YES];
+    
+    [webVC release];
+    
+}
+
+- (void)requestAuthFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    [Utils warningNotification:[error description]];
+    NSLog(@"%@", [error description]);
+}
+
+
+- (void)updateUserInfo
+{
+     self.navigationItem.rightBarButtonItem.enabled = NO;
+    
+    NSDictionary *preInfo = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [self.nameField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"name",
+                             [self.descContentView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"brief",
+                             [self testPhoneNumber:self.phoneField.text] ? self.phoneField.text : nil, @"phone",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[ProfileManager sharedInstance].profile.link];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request appendPostData:[[preInfo JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"PUT"];
+    // sign to header for authorize
+    [request signInHeader];
+    [request setDelegate:self];
+    
+    [request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    
+    if ([request responseStatusCode] == 200){
+        
+        // update profile
+        [ProfileManager sharedInstance].profile.name = [self.nameField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        [ProfileManager sharedInstance].profile.brief = [self.descContentView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        [ProfileManager sharedInstance].profile.phone = [self testPhoneNumber:self.phoneField.text] ? self.phoneField.text : nil;
+        
+        // udpate the user cache ??
+       
+        
+    } else if (400 == [request responseStatusCode]) {
+        [Utils warningNotification:@"参数错误"];
+    } else{
+        [Utils warningNotification:@"非正常返回"];
+    }
+    
+    // send ok cancel
+
+    [self turnSaveButtonEnable];
+    
+    
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    // notify the user
+    [self turnSaveButtonEnable];
+    [Utils warningNotification:[[request error] localizedDescription]];
+    
+}
+
 #pragma mark - Text field delegate
 #pragma mark - dimiss the keyboard
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -183,36 +464,18 @@
     return YES;
 }
 
+-(void)textFieldDidChange:(UITextField *)textField
+{
+    [self turnSaveButtonEnable];
+}
+
 #pragma mark - text view delegate
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    //NSLog(@"done the editing change");
-//    if(![textView hasText]) {
-//        
-//        [textView addSubview:self.placeholderLabel];
-//        self.numIndicator.hidden = YES;
-//        
-//    } else if ([[textView subviews] containsObject:self.placeholderLabel]) {
-//        
-//        [self.placeholderLabel removeFromSuperview];
-//        self.numIndicator.hidden = NO;
-//        
-//    }
-//    
-//    //NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-//    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - /*nonSpaceTextLength*/[self.helpTextView.text length]];
-//    
-//    [self turnOnSendEnabled];
-    
-}
 
-- (void)textViewDidEndEditing:(UITextView *)theTextView
-{
-//    if (![theTextView hasText]) {
-//        [theTextView addSubview:self.placeholderLabel];
-//        self.numIndicator.hidden = YES;
-//    }
+    [self turnSaveButtonEnable];
+    
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
@@ -225,19 +488,33 @@
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     //NSInteger inputedTextLength = [textView.text length];
-    if ([text isEqualToString:@"\n"] || textView.text.length + [text length] > 70){
+    if ([text isEqualToString:@"\n"]){
+        
+        [textView resignFirstResponder];
+        
+        CGRect viewFrame = self.mainView.frame;
+        viewFrame.origin.y = 5.0f;
+        self.mainView.frame = viewFrame;
+        
         return NO;
     } 
+    
+    if (textView.text.length + [text length] > 70){
+        return NO;
+    }
     
     return YES;
 }
 
 #pragma mark - dimiss the keyboard
-
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
 
     [self.descContentView resignFirstResponder];
+    // test
+    [self.nameField resignFirstResponder];
+    [self.phoneField resignFirstResponder];
+    
     CGRect viewFrame = self.mainView.frame;
     viewFrame.origin.y = 5.0f;
     self.mainView.frame = viewFrame;
@@ -287,17 +564,56 @@
     self.image = UIImageJPEGRepresentation([Utils thumbnailWithImage:[info objectForKey:UIImagePickerControllerEditedImage] size:CGSizeMake(70.0f, 70.0f)], 0.65f);
     
 
-    [Utils uploadImageFromData:self.image];
-    
-    // first save to profile
-    [ProfileManager sharedInstance].profile.avatar = self.image;
-    
-    // change current avatar
-    self.avatarImage.image = [UIImage imageWithData:self.image];
+    [self uploadImageFromData:self.image];
     
     [self dismissModalViewControllerAnimated:YES];
     [picker release];
     
 }
+
+#pragma mark - reques upload http
+- (void)uploadImageFromData:(NSData *)avatarData
+{
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UPLOADURI]]];
+    [request setData:avatarData withFileName:@"avatar.jpg" andContentType:@"image/jpg" forKey:@"photo"];
+    [request setRequestMethod:@"POST"]; // set this, otherwise sign dismatch
+           
+    [request setCompletionBlock:^{
+        // Use when fetching text data
+        
+        NSInteger code = [request responseStatusCode];
+        if (200 == code){
+            // first save to profile
+            [ProfileManager sharedInstance].profile.avatar = self.image;
+            
+            // change current avatar
+            self.avatarImage.image = [UIImage imageWithData:self.image];
+            
+            // change the photo cache
+            NSMutableDictionary *photo = [[UserManager sharedInstance].photoCache objectForKey:[ProfileManager sharedInstance].profile.urn];
+            if (photo != nil){
+                [photo setObject:self.image forKey:@"avatar"];
+            }
+            
+        } else if (400 == code){
+            [Utils warningNotification:@"上传头像失败"];
+        } else{
+            [Utils warningNotification:@"服务器异常返回"];
+        }
+        
+    }];
+    
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"Fetch avatar: %@", [error localizedDescription]);
+    }];
+    
+    
+    [request signInHeader];
+    [request startAsynchronous];
+
+    
+}
+
 
 @end
