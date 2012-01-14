@@ -114,7 +114,6 @@
     [endingFrame getValue:&frame];
     
     CGRect tableFrame = self.tableView.frame;
-    
     tableFrame.size.height = 370.0f - frame.size.height;
     
     self.tableView.frame = tableFrame;
@@ -125,6 +124,11 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    
+    CGRect tableFrame = self.tableView.frame;
+    tableFrame.size.height = 370.0f;
+    self.tableView.frame = tableFrame;
+    
     return YES;
 }
 

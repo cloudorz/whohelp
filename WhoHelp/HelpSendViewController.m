@@ -136,6 +136,7 @@
     } else{
         hasRenren = NO;
         [self.renrenButton setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
+        self.renrenButton.enabled = NO;
     }
 
 
@@ -148,6 +149,7 @@
         
         hasWeibo = NO;
         [self.weiboButton setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
+        self.weiboButton.enabled = NO;
     }
 
 
@@ -159,6 +161,7 @@
     } else{
         hasDouban = NO;
         [self.doubanButton setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
+        self.doubanButton.enabled = NO;
     }
 
     
@@ -293,7 +296,11 @@
                              [self.wardCategory objectForKey:@"label"], @"paycate",
                              [self.helpCategory objectForKey:@"label"], @"loudcate",
                              self.duetime, @"expired",
+                             [NSNumber numberWithBool:hasWeibo], @"weibo",
+                             [NSNumber numberWithBool:hasDouban], @"douban",
+                             [NSNumber numberWithBool:hasRenren], @"renren",
                              self.wardText, @"paydesc", // This is a tricker, wardText is nil, the dictionary cut down.
+                             
                              nil];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, LOUDURI]];

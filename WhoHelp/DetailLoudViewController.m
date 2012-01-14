@@ -318,7 +318,7 @@
     
     // check the operation enable or unable
     int loudStatusCode = [[self.loud objectForKey:@"status"] intValue];
-    if (200 != loudStatusCode){
+    if (200 != loudStatusCode || [[Utils dateFromISOStr:[self.loud objectForKey:@"expired"]] timeIntervalSinceNow] < 0){
         self.justLookButton1.enabled = NO;
         self.justLookButton2.enabled = NO;
         self.offerHelpButton.enabled = NO;
@@ -431,6 +431,10 @@
         
         
         self.curCollection = collection;
+        // update this loud comments number
+        [self.loud setValue:[collection objectForKey:@"total"] forKey:@"reply_num"];
+        
+        
         self.replies = [collection objectForKey:@"replies"];
         self.etag = [[request responseHeaders] objectForKey:@"Etag"];
         

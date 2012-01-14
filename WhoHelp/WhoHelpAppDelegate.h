@@ -12,15 +12,16 @@
 {
 @private
     UITabBarController *tabBarController_;
+    UITabBarItem *nearbyItem, *myListItem, *helpItem, *prizeItem, *settingItem;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, retain) IBOutlet UITabBarItem *nearbyItem, *myListItem, *helpItem, *prizeItem, *settingItem;
 
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 
 
 - (void)saveContext;
