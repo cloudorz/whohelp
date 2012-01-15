@@ -18,9 +18,9 @@
 
 }
 
-@property (nonatomic, retain) UIButton *authLinkDouban;
-@property (nonatomic, retain) UIButton *authLinkWeibo;
-@property (nonatomic, retain) UIButton *authLinkRenren;
+@property (nonatomic, retain) IBOutlet UIButton *authLinkDouban;
+@property (nonatomic, retain) IBOutlet UIButton *authLinkWeibo;
+@property (nonatomic, retain) IBOutlet UIButton *authLinkRenren;
 
 
 - (IBAction)linkToAuthDouban:(id)sender;

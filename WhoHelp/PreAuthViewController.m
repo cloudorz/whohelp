@@ -21,6 +21,16 @@
 @synthesize authLinkDouban=authLinkDouban_;
 @synthesize authLinkRenren=authLinkRenren_;
 
+#pragma mark - dealloc
+- (void)dealloc
+{
+    [authLinkDouban_ release];
+    [authLinkRenren_ release];
+    [authLinkWeibo_ release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
+    [super dealloc];
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -56,6 +66,13 @@
                                              selector:@selector(dismissCurrentViewAction:) 
                                                  name:@"DismissPreAuthVC" 
                                                object:nil];
+    
+    [self.authLinkWeibo setImage:[UIImage imageNamed:@"lweiboo.png"] forState:UIControlStateNormal];
+    [self.authLinkWeibo setImage:[UIImage imageNamed:@"lweibox.png"] forState:UIControlStateHighlighted];
+    [self.authLinkRenren setImage:[UIImage imageNamed:@"lrenreno.png"] forState:UIControlStateNormal];
+    [self.authLinkRenren setImage:[UIImage imageNamed:@"lrenrenx.png"] forState:UIControlStateHighlighted];
+    [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubano.png"] forState:UIControlStateNormal];
+    [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubanx.png"] forState:UIControlStateHighlighted];
     
 }
 
@@ -127,14 +144,5 @@
     NSLog(@"%@", [error description]);
 }
 
-#pragma mark - dealloc
-- (void)dealloc
-{
-    [authLinkDouban_ release];
-    [authLinkRenren_ release];
-    [authLinkWeibo_ release];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
-    [super dealloc];
-}
 
 @end

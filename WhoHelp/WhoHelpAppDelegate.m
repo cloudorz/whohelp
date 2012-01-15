@@ -31,7 +31,7 @@
     self.tabBarController.delegate = self;
     self.tabBarController.tabBar.opaque = YES;
 
-    //[self.tabBarController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"avatar.png"]];
+    [self.tabBarController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"blank.png"]];
     // config the tab bar items
     [self.nearbyItem setFinishedSelectedImage:[UIImage imageNamed:@"nearbyo.png"] 
                   withFinishedUnselectedImage:[UIImage imageNamed:@"nearby.png"]];
