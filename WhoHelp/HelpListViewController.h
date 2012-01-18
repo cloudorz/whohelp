@@ -24,7 +24,7 @@
     UITableViewCell *moreCell_;
     NSDictionary *loudCates_, *payCates_;
     UITableView *tableView_;
-    
+    NSString *lastUpdated;
     NSTimer *timer_;
 
 }
@@ -36,6 +36,7 @@
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) NSString *lastUpdated;
 
 
 - (void)reloadTableViewDataSource;
@@ -43,7 +44,7 @@
 
 - (void)fetchLoudList;
 - (void)fetchNextLoudList;
-//- (void)fetchUpdatedInfo;
+- (void)fetchUpdatedInfo;
 - (void)fakeFetchLoudList;
 
 @end

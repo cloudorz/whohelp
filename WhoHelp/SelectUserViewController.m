@@ -136,14 +136,11 @@
         
         // reload the tableview data
         [self.tableView reloadData];
+        [self fadeInMsgWithText:@"成功获取数据" rect:CGRectMake(0, 0, 80, 66)];
         
-    } else if (400 == code) {
+    } else{
         
-        [Utils warningNotification:@"参数错误"];
-        
-    }else{
-        
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 }

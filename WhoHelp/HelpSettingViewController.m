@@ -147,7 +147,8 @@
     // reinit the user info
     self.nameLabel.text = [ProfileManager sharedInstance].profile.name;
     self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
-    NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:[ProfileManager sharedInstance].profile.urn, @"id", 
+    NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:
+                          [ProfileManager sharedInstance].profile.urn, @"id", 
                           [ProfileManager sharedInstance].profile.link, @"link",
                           nil];
     [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
@@ -160,6 +161,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    // init the list
+    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -351,7 +354,7 @@
                                        LOUDSEARCH,
                                        [ProfileManager sharedInstance].profile.userkey,
                                        [@"created desc" URLEncodedString],
-                                       0, 6
+                                       0, 20
                                        ]];
     
     
@@ -387,18 +390,12 @@
         
         [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
         
-        
+        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
     } else if (304 == code){
         // do nothing
-    } else if (400 == code) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
-    } else if (401 == code){
-        [Utils warningNotification:@"授权失败"];
     } else{
         
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 }
@@ -407,6 +404,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -441,10 +439,9 @@
         // reload the tableview data
         [self.tableView reloadData];
         
-    } else if (400 == code) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"服务器异常返回"];
+
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
 }
@@ -453,6 +450,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request next loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 

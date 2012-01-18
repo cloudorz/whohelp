@@ -13,6 +13,7 @@
 #import "ProfileManager.h"
 #import "DoubanAuthViewController.h"
 #import "WhoHelpAppDelegate.h"
+#import "UIViewController+msg.h"
 
 
 @implementation PreAuthViewController
@@ -140,7 +141,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
-    [Utils warningNotification:[error description]];
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     NSLog(@"%@", [error description]);
 }
 

@@ -25,6 +25,8 @@
     
     UIView *sectionView_;
     UILabel *helpotherIndicator_, *goodjosIndicator_;
+    NSString *lastUpdated;
+    NSTimer *timer_;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
@@ -34,6 +36,8 @@
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) IBOutlet UILabel *helpotherIndicator, *goodjosIndicator;
 @property (nonatomic, retain) IBOutlet UIView *sectionView;
+@property (nonatomic, retain) NSString *lastUpdated;
+@property (nonatomic, retain) NSTimer *timer;
 
 -(void)fetchPrizeList;
 -(void)fetchNextPrizeList;

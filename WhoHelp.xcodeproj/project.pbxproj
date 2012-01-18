@@ -129,6 +129,9 @@
 		6133362714C327E90059C980 /* lrenrenx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6133362114C327E90059C980 /* lrenrenx@2x.png */; };
 		6133362814C327E90059C980 /* lweiboo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6133362214C327E90059C980 /* lweiboo@2x.png */; };
 		6133362914C327E90059C980 /* lweibox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6133362314C327E90059C980 /* lweibox@2x.png */; };
+		6133363014C3F5DD0059C980 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133362F14C3F5DD0059C980 /* MessageTableViewCell.m */; };
+		6133363614C707100059C980 /* RoundedRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133363214C7070F0059C980 /* RoundedRect.m */; };
+		6133363714C707100059C980 /* UIViewController+msg.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133363314C7070F0059C980 /* UIViewController+msg.m */; };
 		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
 		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
 		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
@@ -488,6 +491,12 @@
 		6133362114C327E90059C980 /* lrenrenx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lrenrenx@2x.png"; sourceTree = "<group>"; };
 		6133362214C327E90059C980 /* lweiboo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lweiboo@2x.png"; sourceTree = "<group>"; };
 		6133362314C327E90059C980 /* lweibox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lweibox@2x.png"; sourceTree = "<group>"; };
+		6133362E14C3F5DD0059C980 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
+		6133362F14C3F5DD0059C980 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
+		6133363214C7070F0059C980 /* RoundedRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedRect.m; sourceTree = "<group>"; };
+		6133363314C7070F0059C980 /* UIViewController+msg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+msg.m"; sourceTree = "<group>"; };
+		6133363414C7070F0059C980 /* RoundedRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundedRect.h; sourceTree = "<group>"; };
+		6133363514C707100059C980 /* UIViewController+msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+msg.h"; sourceTree = "<group>"; };
 		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
 		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
 		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
@@ -1131,6 +1140,10 @@
 		618B515114B7EDCE001992F0 /* Items View */ = {
 			isa = PBXGroup;
 			children = (
+				6133363414C7070F0059C980 /* RoundedRect.h */,
+				6133363214C7070F0059C980 /* RoundedRect.m */,
+				6133363514C707100059C980 /* UIViewController+msg.h */,
+				6133363314C7070F0059C980 /* UIViewController+msg.m */,
 				61976B2314B2E91A00844C53 /* WhiteNavigationBar.h */,
 				61976B2414B2E91A00844C53 /* WhiteNavigationBar.m */,
 				611FD798143B20F100398709 /* LoudTableCell.h */,
@@ -1147,6 +1160,8 @@
 				61B72FDC14BDEBCD006A84DC /* LoudCateTableCell.m */,
 				61B72FDE14BDF88C006A84DC /* PayCateTableCell.h */,
 				61B72FDF14BDF88D006A84DC /* PayCateTableCell.m */,
+				6133362E14C3F5DD0059C980 /* MessageTableViewCell.h */,
+				6133362F14C3F5DD0059C980 /* MessageTableViewCell.m */,
 				618B515B14B81FBC001992F0 /* NavTitleLabel.h */,
 				618B515C14B81FBD001992F0 /* NavTitleLabel.m */,
 				618B516214B82FCE001992F0 /* TopLine.h */,
@@ -1822,6 +1837,9 @@
 				61B72FF814BEC07D006A84DC /* MyProfileViewController.m in Sources */,
 				61B7303814C05626006A84DC /* Profile.m in Sources */,
 				61B7303C14C0910C006A84DC /* AuthPageViewController.m in Sources */,
+				6133363014C3F5DD0059C980 /* MessageTableViewCell.m in Sources */,
+				6133363614C707100059C980 /* RoundedRect.m in Sources */,
+				6133363714C707100059C980 /* UIViewController+msg.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

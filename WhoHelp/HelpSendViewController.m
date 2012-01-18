@@ -268,7 +268,7 @@
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         //    self.sendBarItem.enabled = NO;
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:3.0];
+        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:1.5];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
     }       
@@ -322,10 +322,9 @@
 
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (400 == [request responseStatusCode]) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"非正常返回"];
+        
+        [self fadeOutMsgWithText:@"发送求助失败" rect:CGRectMake(0, 0, 80, 66)];
     }
 
     // send ok cancel
@@ -342,8 +341,9 @@
     [self.loadingIndicator stopAnimating];
 
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    // 
-    [Utils warningNotification:[[request error] localizedDescription]];
+     
+    //[Utils warningNotification:[[request error] localizedDescription]];
+     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
 
 }
 

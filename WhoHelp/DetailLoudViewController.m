@@ -329,11 +329,14 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     
-//    if ((isOwner && (300 == loudStatusCode || -100 == loudStatusCode))
-//        || (!isOwner && 200 != loudStatusCode)){
-//        NSLog(@"fuck here i'm ");
-//        [self.navigationController popViewControllerAnimated:NO];
-//    }
+
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // init the list
+    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -442,19 +445,13 @@
         [self.tableView reloadData];
         
         //[[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
-        
+        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else if (304 == code){
         // do nothing
-    } else if (400 == code) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
-    } else if (401 == code){
-        [Utils warningNotification:@"需授权认证"];
     } else{
         
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 }
@@ -463,6 +460,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request replies list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -496,10 +494,9 @@
         // reload the tableview data
         [self.tableView reloadData];
         
-    } else if (400 == code) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"服务器异常返回"];
+
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
 }
@@ -508,6 +505,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request next loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -531,10 +529,9 @@
         [self.loud setValue:[NSNumber numberWithInt:-100] forKey:@"status"];
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (400 == code) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"服务器异常返回"];
+        
+        [self fadeOutMsgWithText:@"删除失败" rect:CGRectMake(0, 0, 80, 66)];
     }
 }
 
@@ -543,6 +540,7 @@
     
     NSError *error = [request error];
     NSLog(@"request delete loud: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 

@@ -212,13 +212,13 @@
 {
     //[self.navigationController popViewControllerAnimated:YES];
     if ([[self.nameField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] isEqualToString:@""]){
-        [Utils warningNotification:@"昵称不能为空"];
+        [self fadeOutMsgWithText:@"昵称不能为空" rect:CGRectMake(0, 0, 80, 66)];
         return;
     }
     
     if (![self.phoneField.text isEqualToString:@""] && ![self testPhoneNumber:self.phoneField.text]) {
         
-        [Utils warningNotification:@"填写的手机号无效"];
+        [self fadeOutMsgWithText:@"无效手机号" rect:CGRectMake(0, 0, 80, 66)];
         return;
     } 
     
@@ -339,10 +339,10 @@
             
         } else if (412 == code){
             callback(NO);
-            [Utils warningNotification:@"至少保留一个授权"];
+            [self fadeOutMsgWithText:@"至少保留一个授权" rect:CGRectMake(0, 0, 100, 66)];
         } else{
             callback(NO);
-            [Utils warningNotification:@"取消授权失败"];
+            [self fadeOutMsgWithText:@"至少保留一个授权" rect:CGRectMake(0, 0, 100, 66)];
         }
         
     }];
@@ -350,8 +350,8 @@
     [request setFailedBlock:^{
         
         NSError *error = [request error];
-        [Utils warningNotification:[error description]];
         callback(NO);
+        [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 100, 66)];
         NSLog(@"%@", [error description]);
         
     }];
@@ -394,7 +394,7 @@
 - (void)requestAuthFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
-    [Utils warningNotification:[error description]];
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 100, 66)];
     NSLog(@"%@", [error description]);
 }
 
@@ -433,12 +433,11 @@
         [ProfileManager sharedInstance].profile.phone = [self testPhoneNumber:self.phoneField.text] ? self.phoneField.text : nil;
         
         // udpate the user cache ??
-       
+       [self fadeInMsgWithText:@"保存成功" rect:CGRectMake(0, 0, 60, 66)];
         
-    } else if (400 == [request responseStatusCode]) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"非正常返回"];
+
+        [self fadeOutMsgWithText:@"保存失败" rect:CGRectMake(0, 0, 60, 66)];
     }
     
     // send ok cancel
@@ -452,7 +451,7 @@
 {
     // notify the user
     [self turnSaveButtonEnable];
-    [Utils warningNotification:[[request error] localizedDescription]];
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -595,10 +594,11 @@
                 [photo setObject:self.image forKey:@"avatar"];
             }
             
-        } else if (400 == code){
-            [Utils warningNotification:@"上传头像失败"];
+            [self fadeInMsgWithText:@"上传头像成功" rect:CGRectMake(0, 0, 80, 66)];
+            
         } else{
-            [Utils warningNotification:@"服务器异常返回"];
+
+            [self fadeOutMsgWithText:@"上传头像失败" rect:CGRectMake(0, 0, 80, 66)];
         }
         
     }];
@@ -606,6 +606,7 @@
     [request setFailedBlock:^{
         NSError *error = [request error];
         NSLog(@"Fetch avatar: %@", [error localizedDescription]);
+        [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     }];
     
     

@@ -207,21 +207,21 @@
     }
 }
 
--(IBAction)turnPhoneAction:(id)sender
-{
-    if (self.isHelp){
-        self.isHelp = NO;
-        [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
-    } else{
-        if ([ProfileManager sharedInstance].profile.phone == nil){
-            [Utils wrongInfoString:@"请在设置里填写你的电话号码"];
-        } else{
-            self.isHelp = YES;
-            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
-        }
-
-    }
-}
+//-(IBAction)turnPhoneAction:(id)sender
+//{
+//    if (self.isHelp){
+//        self.isHelp = NO;
+//        [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
+//    } else{
+//        if ([ProfileManager sharedInstance].profile.phone == nil){
+//            [Utils wrongInfoString:@"请在设置里填写你的电话号码"];
+//        } else{
+//            self.isHelp = YES;
+//            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
+//        }
+//
+//    }
+//}
 
 #pragma mark - send post
 - (void)fakeSendPost
@@ -229,7 +229,7 @@
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self performSelector:@selector(sendPost) withObject:nil afterDelay:3.0];
+        [self performSelector:@selector(sendPost) withObject:nil afterDelay:1.5];
     } else{
         [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
     }       
@@ -277,10 +277,6 @@
 
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (400 == code) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
     } else if (412 == code) {
         
         NSString *body = [request responseString];
@@ -290,23 +286,22 @@
         // notification
         int statusCode = [[reason objectForKey:@"status"] intValue];
         if (300 == statusCode){
-            [Utils warningNotification:@"求助已完成，请更新求助列表信息"];
-            
+
+            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
         } else if (100 == statusCode){
-            [Utils warningNotification:@"求助已过期，无法操作，请更新信息"];
-            
+
+            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
         }
         
     } else if (404 == code) {
         
-        NSString *desc = [request responseString];
         [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
         
-        [Utils warningNotification:desc];
+        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
         
     } else{
         
-        [Utils warningNotification:@"非正常返回"];
+       [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 
@@ -325,8 +320,8 @@
     //[self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    // 
-    [Utils warningNotification:[[request error] localizedDescription]];
+
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 

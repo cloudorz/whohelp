@@ -29,6 +29,7 @@
 @synthesize moreCell=moreCell_;
 @synthesize timer=timer_;
 @synthesize tableView=tableView_;
+@synthesize lastUpdated;
 
 #pragma mark - dealloc 
 - (void)dealloc
@@ -40,7 +41,7 @@
     [loudCates_ release];
     [payCates_ release];
     [tableView_ release];
-    
+    [lastUpdated release];
     [super dealloc];
 }
 
@@ -114,11 +115,11 @@
 
     
     // timer
-//    self.timer = [NSTimer scheduledTimerWithTimeInterval:90 
-//                                                  target:self 
-//                                                selector:@selector(fetchUpdatedInfo) 
-//                                                userInfo:nil 
-//                                                 repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
+                                                  target:self 
+                                                selector:@selector(fetchUpdatedInfo) 
+                                                userInfo:nil 
+                                                 repeats:YES];
     
 }
 
@@ -126,7 +127,7 @@
 {
     [super viewDidUnload];
     _refreshHeaderView=nil;
-    //[self.timer invalidate];
+    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -159,9 +160,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self becomeFirstResponder];
+
     // load remote data and init tableview
-    //[self fakeFetchLoudList];
+    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -366,7 +367,7 @@
     if ([CLLocationManager locationServicesEnabled]){
         if (nil != [ProfileManager sharedInstance].profile){
             [[LocationController sharedInstance].locationManager startUpdatingLocation];
-            [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:2.0];        
+            [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];        
         }
 
     } else{
@@ -391,7 +392,7 @@
                                         curloc.latitude, 
                                         curloc.longitude, 
                                         [@"created desc" URLEncodedString],
-                                         0, 6
+                                         0, 20
                                        ]];
     
   
@@ -424,21 +425,17 @@
         
         // reload the tableview data
         [self.tableView reloadData];
-        
+                
         [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+        self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
         
+        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else if (304 == code){
         // do nothing
-    } else if (400 == code) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
-    } else if (401 == code){
-        [Utils warningNotification:@"授权失败"];
     } else{
         
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 }
@@ -447,6 +444,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -481,10 +479,8 @@
         // reload the tableview data
         [self.tableView reloadData];
         
-    } else if (400 == code) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
 }
@@ -493,8 +489,62 @@
 {
     NSError *error = [request error];
     NSLog(@"request next loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
+
+#pragma mark - get update info
+- (void)fetchUpdatedInfo
+{
+    if ([LocationController sharedInstance].allow == NO){
+        return;
+    }
+    
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?lat=%f&lon=%f", 
+                                       HOST,
+                                       ULOUDURI, 
+                                       curloc.latitude, 
+                                       curloc.longitude]
+                  ];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.lastUpdated){
+        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request signInHeader];
+    [request startSynchronous];
+    
+    
+    NSError *error = [request error];
+    if (!error){
+        
+        if (200 == [request responseStatusCode]) {
+            NSString *body = [request responseString];
+            NSDictionary *info = [body JSONValue];
+            
+            int loudNum = [[info objectForKey:@"num"] intValue];
+            if (loudNum > 0 ){
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] 
+                 setBadgeValue:[NSString stringWithFormat:@"%d", loudNum]];
+            } else{
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+            }
+            
+        } else{
+            NSLog(@"error: %@", @"非正常返回");
+        }
+        
+    } else {
+        
+        NSLog(@"network link error:%@", [error localizedDescription]);
+    }
+    
+}
+
+
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -503,7 +553,7 @@
     
     //  should be calling your tableviews data source model to reload
     [self fakeFetchLoudList];
-    // some more actions here TODO
+
     _reloading = YES;
     
 }

@@ -249,10 +249,6 @@
         
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else if (400 == [request responseStatusCode]) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
     } else if (412 == code) {
         
         NSString *body = [request responseString];
@@ -262,22 +258,23 @@
         // notification
         int statusCode = [[reason objectForKey:@"status"] intValue];
         if (300 == statusCode){
-            [Utils warningNotification:@"求助已完成，请更新求助列表信息"];
+
+            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
             
         } else if (100 == statusCode){
-            [Utils warningNotification:@"求助已过期，无法操作，请更新信息"];
+
+            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
             
         }
         
     } else if (404 == code) {
         
-        NSString *desc = [request responseString];
         [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
         
-        [Utils warningNotification:desc];
+        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
         
     } else{
-        [Utils warningNotification:@"非正常返回"];
+        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
     // send ok cancel
@@ -295,9 +292,8 @@
     //[self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    // 
-    [Utils warningNotification:[[request error] localizedDescription]];
     
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
 }
 
 #pragma mark - text view delegate

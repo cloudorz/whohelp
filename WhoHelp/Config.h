@@ -20,6 +20,10 @@
 #define PRIZEURI @"/prize/"
 #define USERLISTURI @"/offer-help-users/"
 #define UPLOADURI @"/upload"
+#define MSGURI @"/msg/"
+#define ULOUDURI @"/loudupdate"
+#define UMSGURI @"/msgupdate"
+#define UPRIZEURI @"/prizeupdate"
 
 #define TEXTWIDTH 246.0f
 

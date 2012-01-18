@@ -27,6 +27,8 @@
 @synthesize helpotherIndicator=helpotherIndicator_;
 @synthesize goodjosIndicator=goodjosIndicator_;
 @synthesize sectionView=sectionView_;
+@synthesize timer=timer_;
+@synthesize lastUpdated;
 
 #pragma mark - dealloc 
 - (void)dealloc
@@ -40,6 +42,8 @@
     [goodjosIndicator_ release];
     [helpotherIndicator_ release];
     [sectionView_ release];
+    [timer_ release];
+    [lastUpdated release];
     [super dealloc];
 }
 
@@ -88,6 +92,13 @@
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"感谢信"] autorelease];
     
+    // timer
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
+                                                  target:self 
+                                                selector:@selector(fetchUpdatedInfo) 
+                                                userInfo:nil 
+                                                 repeats:YES];
+    
 }
 
 - (void)viewDidUnload
@@ -95,8 +106,16 @@
     [super viewDidUnload];
     
     _refreshHeaderView=nil;
+    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // init the list
+    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -326,20 +345,16 @@
         // reload the tableview data
         [self.tableView reloadData];
         
-        //[[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
+        [[[self.tabBarController.tabBar items] objectAtIndex:3] setBadgeValue:nil ];
+        self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
         
+        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else if (304 == code){
         // do nothing
-    } else if (400 == code) {
-        
-        [Utils warningNotification:@"参数错误"];
-        
-    } else if (401 == code){
-        [Utils warningNotification:@"需授权认证"];
     } else{
         
-        [Utils warningNotification:@"服务器异常返回"];
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
 }
@@ -348,6 +363,7 @@
 {
     NSError *error = [request error];
     NSLog(@"request replies list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     
 }
 
@@ -381,14 +397,62 @@
         // reload the tableview data
         [self.tableView reloadData];
         
-    } else if (400 == code) {
-        [Utils warningNotification:@"参数错误"];
     } else{
-        [Utils warningNotification:@"服务器异常返回"];
+
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
 }
 
+-(void)requestNextListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request replies list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+}
+
+#pragma mark - get update info
+- (void)fetchUpdatedInfo
+{
+    
+    // make json data for post
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UPRIZEURI]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.lastUpdated){
+        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request signInHeader];
+    [request startSynchronous];
+    
+    
+    NSError *error = [request error];
+    if (!error){
+        
+        if (200 == [request responseStatusCode]) {
+            NSString *body = [request responseString];
+            NSDictionary *info = [body JSONValue];
+            
+                        
+            int prizeNum = [[info objectForKey:@"num"] intValue];
+            if (prizeNum > 0 ){
+                [[[self.tabBarController.tabBar items] objectAtIndex:2] 
+                 setBadgeValue:[NSString stringWithFormat:@"%d", prizeNum]];
+            } else{
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+            }
+            
+        } else{
+            NSLog(@"error: %@", @"非正常返回");
+        }
+        
+    } else {
+        
+        NSLog(@"network link error:%@", [error localizedDescription]);
+    }
+    
+}
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

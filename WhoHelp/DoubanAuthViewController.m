@@ -11,6 +11,7 @@
 #import "Utils.h"
 #import "SBJson.h"
 #import "ProfileManager.h"
+#import "UIViewController+msg.h"
 
 @implementation DoubanAuthViewController
 
@@ -114,7 +115,7 @@
                                                      error:&error];
         
         if (!error){
-            [Utils warningNotification:[error localizedDescription]];
+            [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         } else {
              //NSLog(@"fuck: %@", content);
             // create the json parser 

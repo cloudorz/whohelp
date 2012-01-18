@@ -17,10 +17,20 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
     
     BOOL _reloading;
+    NSMutableDictionary *curCollection_;
+    NSMutableArray *messages_;
+    NSString *lastUpdated_;
+    NSTimer *timer_;
+
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) NSMutableArray *messages;
+@property (nonatomic, retain) NSMutableDictionary *curCollection;
+@property (nonatomic, retain) NSString *lastUpdated;
+@property (nonatomic, retain) NSTimer *timer;
 
-- (void)fetch3Louds;
+- (void)fetchMsgList;
+- (void)fetchLoud:(NSString *)urlString;
 
 @end

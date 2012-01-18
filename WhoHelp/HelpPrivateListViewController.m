@@ -8,17 +8,30 @@
 
 #import "HelpPrivateListViewController.h"
 #import "CustomItems.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+#import "UserManager.h"
+#import "SBJson.h"
+#import "Utils.h"
+#import "Config.h"
+#import "NSString+URLEncoding.h"
+#import "DetailLoudViewController.h"
 
 @implementation HelpPrivateListViewController
 
+@synthesize messages=messages_;
+@synthesize curCollection=curCollection_;
+@synthesize lastUpdated=lastUpdated_;
 @synthesize tableView=tableView_;
+@synthesize timer=timer_;
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
-
+    [messages_ release];
+    [curCollection_ release];
     [tableView_ release];
-    
+    [timer_ release];
+    [lastUpdated_ release];
     [super dealloc];
 }
 
@@ -67,6 +80,13 @@
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"我的消息"] autorelease];
     
+    // timer
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
+                                                  target:self 
+                                                selector:@selector(fetchUpdatedInfo) 
+                                                userInfo:nil 
+                                                 repeats:YES];
+    
 }
 
 - (void)viewDidUnload
@@ -74,6 +94,7 @@
     [super viewDidUnload];
     
     _refreshHeaderView=nil;
+    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -86,6 +107,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    // init the list
+    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -108,126 +131,225 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+
     // Return the number of rows in the section.
-    return 0;
+    return self.messages.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+
+// Customize the appearance of table view cells.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    static NSString *CellIdentifier = @"messageCateCell";
+    
+    MessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        
+        cell = [[[MessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                            reuseIdentifier:CellIdentifier] autorelease];
+    } 
+    
+    
+    NSMutableDictionary *message = [self.messages objectAtIndex:indexPath.row];
+    
+    // avatar
+    
+    NSDictionary *user = [message objectForKey:@"user"];
+    
+    [cell retain]; // #{ for tableview may dealloc
+    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
+        
+        if (nil != data){
+            cell.avatarImage.image = [UIImage imageWithData: data];
+        }
+        
+        [cell release]; // #} relase it
+    }];
+    
+    // content
+    if ([[message objectForKey:@"label"] isEqualToString:@"help"]) {
+        cell.contentLabel.text = [NSString stringWithFormat:@"%@的求助有人提供帮助", [user objectForKey:@"name"]];
+    } else{
+        cell.contentLabel.text = [NSString stringWithFormat:@"%@的求助有了新的回复", [user objectForKey:@"name"]]; 
     }
     
-    // Configure the cell...
+    
+    if (nil == [message objectForKey:@"createdTime"]){
+        [message setObject:[Utils dateFromISOStr:[message objectForKey:@"created"]] forKey:@"createdTime"];
+    }
+    
+    // date time
+    cell.timeLabel.text = [Utils descriptionForTime:[message objectForKey:@"createdTime"]];
+    
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-#pragma mark - get the three 
-- (void)fetch3Louds
-{
-    //    NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat: @"%@?ak=%@&tk=%@&q=author:%@&qs=created desc&st=0&qn=3", 
-    //                                        SURI, 
-    //                                        APPKEY, 
-    //                                        [ProfileManager sharedInstance].profile.token, 
-    //                                        [ProfileManager sharedInstance].profile.phone] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding
-    //                                       ]
-    //                  ];
-    //    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    //    if (nil != self.etag){
-    //        [request addRequestHeader:@"If-None-Match" value:self.etag];
-    //    }
-    //    //[request setValidatesSecureCertificate:NO];
-    //    [request startSynchronous];
-    //    
-    //    NSError *error = [request error];
-    //    if (!error) {
-    //        if ([request responseStatusCode] == 200){
-    //            
-    //            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    //            id data = [request responseData];
-    //            id result = [jsonParser objectWithData:data];
-    //            [jsonParser release];
-    //            
-    //            self.userEtag = [[request responseHeaders] objectForKey:@"Etag"];
-    //            self.myLouds = [result objectForKey:@"louds"];
-    //            
-    //        } else if (304 == [request responseStatusCode]){
-    //            // done some thing
-    //        } else if (400 == [request responseStatusCode]) {
-    //            [Utils warningNotification:@"参数错误"];
-    //        }else {
-    //            [Utils warningNotification:@"非常规返回"];
-    //        }
-    //        
-    //    }else{
-    //        [Utils warningNotification:@"请求服务错误"];
-    //    }
-    
-}
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    
+    [self fetchLoud:[[self.messages objectAtIndex:indexPath.row] objectForKey:@"loud_link"]];
+     
+}
+
+- (void)fetchMsgList
+{
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, MSGURI]];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.lastUpdated){
+        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * collection = [body JSONValue];
+        self.curCollection = collection;
+        
+        NSMutableArray *tmpArray = [collection objectForKey:@"messages"];
+        if (self.messages != nil) {
+            [tmpArray addObjectsFromArray:self.messages];
+        }
+        self.messages = tmpArray;
+        
+        self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+        [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil ];
+        
+        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
+        
+    } else{
+        
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    
+}
+
+- (void)fetchLoud:(NSString *)urlString
+{
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestLoudDone:)];
+    [request setDidFailSelector:@selector(requestLoudWentWrong:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)requestLoudDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * loud = [body JSONValue];
+        DetailLoudViewController *detailViewController = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
+        detailViewController.loud = loud;
+
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+        
+    } else{        
+
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
+        
+    }
+}
+
+- (void)requestLoudWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request loud list: %@", [error localizedDescription]);
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    
+}
+
+#pragma mark - get update info
+- (void)fetchUpdatedInfo
+{
+
+    // make json data for post
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UMSGURI]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.lastUpdated){
+        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request signInHeader];
+    [request startSynchronous];
+    
+    
+    NSError *error = [request error];
+    if (!error){
+        
+        if (200 == [request responseStatusCode]) {
+            NSString *body = [request responseString];
+            NSDictionary *info = [body JSONValue];
+            
+                       
+            int messageNum = [[info objectForKey:@"num"] intValue];
+            if (messageNum > 0 ){
+                [[[self.tabBarController.tabBar items] objectAtIndex:1] 
+                 setBadgeValue:[NSString stringWithFormat:@"%d", messageNum]];
+            } else{
+                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+            }
+
+            
+        } else{
+            NSLog(@"error: %@", @"非正常返回");
+        }
+        
+    } else {
+        
+        NSLog(@"network link error:%@", [error localizedDescription]);
+    }
+    
 }
 
 #pragma mark -
@@ -236,7 +358,7 @@
 - (void)reloadTableViewDataSource{
     
     //  should be calling your tableviews data source model to reload
-    //[self fakeFetchLoudList];
+    [self fetchMsgList];
     // some more actions here TODO
     _reloading = YES;
     
