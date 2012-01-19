@@ -91,7 +91,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">avatarFrame.png</string>
+									<string key="NSResourceName">avatarFrameG.png</string>
 								</object>
 							</object>
 							<object class="IBUITextView" id="354733273">
@@ -348,6 +348,7 @@
 								<string key="NSFrame">{{288, 377}, {20, 21}}</string>
 								<reference key="NSSuperview" ref="767492252"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<reference key="IBUIBackgroundColor" ref="619424390"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -1000,13 +1001,11 @@
 							<string>avatar</string>
 							<string>doubanButton</string>
 							<string>duetimeButton</string>
-							<string>duetimeLabel</string>
 							<string>helpTextView</string>
 							<string>loadingIndicator</string>
 							<string>numIndicator</string>
 							<string>renrenButton</string>
 							<string>wardButton</string>
-							<string>wardLabel</string>
 							<string>weiboButton</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1014,13 +1013,11 @@
 							<string>UIImageView</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
-							<string>UILabel</string>
 							<string>UITextView</string>
 							<string>UIActivityIndicatorView</string>
 							<string>UILabel</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
-							<string>UILabel</string>
 							<string>UIButton</string>
 						</object>
 					</object>
@@ -1031,13 +1028,11 @@
 							<string>avatar</string>
 							<string>doubanButton</string>
 							<string>duetimeButton</string>
-							<string>duetimeLabel</string>
 							<string>helpTextView</string>
 							<string>loadingIndicator</string>
 							<string>numIndicator</string>
 							<string>renrenButton</string>
 							<string>wardButton</string>
-							<string>wardLabel</string>
 							<string>weiboButton</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1053,10 +1048,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">duetimeButton</string>
 								<string key="candidateClassName">UIButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">duetimeLabel</string>
-								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">helpTextView</string>
@@ -1077,10 +1068,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">wardButton</string>
 								<string key="candidateClassName">UIButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">wardLabel</string>
-								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">weiboButton</string>
@@ -1107,7 +1094,7 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>avatarFrame.png</string>
+				<string>avatarFrameG.png</string>
 				<string>doubanx.png</string>
 				<string>duetime.png</string>
 				<string>renrenx.png</string>

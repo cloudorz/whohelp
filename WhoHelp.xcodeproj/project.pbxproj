@@ -132,6 +132,8 @@
 		6133363014C3F5DD0059C980 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133362F14C3F5DD0059C980 /* MessageTableViewCell.m */; };
 		6133363614C707100059C980 /* RoundedRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133363214C7070F0059C980 /* RoundedRect.m */; };
 		6133363714C707100059C980 /* UIViewController+msg.m in Sources */ = {isa = PBXBuildFile; fileRef = 6133363314C7070F0059C980 /* UIViewController+msg.m */; };
+		6133364214C84A6A0059C980 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 6133364014C84A6A0059C980 /* background.png */; };
+		6133364314C84A6A0059C980 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6133364114C84A6A0059C980 /* background@2x.png */; };
 		6145385314288F7600BA2C34 /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */; };
 		6145385414288F7600BA2C34 /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6145385014288F7600BA2C34 /* OHAttributedLabel.m */; };
 		614538561428930B00BA2C34 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614538551428930B00BA2C34 /* CoreText.framework */; };
@@ -497,6 +499,8 @@
 		6133363314C7070F0059C980 /* UIViewController+msg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+msg.m"; sourceTree = "<group>"; };
 		6133363414C7070F0059C980 /* RoundedRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundedRect.h; sourceTree = "<group>"; };
 		6133363514C707100059C980 /* UIViewController+msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+msg.h"; sourceTree = "<group>"; };
+		6133364014C84A6A0059C980 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		6133364114C84A6A0059C980 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		6145384F14288F7600BA2C34 /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
 		6145385014288F7600BA2C34 /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
 		6145385114288F7600BA2C34 /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
@@ -1080,6 +1084,8 @@
 		618B510814B6002F001992F0 /* Help Detail */ = {
 			isa = PBXGroup;
 			children = (
+				6133364014C84A6A0059C980 /* background.png */,
+				6133364114C84A6A0059C980 /* background@2x.png */,
 				61B7301A14BF5AD1006A84DC /* triFrame.png */,
 				61B7301B14BF5AD1006A84DC /* triFrame@2x.png */,
 				61B7301614BF5969006A84DC /* centerFrame.png */,
@@ -1737,6 +1743,8 @@
 				6133362714C327E90059C980 /* lrenrenx@2x.png in Resources */,
 				6133362814C327E90059C980 /* lweiboo@2x.png in Resources */,
 				6133362914C327E90059C980 /* lweibox@2x.png in Resources */,
+				6133364214C84A6A0059C980 /* background.png in Resources */,
+				6133364314C84A6A0059C980 /* background@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

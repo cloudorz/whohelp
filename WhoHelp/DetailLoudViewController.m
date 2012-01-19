@@ -76,7 +76,7 @@
 {
     if (nil == payCates_){
         // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
         payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
         
     }
@@ -107,6 +107,7 @@
 {
     [super viewDidLoad];
     
+    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     // common variables
     //UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
     UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
@@ -212,7 +213,7 @@
     }
     
     // pay categories description
-    if ([NSNull null] == [self.loud objectForKey:@"paydesc"]){
+    if ([NSNull null] == [self.loud objectForKey:@"paydesc"] || [[self.loud objectForKey:@"paydesc"] isEqualToString:@""]){
         payCateDescLabel.text = [paycate objectForKey:@"text"];
     } else{
         payCateDescLabel.text = [NSString stringWithFormat:@"%@, %@",

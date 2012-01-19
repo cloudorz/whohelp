@@ -70,6 +70,7 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     
     if (_refreshHeaderView == nil) {
 		
@@ -437,10 +438,10 @@
                         
             int prizeNum = [[info objectForKey:@"num"] intValue];
             if (prizeNum > 0 ){
-                [[[self.tabBarController.tabBar items] objectAtIndex:2] 
+                [[[self.tabBarController.tabBar items] objectAtIndex:3] 
                  setBadgeValue:[NSString stringWithFormat:@"%d", prizeNum]];
             } else{
-                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+                [[[self.tabBarController.tabBar items] objectAtIndex:3] setBadgeValue:nil];
             }
             
         } else{

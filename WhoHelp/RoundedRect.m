@@ -22,18 +22,19 @@
 		//self.backgroundColor = [UIColor blackColor];
 		self.opaque = YES;
 		self.clearsContextBeforeDrawing = YES;
+        self.backgroundColor = [UIColor clearColor];
+        radius_ = radius;
+        UILabel *textLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] autorelease];
+        textLabel.textAlignment = UITextAlignmentCenter;
+        textLabel.font = [UIFont systemFontOfSize:11];
+        textLabel.backgroundColor = [UIColor clearColor];
+        textLabel.text = text;
+        textLabel.textColor = [UIColor whiteColor];
+        textLabel.center = self.center;
+        [self addSubview: textLabel];
+
 	}
-	self.backgroundColor = [UIColor clearColor];
-	radius_ = radius;
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-	textLabel.textAlignment = UITextAlignmentCenter;
-	textLabel.font = [UIFont systemFontOfSize:11];
-	textLabel.backgroundColor = [UIColor clearColor];
-	textLabel.text = text;
-	textLabel.textColor = [UIColor whiteColor];
-	textLabel.center = self.center;
-	[self addSubview: textLabel];
-	[textLabel release];
+
 	return self;
 }
 

@@ -55,7 +55,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     // Do any additional setup after loading the view from its nib.
     self.webview.scalesPageToFit =NO;
     self.webview.delegate = self;

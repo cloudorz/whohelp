@@ -60,7 +60,7 @@
 {
     if (nil == payCates_){
         // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
         payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
         
     }
@@ -90,6 +90,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
  	
     if (_refreshHeaderView == nil) {
 		
@@ -303,7 +305,7 @@
     }
     
     // pay categories description
-    if ([NSNull null] == [loud objectForKey:@"paydesc"]){
+    if ([NSNull null] == [loud objectForKey:@"paydesc"] || [[loud objectForKey:@"paydesc"] isEqualToString:@""]){
         cell.payCateDescLabel.text = [paycate objectForKey:@"text"];
     } else{
         cell.payCateDescLabel.text = [NSString stringWithFormat:@"%@, %@",
@@ -422,7 +424,7 @@
         self.curCollection = collection;
         self.louds = [collection objectForKey:@"louds"];
         self.etag = [[request responseHeaders] objectForKey:@"Etag"];
-        
+
         // reload the tableview data
         [self.tableView reloadData];
                 
@@ -528,7 +530,7 @@
             int loudNum = [[info objectForKey:@"num"] intValue];
             if (loudNum > 0 ){
                 [[[self.tabBarController.tabBar items] objectAtIndex:0] 
-                 setBadgeValue:[NSString stringWithFormat:@"%d", loudNum]];
+                 setBadgeValue:@"new"];
             } else{
                 [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
             }

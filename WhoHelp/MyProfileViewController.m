@@ -68,6 +68,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    
     // navigation item config
     self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 

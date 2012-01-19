@@ -58,7 +58,7 @@
 {
     [super viewDidLoad];
     
-    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     if (_refreshHeaderView == nil) {
 		
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] 
@@ -337,7 +337,7 @@
                 [[[self.tabBarController.tabBar items] objectAtIndex:1] 
                  setBadgeValue:[NSString stringWithFormat:@"%d", messageNum]];
             } else{
-                [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
+                [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil];
             }
 
             

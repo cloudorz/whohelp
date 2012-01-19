@@ -44,7 +44,7 @@
         [self.contentView addSubview:self.avatarImage];
         
         UIImageView *avatarImageFrame = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 10, 35, 36)] autorelease];
-        avatarImageFrame.image = [UIImage imageNamed:@"avatarFrame.png"];
+        avatarImageFrame.image = [UIImage imageNamed:@"avatarFrameG.png"];
         avatarImageFrame.opaque = NO;
         avatarImageFrame.backgroundColor = [UIColor clearColor];
         

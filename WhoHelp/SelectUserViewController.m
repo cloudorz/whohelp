@@ -55,7 +55,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    
     self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
                                               action:@selector(backAction:)] autorelease];
@@ -68,7 +70,6 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 
 - (void)viewDidUnload

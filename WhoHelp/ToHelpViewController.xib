@@ -85,7 +85,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">avatarFrame.png</string>
+									<string key="NSResourceName">avatarFrameG.png</string>
 								</object>
 							</object>
 							<object class="IBUIView" id="259366168">
@@ -493,7 +493,6 @@
 						<string key="content">UITextView</string>
 						<string key="numIndicator">UILabel</string>
 						<string key="phoneButton">UIButton</string>
-						<string key="phoneImage">UIImageView</string>
 						<string key="phoneShow">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -513,10 +512,6 @@
 							<string key="name">phoneButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="phoneImage">
-							<string key="name">phoneImage</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="phoneShow">
 							<string key="name">phoneShow</string>
 							<string key="candidateClassName">UIView</string>
@@ -534,7 +529,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="avatarFrame.png">{70, 72}</string>
+			<string key="avatarFrameG.png">{70, 72}</string>
 			<string key="nophone.png">{35, 36}</string>
 			<string key="tableheader.png">{320, 5}</string>
 			<string key="tri.png">{8, 14}</string>

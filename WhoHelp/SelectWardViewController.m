@@ -28,7 +28,7 @@
 {
     if (wardCategories_ == nil){
         // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"payCate" ofType:@"plist"];
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
         NSDictionary *payCates = [NSDictionary dictionaryWithContentsOfFile:myFile]; 
         NSArray *sortedArray = [[payCates allValues] sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *d1, NSDictionary *d2){
             int dnum1 = [[d1 objectForKey:@"no"] intValue];
@@ -64,6 +64,7 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"你的报酬"] autorelease];

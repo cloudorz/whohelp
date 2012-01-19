@@ -77,6 +77,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     // display the keyboard
     // you might have to play around a little with numbers in CGRectMake method
     // they work fine with my settings

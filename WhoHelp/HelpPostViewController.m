@@ -63,7 +63,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"求助"] autorelease];
     

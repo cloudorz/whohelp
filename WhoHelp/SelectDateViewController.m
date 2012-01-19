@@ -46,7 +46,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    
     self.duetimePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:1800];
     self.duetimePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:3600*24*14];
     self.duetimePicker.date = [[NSDate date] dateByAddingTimeInterval:3600*24];

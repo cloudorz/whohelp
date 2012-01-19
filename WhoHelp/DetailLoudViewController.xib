@@ -81,7 +81,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">avatarFrame.png</string>
+									<string key="NSResourceName">avatarFrameG.png</string>
 								</object>
 							</object>
 							<object class="IBUIButton" id="447870245">
@@ -481,6 +481,7 @@
 						<string key="NSFrame">{{0, 66}, {320, 350}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:418</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -928,7 +929,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="avatarFrame.png">{70, 72}</string>
+			<string key="avatarFrameG.png">{70, 72}</string>
 			<string key="helpdone.png">{28, 36}</string>
 			<string key="justlook.png">{28, 36}</string>
 			<string key="offerhelp.png">{28, 36}</string>
