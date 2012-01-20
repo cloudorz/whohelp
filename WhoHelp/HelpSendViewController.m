@@ -284,8 +284,6 @@
         return;
     }
     
-    [self.loadingIndicator startAnimating];
-    
     // make json data for post
     CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
     [[LocationController sharedInstance].locationManager stopUpdatingLocation];

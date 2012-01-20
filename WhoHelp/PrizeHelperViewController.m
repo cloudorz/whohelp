@@ -28,6 +28,7 @@
 @synthesize numIndicator=numIndicator_;
 @synthesize placeholderLabel=placeholderLabel_;
 @synthesize toUser=toUser_;
+@synthesize loadingIndicator=loadingIndicator_;
 
 -(void)dealloc
 {
@@ -39,6 +40,7 @@
     [placeholderLabel_ release];
     [content_ release];
     [toUser_ release];
+    [loadingIndicator_ release];
     [super dealloc];
 }
 
@@ -113,6 +115,8 @@
     
     // unabel the send button
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    
+    [self.loadingIndicator stopAnimating];
 
 }
 
@@ -163,6 +167,7 @@
 
 -(void)sendButtonPressed:(id)sender
 {
+    [self.loadingIndicator startAnimating];
     [self sendPrizePost];
 }
 
@@ -280,7 +285,7 @@
     }
     
     // send ok cancel
-    //[self.loadingIndicator stopAnimating];
+    [self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
@@ -291,7 +296,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     // notify the user
-    //[self.loadingIndicator stopAnimating];
+    [self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     

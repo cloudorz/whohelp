@@ -19,6 +19,7 @@
     UILabel *numIndicator_;
     UILabel *placeholderLabel_;
     NSMutableDictionary *toUser_;
+    UIActivityIndicatorView *loadingIndicator_;
 }
 
 @property (nonatomic, retain) IBOutlet UIImageView *avatar;
@@ -28,6 +29,8 @@
 @property (nonatomic, retain) IBOutlet UITextView *content;
 @property (nonatomic, retain) IBOutlet UILabel *numIndicator;
 @property (nonatomic, retain) UILabel *placeholderLabel;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
+
 
 - (void)sendPrizePost;
 

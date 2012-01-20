@@ -212,15 +212,24 @@
 #pragma mark - distance info
 + (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud
 {
+    NSString *loudcate = [loud objectForKey:@"loudcate"];
+    NSString *addrDesc = nil;
+    NSString *address = [[loud objectForKey:@"address"] isEqual:[NSNull null]] ? @"" : [loud objectForKey:@"address"];
+    if ([loudcate isEqualToString:@"sys"] || [loudcate isEqualToString:@"virtual"]){
+        addrDesc = address;
+    } else{
+        addrDesc = [NSString stringWithFormat:@"%@ %.0f米",
+                    address,
+                    [curPos distanceFromLocation:
+                     [[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] 
+                                             longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]
+                ];
+    }
     
-    return [NSString stringWithFormat:@"%@ %.0f米",
-     [[loud objectForKey:@"address"] isEqual:[NSNull null]] ? @"" : 
-            [loud objectForKey:@"address"],
-     [curPos distanceFromLocation:
-      [[[CLLocation alloc] initWithLatitude:[[loud objectForKey:@"lat"] doubleValue] longitude:[[loud objectForKey:@"lon"] doubleValue]] autorelease]]
-     ];
+    return addrDesc;
     
 }
+
 #pragma mark - wrong notify
 + (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString
 {

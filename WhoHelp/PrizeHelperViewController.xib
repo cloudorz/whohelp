@@ -11,12 +11,13 @@
 			<string key="NS.object.0">933</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
-			<string>IBUITextView</string>
-			<string>IBUIButton</string>
-			<string>IBUIImageView</string>
 			<string>IBUIView</string>
+			<string>IBUIImageView</string>
 			<string>IBUILabel</string>
 			<string>IBProxyObject</string>
+			<string>IBUIActivityIndicatorView</string>
+			<string>IBUITextView</string>
+			<string>IBUIButton</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -142,7 +143,6 @@
 								<string key="NSFrame">{{286, 163}, {21, 21}}</string>
 								<reference key="NSSuperview" ref="444472096"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:328</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -302,6 +302,19 @@
 								<reference key="IBUIFontDescription" ref="1069274515"/>
 								<reference key="IBUIFont" ref="358965648"/>
 							</object>
+							<object class="IBUIActivityIndicatorView" id="417236684">
+								<reference key="NSNextResponder" ref="444472096"/>
+								<int key="NSvFlags">289</int>
+								<string key="NSFrame">{{173, 89}, {20, 20}}</string>
+								<reference key="NSSuperview" ref="444472096"/>
+								<reference key="NSWindow"/>
+								<string key="NSReuseIdentifierKey">_NS:824</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<bool key="IBUIAnimating">YES</bool>
+								<int key="IBUIStyle">2</int>
+							</object>
 						</array>
 						<string key="NSFrame">{{0, 5}, {320, 411}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
@@ -398,6 +411,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">loadingIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="417236684"/>
+					</object>
+					<int key="connectionID">26</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="358058107"/>
 						<reference key="destination" ref="372490531"/>
@@ -469,6 +490,7 @@
 							<reference ref="840756050"/>
 							<reference ref="1000795470"/>
 							<reference ref="323932634"/>
+							<reference ref="417236684"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -517,6 +539,11 @@
 						<reference key="object" ref="323932634"/>
 						<reference key="parent" ref="444472096"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">25</int>
+						<reference key="object" ref="417236684"/>
+						<reference key="parent" ref="444472096"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -531,6 +558,7 @@
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="25.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -541,7 +569,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">24</int>
+			<int key="maxID">26</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -551,6 +579,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="avatar">UIImageView</string>
 						<string key="content">UITextView</string>
+						<string key="loadingIndicator">UIActivityIndicatorView</string>
 						<string key="numIndicator">UILabel</string>
 						<string key="selectUserButton">UIButton</string>
 						<string key="turnStarButton">UIButton</string>
@@ -563,6 +592,10 @@
 						<object class="IBToOneOutletInfo" key="content">
 							<string key="name">content</string>
 							<string key="candidateClassName">UITextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="loadingIndicator">
+							<string key="name">loadingIndicator</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="numIndicator">
 							<string key="name">numIndicator</string>

@@ -28,6 +28,7 @@
 @synthesize toUser=toUser_;
 @synthesize phoneButton=phoneButton_;
 @synthesize isOwner;
+@synthesize loadingIndicator=loadingIndicator_;
 
 -(void)dealloc
 {
@@ -39,6 +40,7 @@
     [placeholderLabel_ release];
     [toUser_ release];
     [phoneButton_ release];
+    [loadingIndicator_ release];
     [super dealloc];
 }
 
@@ -130,6 +132,8 @@
     // unabel the send button
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
+    [self.loadingIndicator stopAnimating];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -163,6 +167,7 @@
 
 -(void)sendButtonPressed:(id)sender
 {
+    [self.loadingIndicator startAnimating];
     [self fakeSendPost];
 }
 
@@ -209,21 +214,21 @@
     }
 }
 
-//-(IBAction)turnPhoneAction:(id)sender
-//{
-//    if (self.isHelp){
-//        self.isHelp = NO;
-//        [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
-//    } else{
-//        if ([ProfileManager sharedInstance].profile.phone == nil){
-//            [Utils wrongInfoString:@"请在设置里填写你的电话号码"];
-//        } else{
-//            self.isHelp = YES;
-//            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
-//        }
-//
-//    }
-//}
+-(IBAction)turnPhoneAction:(id)sender
+{
+    if (self.isHelp){
+        self.isHelp = NO;
+        [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
+    } else{
+        if ([ProfileManager sharedInstance].profile.phone == nil){
+            [Utils warningNotification:@"在关于我中设置你的号码"];
+        } else{
+            self.isHelp = YES;
+            [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
+        }
+
+    }
+}
 
 #pragma mark - send post
 - (void)fakeSendPost
@@ -308,7 +313,7 @@
     }
 
     // send ok cancel
-    //[self.loadingIndicator stopAnimating];
+    [self.loadingIndicator stopAnimating];
 
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
@@ -319,7 +324,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     // notify the user
-    //[self.loadingIndicator stopAnimating];
+    [self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
 

@@ -22,6 +22,7 @@
     UITextView *content_;
     UILabel *numIndicator_;
     UILabel *placeholderLabel_;
+    UIActivityIndicatorView *loadingIndicator_;
 }
 
 @property (nonatomic, retain) NSMutableDictionary *loud, *toUser;
@@ -33,6 +34,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *phoneButton;
 @property (nonatomic, retain) UILabel *placeholderLabel;
 @property (nonatomic, assign) BOOL isOwner;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 
 - (void)fakeSendPost;

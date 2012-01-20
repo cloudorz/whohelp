@@ -550,6 +550,7 @@
 										<string key="NSReuseIdentifierKey">_NS:606</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+										<bool key="IBUIEnabled">NO</bool>
 										<int key="IBUIContentHorizontalAlignment">0</int>
 										<int key="IBUIContentVerticalAlignment">0</int>
 									</object>
@@ -633,7 +634,6 @@
 										<string key="NSFrame">{{12, 23}, {280, 80}}</string>
 										<reference key="NSSuperview" ref="1009858442"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:639</string>
 										<object class="NSColor" key="IBUIBackgroundColor">
 											<int key="NSColorSpace">1</int>
