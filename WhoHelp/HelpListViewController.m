@@ -530,7 +530,7 @@
             int loudNum = [[info objectForKey:@"num"] intValue];
             if (loudNum > 0 ){
                 [[[self.tabBarController.tabBar items] objectAtIndex:0] 
-                 setBadgeValue:@"new"];
+                 setBadgeValue:[NSString stringWithFormat:@"%d", loudNum]];
             } else{
                 [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil];
             }

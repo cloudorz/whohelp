@@ -62,7 +62,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"login.png"]];
     // Do any additional setup after loading the view from its nib.
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(dismissCurrentViewAction:) 
@@ -71,8 +71,10 @@
     
     [self.authLinkWeibo setImage:[UIImage imageNamed:@"lweiboo.png"] forState:UIControlStateNormal];
     [self.authLinkWeibo setImage:[UIImage imageNamed:@"lweibox.png"] forState:UIControlStateHighlighted];
+    
     [self.authLinkRenren setImage:[UIImage imageNamed:@"lrenreno.png"] forState:UIControlStateNormal];
     [self.authLinkRenren setImage:[UIImage imageNamed:@"lrenrenx.png"] forState:UIControlStateHighlighted];
+    
     [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubano.png"] forState:UIControlStateNormal];
     [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubanx.png"] forState:UIControlStateHighlighted];
     
@@ -107,7 +109,7 @@
 
 - (IBAction)linkToAuthRenren:(id)sender
 {
-    //[self authRequest:@"/douban/auth"];
+    [self authRequest:@"/renren/auth"];
 }
 
 

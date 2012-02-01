@@ -125,13 +125,14 @@
                 [authInfo objectForKey:@"secret"] != nil){
                 
                 [[ProfileManager sharedInstance] saveUserInfo:authInfo];
+                [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
+                [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
+                
+            } else{
+                [Utils warningNotification:@"授权失败"];
+                [self dismissModalViewControllerAnimated:YES];// Animated must be 'NO', I don't why...     
             }
-            
-            
-            [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
-            [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
 
-            
 
         }
         

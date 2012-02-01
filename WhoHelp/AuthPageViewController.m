@@ -128,6 +128,9 @@
                 [authInfo objectForKey:@"secret"] != nil){
                 
                 [[ProfileManager sharedInstance] saveUserInfo:authInfo];
+                
+            } else{
+                [Utils warningNotification:@"授权失败!"];   
             }
             
             [self.navigationController popViewControllerAnimated:YES];
