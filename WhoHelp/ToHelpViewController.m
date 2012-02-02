@@ -15,6 +15,7 @@
 #import "Utils.h"
 #import "Config.h"
 #import "SBJson.h"
+#import "DDAlertPrompt.h"
 
 @implementation ToHelpViewController
 
@@ -29,6 +30,7 @@
 @synthesize phoneButton=phoneButton_;
 @synthesize isOwner;
 @synthesize loadingIndicator=loadingIndicator_;
+@synthesize tmpPhoneNum=tmpPhoneNum_;
 
 -(void)dealloc
 {
@@ -41,6 +43,7 @@
     [toUser_ release];
     [phoneButton_ release];
     [loadingIndicator_ release];
+    [tmpPhoneNum_ release];
     [super dealloc];
 }
 
@@ -221,13 +224,100 @@
         [self.phoneButton setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
     } else{
         if ([ProfileManager sharedInstance].profile.phone == nil){
-            [Utils warningNotification:@"在关于我中设置你的号码"];
+//            [Utils warningNotification:@"在关于我中设置你的号码"];
+            DDAlertPrompt *loginPrompt = [[DDAlertPrompt alloc] initWithTitle:nil 
+                                                                     delegate:self 
+                                                            cancelButtonTitle:@"取消" 
+                                                             otherButtonTitle:@"确定"];	
+            [loginPrompt show];
+            [loginPrompt release];
+            
         } else{
             self.isHelp = YES;
             [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
         }
 
     }
+}
+
+- (void)didPresentAlertView:(UIAlertView *)alertView {
+	if ([alertView isKindOfClass:[DDAlertPrompt class]]) {
+		DDAlertPrompt *loginPrompt = (DDAlertPrompt *)alertView;
+		[loginPrompt.plainTextField becomeFirstResponder];		
+		[loginPrompt setNeedsLayout];
+	}
+}
+
+- (void)updateUserInfo
+{
+    
+    NSDictionary *preInfo = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [self.tmpPhoneNum stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"phone",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[ProfileManager sharedInstance].profile.link];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request appendPostData:[[preInfo JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"PUT"];
+    // sign to header for authorize
+
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(pRequestFinished:)];
+    [request setDidFailSelector:@selector(pRequestFailed:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)pRequestFinished:(ASIHTTPRequest *)request
+{
+    
+    if ([request responseStatusCode] == 200){
+        
+        // update profile
+        [ProfileManager sharedInstance].profile.phone = self.tmpPhoneNum;
+        self.isHelp = YES;
+        [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal];
+        
+    } else{
+        
+        [Utils warningNotification:@"设置失败"];
+    }
+    
+    
+}
+
+- (void)pRequestFailed:(ASIHTTPRequest *)request
+{
+    // notify the user
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    
+}
+
+-(BOOL)testPhoneNumber:(NSString *)num
+{
+    NSString *decimalRegex = @"^([0-9]{11})|(([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})|([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1}))$";
+    NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
+    return [decimalTest evaluateWithObject:num];
+}
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == [alertView cancelButtonIndex]) {
+	} else {
+		if ([alertView isKindOfClass:[DDAlertPrompt class]]) {
+			DDAlertPrompt *loginPrompt = (DDAlertPrompt *)alertView;
+            if (![loginPrompt.plainTextField.text isEqualToString:@""] && ![self testPhoneNumber:loginPrompt.plainTextField.text]) {
+                
+                [Utils warningNotification:@"无效号码"];
+                
+            } else{
+                self.tmpPhoneNum = loginPrompt.plainTextField.text;
+                [self updateUserInfo];
+            }
+			
+		}
+	}
 }
 
 #pragma mark - send post

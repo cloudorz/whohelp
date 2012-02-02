@@ -286,6 +286,7 @@
 		61AA7DBD14D82E94000DEA0D /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DBB14D82E94000DEA0D /* icon@2x.png */; };
 		61AA7DC514D96665000DEA0D /* login.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DC314D96665000DEA0D /* login.png */; };
 		61AA7DC614D96665000DEA0D /* login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DC414D96665000DEA0D /* login@2x.png */; };
+		61AA7DCD14DA421B000DEA0D /* DDAlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = 61AA7DCB14DA421B000DEA0D /* DDAlertPrompt.m */; };
 		61B72FC114BD5DF1006A84DC /* sepline.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B72FC014BD5DF1006A84DC /* sepline.png */; };
 		61B72FC414BD5FC6006A84DC /* avatarFrameW.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B72FC314BD5FC6006A84DC /* avatarFrameW.png */; };
 		61B72FC614BD5FF4006A84DC /* avatarFrameG.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B72FC514BD5FF4006A84DC /* avatarFrameG.png */; };
@@ -701,6 +702,8 @@
 		61AA7DBB14D82E94000DEA0D /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		61AA7DC314D96665000DEA0D /* login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login.png; sourceTree = "<group>"; };
 		61AA7DC414D96665000DEA0D /* login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login@2x.png"; sourceTree = "<group>"; };
+		61AA7DCB14DA421B000DEA0D /* DDAlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAlertPrompt.m; sourceTree = "<group>"; };
+		61AA7DCC14DA421B000DEA0D /* DDAlertPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAlertPrompt.h; sourceTree = "<group>"; };
 		61B72FC014BD5DF1006A84DC /* sepline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sepline.png; sourceTree = "<group>"; };
 		61B72FC314BD5FC6006A84DC /* avatarFrameW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatarFrameW.png; sourceTree = "<group>"; };
 		61B72FC514BD5FF4006A84DC /* avatarFrameG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatarFrameG.png; sourceTree = "<group>"; };
@@ -1152,6 +1155,8 @@
 		618B515114B7EDCE001992F0 /* Items View */ = {
 			isa = PBXGroup;
 			children = (
+				61AA7DCC14DA421B000DEA0D /* DDAlertPrompt.h */,
+				61AA7DCB14DA421B000DEA0D /* DDAlertPrompt.m */,
 				6133363414C7070F0059C980 /* RoundedRect.h */,
 				6133363214C7070F0059C980 /* RoundedRect.m */,
 				6133363514C707100059C980 /* UIViewController+msg.h */,
@@ -1856,6 +1861,7 @@
 				6133363014C3F5DD0059C980 /* MessageTableViewCell.m in Sources */,
 				6133363614C707100059C980 /* RoundedRect.m in Sources */,
 				6133363714C707100059C980 /* UIViewController+msg.m in Sources */,
+				61AA7DCD14DA421B000DEA0D /* DDAlertPrompt.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

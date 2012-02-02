@@ -248,7 +248,7 @@
 									<object class="IBUILabel" id="233943454">
 										<reference key="NSNextResponder" ref="9856534"/>
 										<int key="NSvFlags">292</int>
-										<string key="NSFrame">{{199, 13}, {60, 13}}</string>
+										<string key="NSFrame">{{199, 13}, {80, 13}}</string>
 										<reference key="NSSuperview" ref="9856534"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="996472218"/>
@@ -259,7 +259,7 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<string key="IBUIText">修改手机号</string>
+										<string key="IBUIText">修改电话号码</string>
 										<object class="NSColor" key="IBUITextColor">
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC43ODQzMTM3MjU1IDAuNzQ1MDk4MDM5MiAwLjcxNzY0NzA1ODgAA</bytes>

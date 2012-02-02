@@ -23,6 +23,7 @@
     UILabel *numIndicator_;
     UILabel *placeholderLabel_;
     UIActivityIndicatorView *loadingIndicator_;
+    NSString *tmpPhoneNum_;
 }
 
 @property (nonatomic, retain) NSMutableDictionary *loud, *toUser;
@@ -35,9 +36,11 @@
 @property (nonatomic, retain) UILabel *placeholderLabel;
 @property (nonatomic, assign) BOOL isOwner;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, retain) NSString *tmpPhoneNum;
 
 
 - (void)fakeSendPost;
 - (void)sendPost;
+- (void)updateUserInfo;
 
 @end

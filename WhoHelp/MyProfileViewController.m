@@ -176,7 +176,7 @@
 
 -(BOOL)testPhoneNumber:(NSString *)num
 {
-    NSString *decimalRegex = @"^[0-9]{11}$";
+    NSString *decimalRegex = @"^([0-9]{11})|(([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})|([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1}))$";
     NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
     return [decimalTest evaluateWithObject:num];
 }
@@ -220,7 +220,7 @@
     
     if (![self.phoneField.text isEqualToString:@""] && ![self testPhoneNumber:self.phoneField.text]) {
         
-        [self fadeOutMsgWithText:@"无效手机号" rect:CGRectMake(0, 0, 80, 66)];
+        [self fadeOutMsgWithText:@"无效号码" rect:CGRectMake(0, 0, 80, 66)];
         return;
     } 
     
