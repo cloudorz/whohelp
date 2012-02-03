@@ -150,7 +150,7 @@
         locationLabel.backgroundColor = [UIColor clearColor];
         
         UIImageView *locationImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"location.png"]] autorelease];
-        locationImage.frame = CGRectMake(0, 0, SMALLFONTSIZE, SMALLFONTSIZE);
+        locationImage.frame = CGRectMake(0, 0, SMALLFONTSIZE-1, SMALLFONTSIZE);
         locationImage.backgroundColor = [UIColor clearColor];
         [locationLabel addSubview:locationImage];
         

@@ -91,7 +91,7 @@
         locationView.backgroundColor = [UIColor clearColor];
         locationView.opaque = NO;
         
-        UIImageView *locationLogo = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9, 9)] autorelease];
+        UIImageView *locationLogo = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 9)] autorelease];
         locationLogo.image = [UIImage imageNamed:@"location.png"];
         locationLogo.backgroundColor = [UIColor clearColor];
         

@@ -282,8 +282,6 @@
 		61976B2A14B30FD700844C53 /* DetailLoudViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61976B2814B30FD700844C53 /* DetailLoudViewController.xib */; };
 		61976B2D14B3190400844C53 /* UserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61976B2C14B3190400844C53 /* UserManager.m */; };
 		619B96A6143602A80017DE0D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 619B96A5143602A70017DE0D /* Utils.m */; };
-		61AA7DBC14D82E94000DEA0D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DBA14D82E94000DEA0D /* icon.png */; };
-		61AA7DBD14D82E94000DEA0D /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DBB14D82E94000DEA0D /* icon@2x.png */; };
 		61AA7DC514D96665000DEA0D /* login.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DC314D96665000DEA0D /* login.png */; };
 		61AA7DC614D96665000DEA0D /* login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA7DC414D96665000DEA0D /* login@2x.png */; };
 		61AA7DCD14DA421B000DEA0D /* DDAlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = 61AA7DCB14DA421B000DEA0D /* DDAlertPrompt.m */; };
@@ -322,6 +320,8 @@
 		61B7303814C05626006A84DC /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B7303714C05625006A84DC /* Profile.m */; };
 		61B7303C14C0910C006A84DC /* AuthPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61B7303A14C09109006A84DC /* AuthPageViewController.m */; };
 		61B7303D14C0910C006A84DC /* AuthPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61B7303B14C0910A006A84DC /* AuthPageViewController.xib */; };
+		61C0AEDB14DB9CB10058E2F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C0AED914DB9CB10058E2F5 /* Icon.png */; };
+		61C0AEDC14DB9CB10058E2F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C0AEDA14DB9CB10058E2F5 /* Icon@2x.png */; };
 		61C79A9914B981240004BB44 /* havephone.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C79A9814B981230004BB44 /* havephone.png */; };
 		61C79A9C14B981580004BB44 /* havephone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C79A9B14B981580004BB44 /* havephone@2x.png */; };
 		61C79AA314B9A9B60004BB44 /* tri.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C79AA114B9A9B60004BB44 /* tri.png */; };
@@ -698,8 +698,6 @@
 		61976B2C14B3190400844C53 /* UserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserManager.m; sourceTree = "<group>"; };
 		619B96A4143602A70017DE0D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		619B96A5143602A70017DE0D /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
-		61AA7DBA14D82E94000DEA0D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		61AA7DBB14D82E94000DEA0D /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		61AA7DC314D96665000DEA0D /* login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login.png; sourceTree = "<group>"; };
 		61AA7DC414D96665000DEA0D /* login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login@2x.png"; sourceTree = "<group>"; };
 		61AA7DCB14DA421B000DEA0D /* DDAlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAlertPrompt.m; sourceTree = "<group>"; };
@@ -746,6 +744,8 @@
 		61B7303914C09109006A84DC /* AuthPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPageViewController.h; sourceTree = "<group>"; };
 		61B7303A14C09109006A84DC /* AuthPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthPageViewController.m; sourceTree = "<group>"; };
 		61B7303B14C0910A006A84DC /* AuthPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AuthPageViewController.xib; sourceTree = "<group>"; };
+		61C0AED914DB9CB10058E2F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		61C0AEDA14DB9CB10058E2F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		61C79A9814B981230004BB44 /* havephone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = havephone.png; sourceTree = "<group>"; };
 		61C79A9B14B981580004BB44 /* havephone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "havephone@2x.png"; sourceTree = "<group>"; };
 		61C79AA114B9A9B60004BB44 /* tri.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tri.png; sourceTree = "<group>"; };
@@ -1067,8 +1067,8 @@
 				61976B1814B2CD8F00844C53 /* List Elements */,
 				61AA7DC314D96665000DEA0D /* login.png */,
 				61AA7DC414D96665000DEA0D /* login@2x.png */,
-				61AA7DBA14D82E94000DEA0D /* icon.png */,
-				61AA7DBB14D82E94000DEA0D /* icon@2x.png */,
+				61C0AED914DB9CB10058E2F5 /* Icon.png */,
+				61C0AEDA14DB9CB10058E2F5 /* Icon@2x.png */,
 				6133360E14C325220059C980 /* Default.png */,
 				6133360F14C325220059C980 /* Default@2x.png */,
 				61D506DE14AC921A00B3C57E /* avatar.png */,
@@ -1754,10 +1754,10 @@
 				6133362914C327E90059C980 /* lweibox@2x.png in Resources */,
 				6133364214C84A6A0059C980 /* background.png in Resources */,
 				6133364314C84A6A0059C980 /* background@2x.png in Resources */,
-				61AA7DBC14D82E94000DEA0D /* icon.png in Resources */,
-				61AA7DBD14D82E94000DEA0D /* icon@2x.png in Resources */,
 				61AA7DC514D96665000DEA0D /* login.png in Resources */,
 				61AA7DC614D96665000DEA0D /* login@2x.png in Resources */,
+				61C0AEDB14DB9CB10058E2F5 /* Icon.png in Resources */,
+				61C0AEDC14DB9CB10058E2F5 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1941,12 +1941,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "WhoHelp/WhoHelp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1960,6 +1963,7 @@
 					armv7,
 					armv6,
 				);
+				COMPRESS_PNG_FILES = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WhoHelp/WhoHelp-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;

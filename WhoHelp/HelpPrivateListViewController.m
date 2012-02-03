@@ -233,6 +233,11 @@
         self.curCollection = collection;
         
         NSMutableArray *tmpArray = [collection objectForKey:@"messages"];
+        
+        if (tmpArray.count > 0){
+            [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
+        }
+        
         if (self.messages != nil) {
             [tmpArray addObjectsFromArray:self.messages];
         }
@@ -245,7 +250,6 @@
         
         [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil ];
         
-        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else{
         
