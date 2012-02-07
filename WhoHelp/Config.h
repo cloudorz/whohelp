@@ -24,6 +24,7 @@
 #define ULOUDURI @"/loudupdate"
 #define UMSGURI @"/msgupdate"
 #define UPRIZEURI @"/prizeupdate"
+#define DDURI @"/device/"
 
 #define TEXTWIDTH 246.0f
 

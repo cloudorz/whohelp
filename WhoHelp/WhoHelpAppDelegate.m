@@ -11,6 +11,9 @@
 #import "PreAuthViewController.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
+#import "Config.h"
+#import "SBJson.h"
+#import "ASIHTTPRequest.h"
 
 
 @implementation WhoHelpAppDelegate
@@ -22,8 +25,25 @@
 @synthesize tabBarController=tabBarController_;
 @synthesize nearbyItem, myListItem, helpItem, prizeItem, settingItem;
 
+- (void)dealloc
+{
+    [_window release];
+    [__managedObjectContext release];
+    [__managedObjectModel release];
+    [__persistentStoreCoordinator release];
+    [tabBarController_ release];
+    [nearbyItem release]; 
+    [myListItem release]; 
+    [helpItem release]; 
+    [prizeItem release]; 
+    [settingItem release];
+    [super dealloc];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // register the apns
+    [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)]; 
     // Override point for customization after application launch.
     self.window.rootViewController = self.tabBarController;
     // select the middle post help tab bar item.
@@ -41,7 +61,7 @@
                 withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
     [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
                  withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
-    [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"] 
+    [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"]
                    withFinishedUnselectedImage:[UIImage imageNamed:@"setting.png"]];
     // support the shake feature.
     //application.applicationSupportsShakeToEdit = YES;
@@ -74,6 +94,7 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    application.applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -90,21 +111,59 @@
     [self saveContext];
 }
 
-- (void)dealloc
+- (void)updateTokenRequest:(NSString *)token
 {
-    [_window release];
-    [__managedObjectContext release];
-    [__managedObjectModel release];
-    [__persistentStoreCoordinator release];
-    [tabBarController_ release];
-    [nearbyItem release]; 
-    [myListItem release]; 
-    [helpItem release]; 
-    [prizeItem release]; 
-    [settingItem release];
-    [super dealloc];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", HOST, DDURI, [[UIDevice currentDevice] uniqueIdentifier]]];
+    
+    NSDictionary *data = [NSDictionary  dictionaryWithObject:token forKey:@"dtoken"];
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[data JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"]; 
+    [request setRequestMethod:@"PUT"];
+    [request setDelegate:self];
+    [request startAsynchronous];
 }
 
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    // Use when fetching text data
+
+    if ([request responseStatusCode] == 201){
+        
+//         NSLog(@"%@", @"OK");
+    }
+    // Use when fetching binary data
+    //NSData *responseData = [request responseData];
+    
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"%@", [error description]);
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSString *devTokenStr = [[[deviceToken description]
+                              stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] 
+                             stringByReplacingOccurrencesOfString:@" " 
+                             withString:@""];
+    [self updateTokenRequest:devTokenStr];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"Error in registration. Error: %@", error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    
+    /* do something when app foreground , apn action
+     local notification. do
+     */
+    
+}
 
 - (void)awakeFromNib
 {
