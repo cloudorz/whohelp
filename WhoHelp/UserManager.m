@@ -134,12 +134,17 @@ static UserManager *sharedUserManager = nil;
                     [info setObject:[request responseData] forKey:@"avatar"];
 
                 }
+                NSMutableString *lastModified = [[request responseHeaders] objectForKey:@"Last-Modified"];
+                if (nil != lastModified){
+                    [info setObject:lastModified  forKey:@"last"];
+                    [info setObject:[NSDate date] forKey:@"expired"];
+                    [self.photoCache setObject:info forKey:uid];
+                    
+                    callback([info objectForKey:@"avatar"]);
+                } else {
+                    callback(nil);
+                }
 
-                [info setObject: [[request responseHeaders] objectForKey:@"Last-Modified"] forKey:@"last"];
-                [info setObject:[NSDate date] forKey:@"expired"];
-                [self.photoCache setObject:info forKey:uid];
-                
-                callback([info objectForKey:@"avatar"]);
             } else{
                 callback(nil); // just for relase 
             }

@@ -635,6 +635,7 @@
     }
     
     // location infomation
+    [reply setObject:[self.loud objectForKey:@"loudcate"] forKey:@"loudcate"];
     cell.locationLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:reply];
     
     

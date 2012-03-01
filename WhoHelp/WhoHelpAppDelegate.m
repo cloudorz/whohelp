@@ -50,23 +50,27 @@
     self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
     self.tabBarController.delegate = self;
     self.tabBarController.tabBar.opaque = YES;
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")) {
+        
+        [self.tabBarController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"blank.png"]];
+        // config the tab bar items
+        [self.nearbyItem setFinishedSelectedImage:[UIImage imageNamed:@"nearbyo.png"] 
+                      withFinishedUnselectedImage:[UIImage imageNamed:@"nearby.png"]];
+        [self.myListItem setFinishedSelectedImage:[UIImage imageNamed:@"mylisto.png"] 
+                      withFinishedUnselectedImage:[UIImage imageNamed:@"mylist.png"]];
+        [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
+                    withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
+        [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
+                     withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
+        [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"]
+                       withFinishedUnselectedImage:[UIImage imageNamed:@"setting.png"]];
+    }
 
-    [self.tabBarController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"blank.png"]];
-    // config the tab bar items
-    [self.nearbyItem setFinishedSelectedImage:[UIImage imageNamed:@"nearbyo.png"] 
-                  withFinishedUnselectedImage:[UIImage imageNamed:@"nearby.png"]];
-    [self.myListItem setFinishedSelectedImage:[UIImage imageNamed:@"mylisto.png"] 
-                  withFinishedUnselectedImage:[UIImage imageNamed:@"mylist.png"]];
-    [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
-                withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
-    [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
-                 withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
-    [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"]
-                   withFinishedUnselectedImage:[UIImage imageNamed:@"setting.png"]];
     // support the shake feature.
     //application.applicationSupportsShakeToEdit = YES;
     
-    
+
     [self.window makeKeyAndVisible];
     
     return YES;

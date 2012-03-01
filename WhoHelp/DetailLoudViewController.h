@@ -53,7 +53,7 @@
 @property (nonatomic, retain) NSMutableDictionary *tapUser;
 @property (nonatomic, retain) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *offerHelpButton;
 
--(void)avatarButtonAction:(id)sender;
+-(IBAction)avatarButtonAction:(id)sender;
 
 -(void)reloadTableViewDataSource;
 -(void)doneLoadingTableViewData;

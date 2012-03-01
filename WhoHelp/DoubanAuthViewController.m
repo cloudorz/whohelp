@@ -106,6 +106,16 @@
     [self.loading stopAnimating];
 }
 
+- (void)clearCookies
+{
+    // clear the cookies
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies]) {
+        [storage deleteCookie:cookie];
+    }
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:HOST]){
@@ -123,13 +133,14 @@
             if (authInfo != nil && authInfo.count > 0 && 
                 [authInfo objectForKey:@"userkey"] != nil && 
                 [authInfo objectForKey:@"secret"] != nil){
-                
+                [self clearCookies];
                 [[ProfileManager sharedInstance] saveUserInfo:authInfo];
                 [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
                 [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
                 
             } else{
                 [Utils warningNotification:@"授权失败"];
+                [self clearCookies];
                 [self dismissModalViewControllerAnimated:YES];// Animated must be 'NO', I don't why...     
             }
 

@@ -419,23 +419,18 @@
     // make json data for post
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UPRIZEURI]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil != self.lastUpdated){
         [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
     }
     //[request setValidatesSecureCertificate:NO];
-    [request signInHeader];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    if (!error){
-        
+    [request setCompletionBlock:^{
+        // Use when fetching text data
         if (200 == [request responseStatusCode]) {
             NSString *body = [request responseString];
             NSDictionary *info = [body JSONValue];
             
-                        
+            
             int prizeNum = [[info objectForKey:@"num"] intValue];
             if (prizeNum > 0 ){
                 [[[self.tabBarController.tabBar items] objectAtIndex:3] 
@@ -448,10 +443,15 @@
             NSLog(@"error: %@", @"非正常返回");
         }
         
-    } else {
-        
+    }];
+    
+    [request setFailedBlock:^{
+        NSError *error = [request error];
         NSLog(@"network link error:%@", [error localizedDescription]);
-    }
+    }];
+    [request signInHeader];
+    [request startAsynchronous];
+
     
 }
 

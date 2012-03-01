@@ -259,6 +259,10 @@
 		617E3A7A141B69D300441135 /* HelpListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A78141B69D300441135 /* HelpListViewController.xib */; };
 		617E3A89141B8D7400441135 /* HelpSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E3A87141B8D7400441135 /* HelpSettingViewController.m */; };
 		617E3A8A141B8D7400441135 /* HelpSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617E3A88141B8D7400441135 /* HelpSettingViewController.xib */; };
+		6185C5CD14E29D10000840B7 /* pother.png in Resources */ = {isa = PBXBuildFile; fileRef = 6185C5CB14E29D10000840B7 /* pother.png */; };
+		6185C5CE14E29D10000840B7 /* pother@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6185C5CC14E29D10000840B7 /* pother@2x.png */; };
+		6185C5D214E29F6A000840B7 /* else.png in Resources */ = {isa = PBXBuildFile; fileRef = 6185C5D014E29F6A000840B7 /* else.png */; };
+		6185C5D314E29F6A000840B7 /* else@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6185C5D114E29F6A000840B7 /* else@2x.png */; };
 		618B510114B6002A001992F0 /* helpdone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 618B50FB14B6002A001992F0 /* helpdone@2x.png */; };
 		618B510214B6002A001992F0 /* justlook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 618B50FC14B6002A001992F0 /* justlook@2x.png */; };
 		618B510314B6002A001992F0 /* justlooknum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 618B50FD14B6002A001992F0 /* justlooknum@2x.png */; };
@@ -668,6 +672,10 @@
 		617E3A86141B8D7400441135 /* HelpSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSettingViewController.h; sourceTree = "<group>"; };
 		617E3A87141B8D7400441135 /* HelpSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpSettingViewController.m; sourceTree = "<group>"; };
 		617E3A88141B8D7400441135 /* HelpSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HelpSettingViewController.xib; sourceTree = "<group>"; };
+		6185C5CB14E29D10000840B7 /* pother.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pother.png; sourceTree = "<group>"; };
+		6185C5CC14E29D10000840B7 /* pother@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pother@2x.png"; sourceTree = "<group>"; };
+		6185C5D014E29F6A000840B7 /* else.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = else.png; sourceTree = "<group>"; };
+		6185C5D114E29F6A000840B7 /* else@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "else@2x.png"; sourceTree = "<group>"; };
 		618B50FB14B6002A001992F0 /* helpdone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "helpdone@2x.png"; sourceTree = "<group>"; };
 		618B50FC14B6002A001992F0 /* justlook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "justlook@2x.png"; sourceTree = "<group>"; };
 		618B50FD14B6002A001992F0 /* justlooknum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "justlooknum@2x.png"; sourceTree = "<group>"; };
@@ -921,6 +929,10 @@
 		61782AED14B591390039BA8E /* Send Help */ = {
 			isa = PBXGroup;
 			children = (
+				6185C5D014E29F6A000840B7 /* else.png */,
+				6185C5D114E29F6A000840B7 /* else@2x.png */,
+				6185C5CB14E29D10000840B7 /* pother.png */,
+				6185C5CC14E29D10000840B7 /* pother@2x.png */,
 				613335C114C164CF0059C980 /* duetimeicon.png */,
 				613335C214C164CF0059C980 /* duetimeicon@2x.png */,
 				61B72FE114BE05CA006A84DC /* right.png */,
@@ -1479,7 +1491,7 @@
 		617E3A2B141B584E00441135 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 617E3A2E141B584E00441135 /* Build configuration list for PBXProject "WhoHelp" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1758,6 +1770,10 @@
 				61AA7DC614D96665000DEA0D /* login@2x.png in Resources */,
 				61C0AEDB14DB9CB10058E2F5 /* Icon.png in Resources */,
 				61C0AEDC14DB9CB10058E2F5 /* Icon@2x.png in Resources */,
+				6185C5CD14E29D10000840B7 /* pother.png in Resources */,
+				6185C5CE14E29D10000840B7 /* pother@2x.png in Resources */,
+				6185C5D214E29F6A000840B7 /* else.png in Resources */,
+				6185C5D314E29F6A000840B7 /* else@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
