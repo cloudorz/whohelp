@@ -292,7 +292,7 @@
     self.tableView.tableHeaderView = tableHeaderView;
     
     // config the sms send textview
-    self.messageView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/* - 40*/, 320, 40)];
+    self.messageView = [[[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/* - 40*/, 320, 40)] autorelease];
     
     CGFloat leftPad = 6;
     CGFloat width = 250;
@@ -302,7 +302,7 @@
         
     }
     
-	self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(leftPad, 3, width, 40)];
+	self.textView = [[[HPGrowingTextView alloc] initWithFrame:CGRectMake(leftPad, 3, width, 40)] autorelease];
     self.textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
     
 	self.textView.minNumberOfLines = 1;
