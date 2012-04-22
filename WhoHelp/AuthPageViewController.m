@@ -108,6 +108,16 @@
     [self.loading stopAnimating];
 }
 
+- (void)clearCookies
+{
+    // clear the cookies
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies]) {
+        [storage deleteCookie:cookie];
+    }
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:HOST]){
@@ -133,6 +143,7 @@
                 [Utils warningNotification:@"授权失败!"];   
             }
             
+            [self clearCookies];
             [self.navigationController popViewControllerAnimated:YES];
             
         }

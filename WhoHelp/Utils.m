@@ -72,7 +72,7 @@
             NSDateComponents *dateComp = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:date];
             
             if (timePassed < 24*60*60 && curDateComp.day == dateComp.day ){
-                dateFormatString = [NSString stringWithFormat:@"今天 %@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
+                dateFormatString = [NSString stringWithFormat:@"%@", [NSDateFormatter dateFormatFromTemplate:@"h:mm a" options:0 locale:[NSLocale currentLocale]]];
             }else{
                 dateFormatString = [NSDateFormatter dateFormatFromTemplate:@"M-d H:m" options:0 locale:[NSLocale currentLocale]];
             }

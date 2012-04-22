@@ -21,6 +21,7 @@
     NSMutableArray *messages_;
     NSString *lastUpdated_;
     NSTimer *timer_;
+    BOOL _loadloud;
 
 }
 

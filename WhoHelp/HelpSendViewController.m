@@ -132,8 +132,10 @@
    
     if ([ProfileManager sharedInstance].profile.renren != nil){
         
-        hasRenren = YES;
-        [self.renrenButton setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
+//        hasRenren = YES;
+        hasRenren = NO;
+//        [self.renrenButton setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
+        [self.renrenButton setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
 
     } else{
         hasRenren = NO;
@@ -144,8 +146,10 @@
 
     if ([ProfileManager sharedInstance].profile.weibo != nil){
         
-        hasWeibo = YES;
-        [self.weiboButton setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
+//        hasWeibo = YES;
+//        [self.weiboButton setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
+        hasWeibo = NO;
+        [self.weiboButton setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
 
     } else{
         
@@ -157,8 +161,10 @@
 
     if ([ProfileManager sharedInstance].profile.douban != nil){
         
-        hasDouban = YES;
-        [self.doubanButton setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
+//        hasDouban = YES;
+//        [self.doubanButton setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
+        hasDouban = NO;
+        [self.doubanButton setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
 
     } else{
         hasDouban = NO;

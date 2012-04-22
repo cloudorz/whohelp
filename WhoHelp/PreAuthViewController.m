@@ -115,7 +115,7 @@
 
 - (void)authRequest: (NSString *)path
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, path]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?uid=%@", HOST, path, [[UIDevice currentDevice] uniqueIdentifier]]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];

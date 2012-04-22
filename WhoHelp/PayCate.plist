@@ -77,5 +77,20 @@
 		<key>showPic</key>
 		<string>money.png</string>
 	</dict>
+	<key>other</key>
+	<dict>
+		<key>no</key>
+		<integer>6</integer>
+		<key>label</key>
+		<string>other</string>
+		<key>text</key>
+		<string>其他</string>
+		<key>desc</key>
+		<string>empty</string>
+		<key>logo</key>
+		<string>pother.png</string>
+		<key>showPic</key>
+		<string>else.png</string>
+	</dict>
 </dict>
 </plist>

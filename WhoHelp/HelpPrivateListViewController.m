@@ -86,6 +86,7 @@
                                                 selector:@selector(fetchUpdatedInfo) 
                                                 userInfo:nil 
                                                  repeats:YES];
+    _loadloud = NO;
     
 }
 
@@ -198,8 +199,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    [self fetchLoud:[[self.messages objectAtIndex:indexPath.row] objectForKey:@"loud_link"]];
+    if (!_loadloud){
+        [self fetchLoud:[[self.messages objectAtIndex:indexPath.row] objectForKey:@"loud_link"]];
+    }
      
 }
 
@@ -271,7 +273,7 @@
     
     NSURL *url = [NSURL URLWithString:urlString];
     
-    
+    _loadloud = YES;
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
     //[request setValidatesSecureCertificate:NO];
@@ -302,6 +304,7 @@
         [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
         
     }
+    _loadloud = NO;
 }
 
 - (void)requestLoudWentWrong:(ASIHTTPRequest *)request
@@ -309,7 +312,7 @@
     NSError *error = [request error];
     NSLog(@"request loud list: %@", [error localizedDescription]);
     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
-    
+    _loadloud = NO;
 }
 
 #pragma mark - get update info
@@ -319,23 +322,19 @@
     // make json data for post
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UMSGURI]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil != self.lastUpdated){
         [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
     }
     //[request setValidatesSecureCertificate:NO];
-    [request signInHeader];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    if (!error){
+    [request setCompletionBlock:^{
+        // Use when fetching text data
         
         if (200 == [request responseStatusCode]) {
             NSString *body = [request responseString];
             NSDictionary *info = [body JSONValue];
             
-                       
+            
             int messageNum = [[info objectForKey:@"num"] intValue];
             if (messageNum > 0 ){
                 [[[self.tabBarController.tabBar items] objectAtIndex:1] 
@@ -343,17 +342,22 @@
             } else{
                 [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil];
             }
-
+            
             
         } else{
             NSLog(@"error: %@", @"非正常返回");
         }
         
-    } else {
-        
-        NSLog(@"network link error:%@", [error localizedDescription]);
-    }
+    }];
     
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"network link error:%@", [error localizedDescription]);
+
+    }];
+    [request signInHeader];
+    [request startAsynchronous];
+
 }
 
 #pragma mark -
