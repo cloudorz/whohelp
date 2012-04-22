@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
+#import "HPGrowingTextView.h"
 
-@interface DetailLoudViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
+@interface DetailLoudViewController : UIViewController <HPGrowingTextViewDelegate, EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
 @private
     NSMutableDictionary *loud_;
@@ -26,7 +27,7 @@
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     
-    BOOL _reloading;
+    BOOL _reloading, hasPhone;
     
     NSMutableDictionary *curCollection_;
     NSMutableArray *replies_;
@@ -35,7 +36,11 @@
     
     NSMutableDictionary *tapUser_;
     
-    UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *offerHelpButton;
+    UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *phoneButton, *sendButton;
+    
+    UIView *messageView_;
+    HPGrowingTextView *textView_;
+    NSString *tmpPhoneNum_;
 }
 
 @property (nonatomic, retain) NSMutableDictionary *loud;
@@ -51,7 +56,10 @@
 @property (nonatomic, retain) NSString *etag;
 @property (nonatomic, retain) UITableViewCell *moreCell;
 @property (nonatomic, retain) NSMutableDictionary *tapUser;
-@property (nonatomic, retain) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *offerHelpButton;
+@property (nonatomic, retain) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *phoneButton, *sendButton;
+@property (nonatomic, retain) UIView *messageView;
+@property (nonatomic, retain) HPGrowingTextView *textView;
+@property (nonatomic, retain) NSString *tmpPhoneNum;
 
 -(IBAction)avatarButtonAction:(id)sender;
 

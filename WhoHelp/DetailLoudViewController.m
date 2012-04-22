@@ -15,11 +15,12 @@
 #import "CustomItems.h"
 
 // lots
-#import "ToHelpViewController.h"
+//#import "ToHelpViewController.h"
 #import "PrizeHelperViewController.h"
 #import "ProfileViewController.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
+#import "DDAlertPrompt.h"
 
 @implementation DetailLoudViewController
 
@@ -38,7 +39,10 @@
 @synthesize etag=etag_;
 @synthesize moreCell=moreCell_;
 @synthesize tapUser=tapUser_;
-@synthesize justLookButton1, justLookButton2, helpDoneButton, offerHelpButton;
+@synthesize textView=textView_;
+@synthesize messageView=messageView_;
+@synthesize tmpPhoneNum=tmpPhoneNum_;
+@synthesize justLookButton1, justLookButton2, helpDoneButton, phoneButton, sendButton;
 
 - (void)dealloc
 {
@@ -58,6 +62,8 @@
     [curCollection_ release];
     [replies_ release];
     [moreCell_ release];
+    [messageView_ release];
+    [textView_ release];
     [super dealloc];
 }
 
@@ -284,7 +290,86 @@
     
     // tableview
     self.tableView.tableHeaderView = tableHeaderView;
-
+    
+    // config the sms send textview
+    self.messageView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/* - 40*/, 320, 40)];
+    
+    CGFloat leftPad = 6;
+    CGFloat width = 250;
+    if (!isOwner) {
+        leftPad = 36;
+        width = 220;
+        
+    }
+    
+	self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(leftPad, 3, width, 40)];
+    self.textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
+    
+	self.textView.minNumberOfLines = 1;
+	self.textView.maxNumberOfLines = 6;
+	self.textView.returnKeyType = UIReturnKeyDone; //just as an example
+	self.textView.font = [UIFont systemFontOfSize:15.0f];
+    
+	self.textView.delegate = self;
+    self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
+    self.textView.backgroundColor = [UIColor whiteColor];
+    
+    // textView.text = @"test\n\ntest";
+	// textView.animateHeightChange = NO; //turns off animation
+    
+    [self.view addSubview:self.messageView];
+	
+    UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageEntryInputField.png"];
+    UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
+    UIImageView *entryImageView = [[[UIImageView alloc] initWithImage:entryBackground] autorelease];
+    entryImageView.frame = CGRectMake(leftPad-1, 0, width+8, 40);
+    entryImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
+    UIImage *rawBackground = [UIImage imageNamed:@"MessageEntryBackground.png"];
+    UIImage *background = [rawBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
+    UIImageView *imageView = [[[UIImageView alloc] initWithImage:background] autorelease];
+    imageView.frame = CGRectMake(0, 0, self.messageView.frame.size.width, self.messageView.frame.size.height);
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    // view hierachy
+    [self.messageView addSubview:imageView];
+    [self.messageView addSubview:self.textView];
+    [self.messageView addSubview:entryImageView];
+        
+    UIImage *sendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton.png"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
+    UIImage *selectedSendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton.png"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
+    
+    if (!isOwner) {
+        UIButton *hasPhoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        hasPhoneBtn.frame = CGRectMake(6, 8, 22, 24);
+        hasPhoneBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+        [hasPhoneBtn setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
+        [hasPhoneBtn addTarget:self action:@selector(phoneAction:) forControlEvents:UIControlEventTouchUpInside];
+        self.phoneButton = hasPhoneBtn;
+        [self.messageView addSubview:hasPhoneBtn];
+    }
+    
+	UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+	doneBtn.frame = CGRectMake(self.messageView.frame.size.width - 55, 8, 50, 26);
+    doneBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+	[doneBtn setTitle:@"发送" forState:UIControlStateNormal];
+    
+    [doneBtn setTitleShadowColor:[UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
+    doneBtn.titleLabel.shadowOffset = CGSizeMake (0.0, -1.0);
+    doneBtn.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+    doneBtn.enabled = NO;
+    
+    [doneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	[doneBtn addTarget:self action:@selector(sendText:) forControlEvents:UIControlEventTouchUpInside];
+    [doneBtn setBackgroundImage:sendBtnBackground forState:UIControlStateNormal];
+    [doneBtn setBackgroundImage:selectedSendBtnBackground forState:UIControlStateSelected];
+    self.sendButton = doneBtn;
+    
+	[self.messageView addSubview:doneBtn];
+    self.messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
     // loading data 
     if (_refreshHeaderView == nil) {
 		
@@ -322,7 +407,6 @@
     if (200 != loudStatusCode || [[Utils dateFromISOStr:[self.loud objectForKey:@"expired"]] timeIntervalSinceNow] < 0){
         self.justLookButton1.enabled = NO;
         self.justLookButton2.enabled = NO;
-        self.offerHelpButton.enabled = NO;
     }
     
     if (300 == loudStatusCode || -100 == loudStatusCode){
@@ -330,7 +414,23 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillShow:) 
+                                                 name:UIKeyboardWillShowNotification 
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillHide:) 
+                                                 name:UIKeyboardWillHideNotification 
+                                               object:nil];	
 
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -384,24 +484,10 @@
     [pvc release];
 }
 
--(IBAction)toHelpAction:(id)sender
-{
-    ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-    tpv.loud = self.loud;
-    tpv.isHelp = YES;
-    tpv.isOwner = isOwner;
-    [self.navigationController pushViewController:tpv animated:YES];
-    [tpv release];
-}
-
 -(IBAction)justLookAction:(id)sender
 {
-    ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-    tpv.loud = self.loud;
-    tpv.isHelp = NO;
-    tpv.isOwner = isOwner;
-    [self.navigationController pushViewController:tpv animated:YES];
-    [tpv release];
+    self.textView.text = nil;
+    [self.textView becomeFirstResponder];
 }
 
 #pragma mark - grap the comments
@@ -446,7 +532,7 @@
         [self.tableView reloadData];
         
         //[[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
-        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
+//        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else if (304 == code){
         // do nothing
@@ -737,13 +823,9 @@
             
             self.tapUser = user;
         } else{
-            ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-            tpv.loud = self.loud;
-            tpv.isHelp = NO;
-            tpv.toUser = user;
-            tpv.isOwner = isOwner;
-            [self.navigationController pushViewController:tpv animated:YES];
-            [tpv release];
+
+            self.textView.text = [NSString stringWithFormat:@"@%@ ", [user objectForKey:@"name"]];
+            [self.textView becomeFirstResponder];
         }
         
         
@@ -767,14 +849,9 @@
         
         [[UIApplication sharedApplication] openURL:callURL];
     } else{
-        
-        ToHelpViewController *tpv = [[ToHelpViewController alloc] initWithNibName:@"ToHelpViewController" bundle:nil];
-        tpv.loud = self.loud;
-        tpv.isHelp = NO;
-        tpv.toUser = self.tapUser;
-        tpv.isOwner = isOwner;
-        [self.navigationController pushViewController:tpv animated:YES];
-        [tpv release];
+
+          self.textView.text = [NSString stringWithFormat:@"@%@ ", [self.tapUser objectForKey:@"name"]];
+          [self.textView becomeFirstResponder];
          
     }
     
@@ -845,4 +922,313 @@
     return TRUE; 
 }
 
+#pragma mark - sms text send 
+-(void)sendText:(id)sender
+{
+//    NSLog(@"sent now");
+    [self fakeSendPost];
+
+}
+
+//Code from Brett Schumann
+-(void) keyboardWillShow:(NSNotification *)note{
+    // get keyboard size and loctaion
+	CGRect keyboardBounds;
+    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &keyboardBounds];
+    NSNumber *duration = [note.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = [note.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+    
+    // Need to translate the bounds to account for rotation.
+    keyboardBounds = [self.view convertRect:keyboardBounds toView:nil];
+    
+	// get a rect for the textView frame
+	CGRect containerFrame = self.messageView.frame;
+    containerFrame.origin.y = self.view.bounds.size.height - (keyboardBounds.size.height + containerFrame.size.height);
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:[duration doubleValue]];
+    [UIView setAnimationCurve:[curve intValue]];
+	
+	// set views with new info
+	self.messageView.frame = containerFrame;
+	
+	// commit animations
+	[UIView commitAnimations];
+}
+
+-(void) keyboardWillHide:(NSNotification *)note{
+    NSNumber *duration = [note.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = [note.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+	
+	// get a rect for the textView frame
+	CGRect containerFrame = self.messageView.frame;
+//    containerFrame.origin.y = self.view.bounds.size.height - containerFrame.size.height;
+    containerFrame.origin.y = self.view.frame.size.height;
+	
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:[duration doubleValue]];
+    [UIView setAnimationCurve:[curve intValue]];
+    
+	// set views with new info
+	self.messageView.frame = containerFrame;
+	
+	// commit animations
+	[UIView commitAnimations];
+}
+
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    float diff = (growingTextView.frame.size.height - height);
+    
+	CGRect r = self.messageView.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	self.messageView.frame = r;
+}
+
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [super touchesBegan:touches withEvent:event];
+//    
+//    [self.textView resignFirstResponder];
+//}
+
+-(BOOL)growingTextView:(HPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]){
+        
+        [growingTextView resignFirstResponder];
+        
+        return NO;
+    }
+    
+    if (growingTextView.text.length + [text length] > 70){
+        
+        return NO;
+    } 
+    
+    return YES;
+}
+
+-(void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+{
+    NSInteger nonSpaceTextLength = [[growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
+    if([growingTextView hasText] && nonSpaceTextLength > 0) {
+
+        self.sendButton.enabled = YES;
+        
+    } else {
+        self.sendButton.enabled = NO;
+    }
+}
+
+#pragma mark - set phone number
+
+-(void)phoneAction:(id)sender
+{
+    UIButton *phoneBtn = (UIButton *)sender;
+    if (hasPhone){
+        hasPhone = NO;
+        [phoneBtn setImage:[UIImage imageNamed:@"nophone.png"] forState:UIControlStateNormal];
+    } else{
+        if ([ProfileManager sharedInstance].profile.phone == nil){
+            //            [Utils warningNotification:@"在关于我中设置你的号码"];
+            DDAlertPrompt *loginPrompt = [[DDAlertPrompt alloc] initWithTitle:nil 
+                                                                     delegate:self 
+                                                            cancelButtonTitle:@"取消" 
+                                                             otherButtonTitle:@"确定"];	
+            [loginPrompt show];
+            [loginPrompt release];
+            
+        } else{
+            hasPhone = YES;
+            [phoneBtn setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal]; 
+        }
+        
+    }
+    
+}
+
+- (void)didPresentAlertView:(UIAlertView *)alertView {
+	if ([alertView isKindOfClass:[DDAlertPrompt class]]) {
+		DDAlertPrompt *loginPrompt = (DDAlertPrompt *)alertView;
+		[loginPrompt.plainTextField becomeFirstResponder];		
+		[loginPrompt setNeedsLayout];
+	}
+}
+
+-(BOOL)testPhoneNumber:(NSString *)num
+{
+    NSString *decimalRegex = @"^([0-9]{11})|(([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})|([0-9]{4}|[0-9]{3})-([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})|([0-9]{7,8})-([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1}))$";
+    NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegex];
+    return [decimalTest evaluateWithObject:num];
+}
+
+- (void)updateUserInfo
+{
+    
+    NSDictionary *preInfo = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [self.tmpPhoneNum stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"phone",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[ProfileManager sharedInstance].profile.link];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request appendPostData:[[preInfo JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"PUT"];
+    // sign to header for authorize
+    
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(pRequestFinished:)];
+    [request setDidFailSelector:@selector(pRequestFailed:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)pRequestFinished:(ASIHTTPRequest *)request
+{
+    
+    if ([request responseStatusCode] == 200){
+        
+        // update profile
+        [ProfileManager sharedInstance].profile.phone = self.tmpPhoneNum;
+        hasPhone = YES;
+        [self.phoneButton setImage:[UIImage imageNamed:@"havephone.png"] forState:UIControlStateNormal];
+        
+    } else{
+        
+        [Utils warningNotification:@"设置失败"];
+    }
+    
+    
+}
+
+- (void)pRequestFailed:(ASIHTTPRequest *)request
+{
+    // notify the user
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    
+}
+
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == [alertView cancelButtonIndex]) {
+	} else {
+		if ([alertView isKindOfClass:[DDAlertPrompt class]]) {
+			DDAlertPrompt *loginPrompt = (DDAlertPrompt *)alertView;
+            if (![loginPrompt.plainTextField.text isEqualToString:@""] && ![self testPhoneNumber:loginPrompt.plainTextField.text]) {
+                
+                [Utils warningNotification:@"无效号码"];
+                
+            } else{
+                self.tmpPhoneNum = loginPrompt.plainTextField.text;
+                [self updateUserInfo];
+            }
+			
+		}
+	}
+}
+
+#pragma mark send post
+#pragma mark - send post
+- (void)fakeSendPost
+{
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+//        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.sendButton.enabled = NO;
+        [self performSelector:@selector(sendPost) withObject:nil afterDelay:1.5];
+    } else{
+        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
+    }       
+}
+
+- (void)sendPost
+{
+    
+    if (NO == [LocationController sharedInstance].allow){
+        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
+        return;
+    }
+    
+    //[self.loadingIndicator startAnimating];
+    
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
+    
+    NSDictionary *prePost = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithDouble:curloc.latitude], @"lat",
+                             [NSNumber numberWithDouble:curloc.longitude], @"lon",
+                             [NSNumber numberWithBool: hasPhone], @"is_help",
+                             [self.loud objectForKey:@"id"], @"urn",
+                             [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, REPLYURI]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[prePost JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"POST"];
+    // sign to header for authorize
+    [request signInHeader];
+    [request setDelegate:self];
+    
+    [request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (201 == code){
+        
+        [self.textView resignFirstResponder];
+        [self fadeInMsgWithText:@"回复成功" rect:CGRectMake(0, 0, 80, 66)];
+        [self fetchReplyList]; // TODO 
+        
+    } else if (412 == code) {
+        
+        NSString *body = [request responseString];
+        NSDictionary *reason = [body JSONValue];
+        [self.loud setValuesForKeysWithDictionary:reason];        
+        
+        // notification
+        int statusCode = [[reason objectForKey:@"status"] intValue];
+        if (300 == statusCode){
+            
+            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
+        } else if (100 == statusCode){
+            
+            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
+        }
+        
+    } else if (404 == code) {
+        
+        [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
+        
+        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
+        
+    } else{
+        
+        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
+        
+    }
+    
+    self.sendButton.enabled = YES;
+    
+    
+}
+
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    self.sendButton.enabled = YES;
+    
+}
 @end
