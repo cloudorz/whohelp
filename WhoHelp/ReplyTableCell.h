@@ -16,7 +16,7 @@
     UIButton *button;
 }
 
-@property (nonatomic, retain) UIImageView *avatarImage, *phoneLogo;
+@property (nonatomic, retain) UIImageView *avatarImage, *phoneLogo, *starLogo;
 @property (nonatomic, retain) UILabel *contentLabel, *timeLabel, *locationLabel;
 @property (nonatomic, retain) UIButton *button;
 

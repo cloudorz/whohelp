@@ -69,5 +69,6 @@
 -(void)fetchReplyList;
 -(void)fetchNextReplyList;
 -(void)deleteLoud;
+- (void)updateLoudInfo;
 
 @end

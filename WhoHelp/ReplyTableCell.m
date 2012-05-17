@@ -11,7 +11,7 @@
 
 @implementation ReplyTableCell
 
-@synthesize  contentLabel, timeLabel, locationLabel, avatarImage, button, phoneLogo;
+@synthesize  contentLabel, timeLabel, locationLabel, avatarImage, button, phoneLogo, starLogo;
 
 -(void)dealloc
 {
@@ -21,6 +21,7 @@
     [avatarImage release];
     [button release];
     [phoneLogo release];
+    [starLogo release];
     
     [super dealloc];
 }
@@ -49,6 +50,13 @@
         avatarImageFrame.backgroundColor = [UIColor clearColor];
         
         [self.contentView addSubview:avatarImageFrame];
+        
+        self.starLogo = [[[UIImageView alloc] initWithFrame:CGRectMake(35, 6, 16, 16)] autorelease];
+        self.starLogo.opaque = YES;
+        self.starLogo.image = [UIImage imageNamed:@"star.png"];
+        self.starLogo.hidden = YES;
+        
+        [self.contentView addSubview:self.starLogo];
         
         self.phoneLogo = [[[UIImageView alloc] initWithFrame:CGRectMake(35, 33, 16, 16)] autorelease];
         self.phoneLogo.opaque = YES;

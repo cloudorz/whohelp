@@ -301,7 +301,7 @@
         
     } else{        
 
-        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
+        [self fadeOutMsgWithText:@"求助信息已无效" rect:CGRectMake(0, 0, 100, 66)];
         
     }
     _loadloud = NO;

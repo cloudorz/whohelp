@@ -16,7 +16,7 @@
 
 // lots
 //#import "ToHelpViewController.h"
-#import "PrizeHelperViewController.h"
+//#import "PrizeHelperViewController.h"
 #import "ProfileViewController.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
@@ -459,29 +459,51 @@
     [self deleteLoud];
 }
 
+-(void)userInfoShow
+{
+    ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
+    pvc.user = self.tapUser;
+    [self.navigationController pushViewController:pvc animated:YES];
+    [pvc release];
+}
+
 -(IBAction)avatarButtonAction:(id)sender
 {
     UIButton *button = (UIButton *)sender;
-    NSDictionary *user = nil;
+    NSMutableDictionary *user = nil;
     if (button.tag == -1){
         user = [self.loud objectForKey:@"user"];
     } else{
         user = [[self.replies objectAtIndex:button.tag] objectForKey:@"user"];
     }
-    
-    ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
-    pvc.user = user;
-    [self.navigationController pushViewController:pvc animated:YES];
-    [pvc release];
+    self.tapUser = user;
+    NSMutableArray *prizeUids = [self.curCollection objectForKey:@"prizes"];
+    if (isOwner && 
+        ![[self.tapUser objectForKey:@"id"] isEqual:[[self.loud objectForKey:@"user"] objectForKey:@"id"]] && 
+        ![prizeUids containsObject:[self.tapUser objectForKey:@"id"]]) {
+        
+        UIActionSheet *contactSheet = [[UIActionSheet alloc] 
+                                       initWithTitle:nil
+                                       delegate:self 
+                                       cancelButtonTitle:@"取消" 
+                                       destructiveButtonTitle:nil 
+                                       otherButtonTitles:@"查看个人信息", @"感谢TA", nil];
+        
+        
+        contactSheet.tag = 2;
+        [contactSheet showFromTabBar:self.tabBarController.tabBar];
+        [contactSheet release];
+        
+    }else {
+        [self userInfoShow];
+    }
     
 }
 
 -(IBAction)helpDoneAction:(id)sender
 {
-    PrizeHelperViewController *pvc = [[PrizeHelperViewController alloc] initWithNibName:@"PrizeHelperViewController" bundle:nil];
-    pvc.loud = self.loud;
-    [self.navigationController pushViewController:pvc animated:YES];
-    [pvc release];
+ // be Done here
+    [self updateLoudInfo];
 }
 
 -(IBAction)justLookAction:(id)sender
@@ -713,6 +735,14 @@
     // content
     cell.contentLabel.text = lenContent;
     
+    // star prize
+    NSMutableArray *prizeUids = [self.curCollection objectForKey:@"prizes"];
+    if ([prizeUids containsObject:[[reply objectForKey:@"user"] objectForKey:@"id"]]) {
+        cell.starLogo.hidden = NO;
+    }else {
+        cell.starLogo.hidden = YES;
+    }
+    
     // show phone logo
     if (1 == [[reply objectForKey:@"is_help"] intValue]){
         cell.phoneLogo.hidden = NO;
@@ -791,7 +821,10 @@
 {
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-    if (indexPath.row < [self.replies count] && 200 == [[self.loud objectForKey:@"status"] intValue]){
+    int interval = [[Utils dateFromISOStr:[self.loud objectForKey:@"expired"]] timeIntervalSinceNow];
+    if (indexPath.row < [self.replies count] && 
+        200 == [[self.loud objectForKey:@"status"] intValue] && 
+        interval > 0){
         
         NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
         NSMutableDictionary *user= [reply objectForKey:@"user"];
@@ -817,7 +850,7 @@
                                                otherButtonTitles:@"回复", nil];
             }
             
-            //contactSheet.tag = 1;
+            contactSheet.tag = 1;
             [contactSheet showFromTabBar:self.tabBarController.tabBar];
             [contactSheet release];
             
@@ -829,6 +862,8 @@
         }
         
         
+    } else {
+        [Utils warningNotification:@"无法操作，求助已过期或已完成。"];
     }
 
 }
@@ -840,24 +875,116 @@
         return;
     }
     
-    UIDevice *device = [UIDevice currentDevice];
-    if ([[device model] isEqualToString:@"iPhone"] && buttonIndex < 2) {
-        NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
-                                               buttonIndex == 0 ? @"tel" : @"sms", 
-                                               [self.tapUser objectForKey:@"phone"]]
-                          ];
+    if (actionSheet.tag == 1) {
+        UIDevice *device = [UIDevice currentDevice];
+        if ([[device model] isEqualToString:@"iPhone"] && buttonIndex < 2) {
+            NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", 
+                                                   buttonIndex == 0 ? @"tel" : @"sms", 
+                                                   [self.tapUser objectForKey:@"phone"]]
+                              ];
+            
+            [[UIApplication sharedApplication] openURL:callURL];
+        } else{
+            
+            self.textView.text = [NSString stringWithFormat:@"@%@ ", [self.tapUser objectForKey:@"name"]];
+            [self.textView becomeFirstResponder];
+            
+        }
         
-        [[UIApplication sharedApplication] openURL:callURL];
-    } else{
+    } else if (actionSheet.tag == 2) {
+        if (buttonIndex == 0) {
+            [self userInfoShow];
+        } else if (buttonIndex == 1) {
+            [self sendPrizePost];
+        }
+    }  
+    
+}
 
-          self.textView.text = [NSString stringWithFormat:@"@%@ ", [self.tapUser objectForKey:@"name"]];
-          [self.textView becomeFirstResponder];
-         
+- (void)sendPrizePost
+{
+    
+    //[self.loadingIndicator startAnimating];
+    
+    NSDictionary *prePost = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithBool: YES], @"has_star",
+                             [self.loud objectForKey:@"id"], @"loud_urn",
+                             [self.tapUser objectForKey:@"id"], @"user_urn",
+                             @"非常感谢你提供的帮助", @"content",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, PRIZEURI]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[prePost JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"POST"];
+    // sign to header for authorize
+    [request  setDidFinishSelector:@selector(prizeRequestFinished:)];
+    [request setDidFailSelector:@selector(prizeRequestFailed:)];
+    [request signInHeader];
+    [request setDelegate:self];
+    
+    [request startAsynchronous];
+}
+
+
+- (void)prizeRequestFinished:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (201 == code){
+        
+//        [self.navigationController popViewControllerAnimated:YES];
+        [self fadeInMsgWithText:@"感谢成功" rect:CGRectMake(0, 0, 80, 66)];
+        [self fetchReplyList];
+        
+    } else if (412 == code) {
+        
+        NSString *body = [request responseString];
+        NSDictionary *reason = [body JSONValue];
+        [self.loud setValuesForKeysWithDictionary:reason];        
+        
+        // notification
+        int statusCode = [[reason objectForKey:@"status"] intValue];
+        if (300 == statusCode){
+            
+//            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
+            [Utils warningNotification:@"无法操作，求助已完成"];
+            
+        } else if (100 == statusCode){
+            
+//            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
+            [Utils warningNotification:@"无法操作，求助过期"];
+            
+        }
+        
+    } else if (404 == code) {
+        
+        [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
+        
+        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
+        
+    } else{
+        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
     }
+    
+    // send ok cancel
+//    [self.loadingIndicator stopAnimating];
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     
     
 }
 
+
+- (void)prizeRequestFailed:(ASIHTTPRequest *)request
+{
+    // notify the user
+//    [self.loadingIndicator stopAnimating];
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+}
 
 
 #pragma mark -
@@ -1114,6 +1241,53 @@
 }
 
 
+#pragma mark - done the help
+- (void)updateLoudInfo
+{
+    
+    NSDictionary *preInfo = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithInt:300], @"status",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[self.loud objectForKey:@"link"]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request appendPostData:[[preInfo JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"PUT"];
+    // sign to header for authorize
+    
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(loudUpdateRequestFinished:)];
+    [request setDidFailSelector:@selector(loudUpdateRequestFailed:)];
+    [request signInHeader];
+    [request startAsynchronous];
+}
+
+- (void)loudUpdateRequestFinished:(ASIHTTPRequest *)request
+{
+    
+    if ([request responseStatusCode] == 200){
+        
+        // update profile
+        [self.loud setObject:[NSNumber numberWithInt:300] forKey:@"status"];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } else{
+
+        [self fadeOutMsgWithText:@"设置失败" rect:CGRectMake(0, 0, 80, 66)];
+    }
+    
+    
+}
+
+- (void)loudUpdateRequestFailed:(ASIHTTPRequest *)request
+{
+    // notify the user
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    
+}
+
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if (buttonIndex == [alertView cancelButtonIndex]) {
 	} else {
@@ -1200,10 +1374,12 @@
         int statusCode = [[reason objectForKey:@"status"] intValue];
         if (300 == statusCode){
             
-            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
+//            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
+            [Utils warningNotification:@"无法操作，求助已完成"];
         } else if (100 == statusCode){
             
-            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
+//            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
+            [Utils warningNotification:@"无法操作，求助已过期"];
         }
         
     } else if (404 == code) {
