@@ -11,21 +11,22 @@
 
 @implementation LoudTableCell
 
-@synthesize avatarImage, nameLabel, timeLabel, cellText, loudCateLabel;
-@synthesize payCateDescLabel, payCateImage, loudCateImage, commentLabel, locationDescLabel;
+@synthesize avatarImage=_avatarImage;
+@synthesize nameLabel=_nameLabel;
+@synthesize timeLabel=_timeLabel;
+@synthesize cellText=_cellText;
+@synthesize commentLabel=_commentLabel;
+@synthesize locationDescLabel=_locationDescLabel;
+
 
 - (void)dealloc
 {
-    [avatarImage release];
-    [nameLabel release];
-    [timeLabel release];
-    [cellText release];
-    [loudCateImage release];
-    [loudCateLabel release];
-    [payCateImage release];
-    [payCateDescLabel release];
-    [commentLabel release];
-    [locationDescLabel release];
+    [_avatarImage release];
+    [_nameLabel release];
+    [_timeLabel release];
+    [_cellText release];
+    [_commentLabel release];
+    [_locationDescLabel release];
     [super dealloc];
 }
 
@@ -48,7 +49,7 @@
         
     
         // avatar show
-        self.avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
+        self.avatarImage = [[[AsyncImageView alloc] initWithFrame:CGRectMake(12, 12, 35, 35)] autorelease]; // show
         self.avatarImage.tag = 1;
         self.avatarImage.opaque = YES;
         self.avatarImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
@@ -94,41 +95,8 @@
         self.cellText.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.cellText];
         
-        // loud category color show
-        //loudCateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
-        self.loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 34+NAMEFONTSIZE+contentHeight, 320, 24)] autorelease];
-        self.loudCateLabel.tag = 5;
-        self.loudCateLabel.backgroundColor = [UIColor clearColor]; // FIXME let me go
-        self.loudCateLabel.opaque = YES;
-        
-        self.payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
-        self.payCateDescLabel.tag = 6;
-        self.payCateDescLabel.textAlignment = UITextAlignmentLeft;
-        self.payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        self.payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
-        self.payCateDescLabel.textColor = [UIColor whiteColor];
-        self.payCateDescLabel.numberOfLines = 1;
-        self.payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
-        self.payCateDescLabel.backgroundColor = [UIColor clearColor];
-        [self.loudCateLabel addSubview:self.payCateDescLabel];
-    
-        [self.contentView addSubview:self.loudCateLabel];
-
-        // loud category and pay category image show
-        self.loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 30+NAMEFONTSIZE+contentHeight, 32, 32)] autorelease];
-        self.loudCateImage.tag = 7;
-        self.loudCateImage.opaque = YES;
-        self.loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-        
-        self.payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
-        self.payCateImage.tag = 8;
-        self.payCateImage.backgroundColor = [UIColor clearColor];
-        
-        [self.loudCateImage addSubview:self.payCateImage];
-        [self.contentView addSubview:self.loudCateImage];
-        
         // comment infomation
-        self.commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 69+NAMEFONTSIZE+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
+        self.commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 29+NAMEFONTSIZE+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
         self.commentLabel.tag = 9;
         self.commentLabel.opaque = YES;
         self.commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
@@ -146,7 +114,7 @@
         [self.contentView addSubview:self.commentLabel];
         
         // location descrtion
-        UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 69+NAMEFONTSIZE+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
+        UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 29+NAMEFONTSIZE+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
         locationLabel.backgroundColor = [UIColor clearColor];
         
         UIImageView *locationImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"location.png"]] autorelease];
@@ -168,7 +136,7 @@
         [self.contentView addSubview:locationLabel];
         
         // bottome line
-        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+78-10+contentHeight, 320, 1)] autorelease];
+        UIImageView *bottomLine = [[[UIImageView alloc] initWithFrame:CGRectMake(0, NAMEFONTSIZE+TEXTFONTSIZE+SMALLFONTSIZE+38-10+contentHeight, 320, 1)] autorelease];
         bottomLine.backgroundColor = [UIColor clearColor];
         bottomLine.image = [UIImage imageNamed:@"sepline.png"];
         bottomLine.opaque = NO;

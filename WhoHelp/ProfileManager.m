@@ -8,7 +8,6 @@
 
 #import "ProfileManager.h"
 #import "WhoHelpAppDelegate.h"
-#import "UserManager.h"
 #import "Utils.h"
 static ProfileManager *sharedProfileManager = nil;
 
@@ -91,22 +90,13 @@ static ProfileManager *sharedProfileManager = nil;
     self.profile.name = [data objectForKey:@"name"];
     self.profile.userkey = [data objectForKey:@"userkey"];
     self.profile.secret = [data objectForKey:@"secret"];
+    self.profile.avatar_link = [data objectForKey:@"avatar_link"];
     self.profile.link = [data objectForKey:@"link"];
-    self.profile.brief = [data objectForKey:@"brief"] == [NSNull null] ? nil : [data objectForKey:@"brief"];
-    self.profile.phone = [data objectForKey:@"phone"] == [NSNull null] ? nil : [data objectForKey:@"phone"];
+    self.profile.brief = [[data objectForKey:@"brief"] isEqual:@""] ? nil : [data objectForKey:@"brief"];
+    self.profile.phone = [[data objectForKey:@"phone"] isEqual:@""] ? nil : [data objectForKey:@"phone"];
     self.profile.urn = [data objectForKey:@"id"];
     self.profile.updated = [Utils dateFromISOStr:[data objectForKey:@"updated"]];
     
-    NSMutableDictionary *auths = [data objectForKey:@"auths"];
-    self.profile.weibo = [auths objectForKey:@"weibo"];
-    self.profile.douban = [auths objectForKey:@"douban"];
-    self.profile.renren = [auths objectForKey:@"renren"];
-    
-    
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:data forBlock:^(NSData *data){
-        self.profile.avatar = data; 
-    }];
-    //[self save];
     
     
 }

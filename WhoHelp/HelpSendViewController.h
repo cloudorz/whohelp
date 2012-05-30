@@ -9,52 +9,23 @@
 #import <UIKit/UIKit.h>
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate>
-{
-@private
-    
-    UIActivityIndicatorView *loadingIndicator_;
-    NSDictionary *helpCategory_;
-    
-    UIImageView *avatar_;
-    UILabel *placeholderLabel_;
-    UILabel *numIndicator_;
-    UITextView *helpTextView_;
-    NSDate *duetime_;
-    NSDictionary *wardCategory_;
-    UIButton *duetimeButton_;
-    UIButton *wardButton_;
-    NSString *wardText_;
-    
-    BOOL hasRenren, hasDouban, hasWeibo;
-    UIButton *renrenButton, *doubanButton, *weiboButton;
-    
-    
-}
 
-@property (nonatomic, retain) IBOutlet UITextView *helpTextView;
-@property (nonatomic, retain) IBOutlet UILabel *numIndicator;
-@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, retain) UILabel *placeholderLabel;
-@property (nonatomic, retain) IBOutlet UIButton *duetimeButton;
-@property (nonatomic, retain) IBOutlet UIButton *wardButton;
-@property (nonatomic, retain) NSDictionary *helpCategory;
-@property (nonatomic, retain) IBOutlet UIImageView *avatar;
-@property (nonatomic, retain) NSDate *duetime;
-@property (nonatomic, retain) NSDictionary *wardCategory;
-@property (nonatomic, retain) NSString *wardText;
-@property (nonatomic, retain) IBOutlet UIButton *renrenButton, *doubanButton, *weiboButton;
+
+@property (strong, nonatomic) IBOutlet UITextView *helpTextView;
+@property (strong, nonatomic) IBOutlet UILabel *numIndicator;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (strong, nonatomic) UILabel *placeholderLabel;
+@property (strong, nonatomic) IBOutlet UINavigationItem *myNavigationItem;
+@property (strong, nonatomic) NSArray *locaiton;
+@property (strong, nonatomic) NSString *address;
+@property (strong, nonatomic) NSString *poi;
+
 
 - (void)sendButtonPressed:(id)sender;
 
 - (void)postHelpTextToRemoteServer;
-- (void)fakePostHelpTextToRemoteServer;
 
 // new
-- (IBAction)duetimeAction:(id)sender;
-- (IBAction)wadAction:(id)sender;
-- (IBAction)renrenAction:(id)sender;
-- (IBAction)weiboAction:(id)sender;
-- (IBAction)doubanAction:(id)sender;
 
 - (void)turnOnSendEnabled;
 

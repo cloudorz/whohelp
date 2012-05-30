@@ -8,7 +8,7 @@
 
 #import "HelpSettingViewController.h"
 //#import "LawViewController.h"
-#import "ASIFormDataRequest.h"
+
 #import "Config.h"
 #import "Utils.h"
 #import "SBJson.h"
@@ -18,62 +18,36 @@
 #import "NSString+URLEncoding.h"
 #import "DetailLoudViewController.h"
 #import "MyProfileViewController.h"
-#import "UserManager.h"
 
 @implementation HelpSettingViewController
 
-@synthesize tableView=tableView_;
-@synthesize louds=louds_;
-@synthesize curCollection=curCollection_;
-@synthesize etag=etag_;
-@synthesize moreCell=moreCell_;
-@synthesize toHelpIndicator=toHelpIndicator_;
-@synthesize beHelpedIndicator=beHelpedIndicator_;
-@synthesize starIndciator=starIndciator_;
-@synthesize avatarImage=avatarImage_;
-@synthesize nameLabel=nameLabel_;
+@synthesize tableView=_tableView;
+@synthesize louds=_louds;
+@synthesize curCollection=_curCollection;
+@synthesize etag=_etag;
+@synthesize moreCell=_moreCell;
+@synthesize toHelpIndicator=_toHelpIndicator;
+@synthesize beHelpedIndicator=_beHelpedIndicator;
+@synthesize starIndciator=_starIndciator;
+@synthesize avatarImage=_avatarImage;
+@synthesize nameLabel=_nameLabel;
 
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
-    [louds_ release];
-    [etag_ release];
-    [curCollection_ release];
-    [loudCates_ release];
-    [payCates_ release];
-    [tableView_ release];
-    [tableView_ release];
-    [toHelpIndicator_ release];
-    [beHelpedIndicator_ release];
-    [starIndciator_ release];
-    [avatarImage_ release];
-    [nameLabel_ release];
+    [_louds release];
+    [_etag release];
+    [_curCollection release];
+    [_tableView release];
+    [_toHelpIndicator release];
+    [_beHelpedIndicator release];
+    [_starIndciator release];
+    [_avatarImage release];
+    [_nameLabel release];
     [super dealloc];
 }
 
-- (NSDictionary *)loudCates
-{
-    if (nil == loudCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
-        loudCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
-    }
-    
-    return loudCates_;
-}
-
-- (NSDictionary *)payCates
-{
-    if (nil == payCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
-        payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
-        
-    }
-    
-    return payCates_;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -138,26 +112,48 @@
     if (self.louds != nil) {
         NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
 
-            int status = [[loud objectForKey:@"status"] intValue];
-            return status != 300 && status != -100;
-            
+            return ![[loud objectForKey:@"status"] isEqualToString:@"del"];
+
         }];
+        
         [self.louds filterUsingPredicate:p];
         [self.tableView reloadData];
     }
     
     // reinit the user info
     self.nameLabel.text = [ProfileManager sharedInstance].profile.name;
-    self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
-    NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:
-                          [ProfileManager sharedInstance].profile.urn, @"id", 
-                          [ProfileManager sharedInstance].profile.link, @"link",
-                          nil];
-    [[UserManager sharedInstance] fetchUserRequestWithLink:user forBlock:^(NSDictionary *data){
-        self.toHelpIndicator.text = [[data objectForKey:@"to_help_num"] description];
-        self.beHelpedIndicator.text = [[data objectForKey:@"be_helped_num"] description];
-        self.starIndciator.text = [[data objectForKey:@"star_num"] description];
+    [self.avatarImage loadImage:[ProfileManager sharedInstance].profile.avatar_link];
+    [self grapUserDetail];
+}
+
+- (void)grapUserDetail
+{
+    
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[ProfileManager sharedInstance].profile.link]];
+    
+
+    [request setCompletionBlock:^{
+        // Use when fetching text data
+        
+        NSInteger code = [request responseStatusCode];
+        
+        if (200 == code){
+            NSString *response = [request responseString];
+            NSMutableDictionary *user = [response JSONValue];
+            self.toHelpIndicator.text = [[user objectForKey:@"help_num"] description];
+            self.beHelpedIndicator.text = [[user objectForKey:@"loud_num"] description];
+            self.starIndciator.text = [[user objectForKey:@"star_num"] description];
+        }
+        
     }];
+    
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"Fetch User Info: %@", [error localizedDescription]);
+    }];
+    
+    [request startAsynchronous];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -228,18 +224,8 @@
 - (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
-    NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
-    NSString *payDesc = nil;
-    // pay categories description
-    if ([NSNull null] == [loud objectForKey:@"paydesc"] || [[loud objectForKey:@"paydesc"] isEqualToString:@""]){
-        payDesc = [paycate objectForKey:@"text"];
-    } else{
-        payDesc = [NSString stringWithFormat:@"%@, %@",
-                                      [paycate objectForKey:@"text"],
-                                      [loud objectForKey:@"paydesc"]];
-    }
     
-    NSString *content = [NSString stringWithFormat:@"%@ 报酬: %@", [loud objectForKey:@"content"], payDesc];
+    NSString *content = [loud objectForKey:@"content"];
     
     CGFloat contentHeight= [content sizeWithFont:[UIFont systemFontOfSize:14.0f] 
                                                       constrainedToSize:CGSizeMake(228, CGFLOAT_MAX) 
@@ -260,13 +246,6 @@
     // content
     cell.contentLabel.text = content;
     
-        // date time
-    if (nil == [loud objectForKey:@"expiredTime"]){
-
-        [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"expired"]] forKey:@"expiredTime"];
-    }
-    cell.timeLabel.text = [Utils pastDueTimeDesc:[loud objectForKey:@"expiredTime"]];
-    
     // comments 
     if ([[loud objectForKey:@"reply_num"] intValue] >= 0){
         cell.commentLabel.hidden = NO;
@@ -274,13 +253,6 @@
         
     } else {
         cell.commentLabel.hidden = YES;
-    }
-    
-    // loud categories and pay categories
-    NSDictionary *loudcate = [self.loudCates objectForKey:[loud objectForKey:@"loudcate"]];
-    
-    if (nil != loudcate){
-        cell.logoImage.image = [UIImage imageNamed:[loudcate objectForKey:@"logo"]];
     }
     
     return cell;
@@ -309,7 +281,7 @@
         
         DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
         
-        dlVC.loud = [self.louds objectAtIndex:indexPath.row];
+        dlVC.loudLink = [[self.louds objectAtIndex:indexPath.row] objectForKey:@"link"];
         [self.navigationController pushViewController:dlVC animated:YES];
         [dlVC release];
     }
@@ -322,17 +294,8 @@
     if (indexPath.row < [self.louds count]){
         
         NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
-        NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
        
         NSString *payDesc = nil;
-        // pay categories description
-        if ([NSNull null] == [loud objectForKey:@"paydesc"]){
-            payDesc = [paycate objectForKey:@"text"];
-        } else{
-            payDesc = [NSString stringWithFormat:@"%@, %@",
-                       [paycate objectForKey:@"text"],
-                       [loud objectForKey:@"paydesc"]];
-        }
         
         NSString *content = [NSString stringWithFormat:@"%@ 报酬: %@", [loud objectForKey:@"content"], payDesc];
         
@@ -352,7 +315,7 @@
     
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=author:%@&qs=%@&st=%d&qn=%d", 
-                                       HOST,
+                                       TESTHOST,
                                        LOUDSEARCH,
                                        [ProfileManager sharedInstance].profile.userkey,
                                        [@"created desc" URLEncodedString],
@@ -392,7 +355,7 @@
         
         [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
         
-        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
+//        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
     } else if (304 == code){
         // do nothing
     } else{

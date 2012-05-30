@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
+#import "AsyncImageView.h"
 
 @interface HelpSettingViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate>
 {
@@ -15,27 +16,16 @@
     BOOL _reloading;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
-    
-    UITableView *tableView_;
-    
-    NSMutableDictionary *curCollection_;
-    NSMutableArray *louds_;
-    NSString *etag_;
-    UITableViewCell *moreCell_;
-    NSDictionary *loudCates_, *payCates_;
-    
-    UIImageView *avatarImage_;
-    UILabel *nameLabel_, *toHelpIndicator_, *beHelpedIndicator_, *starIndciator_;
 }
 
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) NSMutableArray *louds;
-@property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property (nonatomic, retain) NSString *etag;
-@property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain, readonly) NSDictionary *loudCates,  *payCates;
-@property (nonatomic, retain) IBOutlet UILabel *nameLabel, *toHelpIndicator, *beHelpedIndicator, *starIndciator;
-@property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *louds;
+@property (nonatomic, strong) NSMutableDictionary *curCollection;
+@property (nonatomic, strong) NSString *etag;
+@property (nonatomic, strong) UITableViewCell *moreCell;
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel, *toHelpIndicator, *beHelpedIndicator, *starIndciator;
+@property (nonatomic, strong) IBOutlet AsyncImageView *avatarImage;
 
+- (void)grapUserDetail;
 
 @end

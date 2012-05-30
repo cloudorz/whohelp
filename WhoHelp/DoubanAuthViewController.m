@@ -118,7 +118,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:HOST]){
+    if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:TESTHOST]){
         NSError *error;
         NSString *content = [NSString stringWithContentsOfURL:[request URL] 
                                                   encoding:NSUTF8StringEncoding

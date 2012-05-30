@@ -15,32 +15,30 @@
 #import "SBJson.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ProfileManager.h"
-#import "UserManager.h"
-#import "AuthPageViewController.h"
 
 @implementation MyProfileViewController
 
-@synthesize image=image_;
-@synthesize appView, contentView, descContentView, mainView, nameField, phoneField;
-@synthesize avatarImage, doubanImage, renrenImage, weiboImage;
-@synthesize weiboSwitch, doubanSwitch, renrenSwitch;
+@synthesize image=_image;
+@synthesize appView=_appView;
+@synthesize contentView=_contentView;
+@synthesize descContentView=_descContentView;
+@synthesize mainView=_mainView;
+@synthesize phoneField=_phoneField;
+@synthesize avatarImage=_avatarImage;
+@synthesize nameField=_nameField;
+
 
 -(void)dealloc
 {
-    [image_ release];
-    [appView release];
-    [contentView release];
-    [descContentView release];
-    [mainView release];
-    [nameField release];
-    [phoneField release];
-    [avatarImage release];
-    [doubanImage release];
-    [renrenImage release];
-    [weiboImage release];
-    [weiboSwitch release];
-    [doubanSwitch release];
-    [renrenSwitch release];
+    [_image release];
+    [_appView release];
+    [_contentView release];
+    [_descContentView release];
+    [_mainView release];
+    [_nameField release];
+    [_phoneField release];
+    [_avatarImage release];
+
     [super dealloc];
 }
 
@@ -101,7 +99,7 @@
         self.phoneField.text = [ProfileManager sharedInstance].profile.phone;
     }
     self.descContentView.text = [ProfileManager sharedInstance].profile.brief;
-    self.avatarImage.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
+    [self.avatarImage loadImage:[ProfileManager sharedInstance].profile.avatar_link];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
@@ -127,31 +125,6 @@
                                              selector:@selector(textFieldDidChange:)
                                                  name:UITextFieldTextDidChangeNotification 
                                                object:self.phoneField];
-    
-    // init the auths
-    if ([ProfileManager sharedInstance].profile.weibo != nil) {
-        self.weiboImage.image = [UIImage imageNamed:@"weiboo.png"];
-        self.weiboSwitch.on = YES;
-    } else{
-        self.weiboImage.image = [UIImage imageNamed:@"weibox.png"];
-        self.weiboSwitch.on = NO;
-    }
-    
-    if ([ProfileManager sharedInstance].profile.douban != nil) {
-        self.doubanImage.image = [UIImage imageNamed:@"doubano.png"];
-        self.doubanSwitch.on = YES;
-    } else{
-        self.doubanImage.image = [UIImage imageNamed:@"doubanx.png"];
-        self.doubanSwitch.on = NO;
-    } 
-    
-    if ([ProfileManager sharedInstance].profile.renren != nil) {
-        self.renrenImage.image = [UIImage imageNamed:@"renreno.png"];
-        self.renrenSwitch.on = YES;
-    } else{
-        self.renrenImage.image = [UIImage imageNamed:@"renrenx.png"];
-        self.renrenSwitch.on = NO;
-    }
     
 }
 
@@ -235,72 +208,6 @@
     return TRUE; 
 }
 
--(IBAction)doubanAction:(id)sender
-{
-
-    UISwitch *sw = (UISwitch *)sender;
-    if (sw.on) {
-        
-        [self authRequest:@"/douban/auth"];
-        
-    } else{
-        [self delAuthRequest:[ProfileManager sharedInstance].profile.douban block:^(BOOL success){
-            if (success) {
-                [ProfileManager sharedInstance].profile.douban = nil;
-                self.doubanImage.image = [UIImage imageNamed:@"doubanx.png"];
-            } else {
-                self.doubanSwitch.on = YES;
-            }
-
-            
-        }];
-    }
- 
-}
-
--(IBAction)renrenAction:(id)sender
-{
-
-    UISwitch *sw = (UISwitch *)sender;
-    if (sw.on) {
-        
-        [self authRequest:@"/renren/auth"];
-        
-    } else{
-        [self delAuthRequest:[ProfileManager sharedInstance].profile.renren block:^(BOOL success){
-            if (success) {
-                [ProfileManager sharedInstance].profile.renren = nil;
-                self.renrenImage.image = [UIImage imageNamed:@"renrenx.png"];
-            } else {
-                self.renrenSwitch.on = YES;
-            }
-            
-            
-        }];
-    }
-}
-
--(IBAction)weiboAction:(id)sender
-{
-    
-    UISwitch *sw = (UISwitch *)sender;
-    if (sw.on) {
-        
-        [self authRequest:@"/weibo/auth"];
-        
-    } else{
-        [self delAuthRequest:[ProfileManager sharedInstance].profile.weibo block:^(BOOL success){
-            if (success) {
-                [ProfileManager sharedInstance].profile.weibo = nil;
-                self.weiboImage.image = [UIImage imageNamed:@"weibox.png"];
-            } else {
-                self.weiboSwitch.on = YES;
-            }
-            
-            
-        }];
-    }
-}
 
 -(IBAction)avatarAction:(id)sender
 {
@@ -327,79 +234,17 @@
 
 #pragma mark - remote operations
 
--(void)delAuthRequest:(NSString *)urlString block:(void (^)(BOOL))callback
-{
-    NSURL *url = [NSURL URLWithString:urlString];
-    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    
-    [request setCompletionBlock:^{
-        
-        NSInteger code = [request responseStatusCode];
-        if (200 == code){
-            
-            callback(YES);
-            
-        } else if (412 == code){
-            callback(NO);
-            [self fadeOutMsgWithText:@"至少保留一个授权" rect:CGRectMake(0, 0, 100, 66)];
-        } else{
-            callback(NO);
-            [self fadeOutMsgWithText:@"至少保留一个授权" rect:CGRectMake(0, 0, 100, 66)];
-        }
-        
-    }];
-    
-    [request setFailedBlock:^{
-        
-        NSError *error = [request error];
-        callback(NO);
-        [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 100, 66)];
-        NSLog(@"%@", [error description]);
-        
-    }];
-    [request setRequestMethod:@"DELETE"];
-    [request signInHeader];
-    [request startAsynchronous]; 
-}
 
-- (void)authRequest: (NSString *)path
-{
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, path]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request setDelegate:self];
-    [request setDidFailSelector:@selector(requestAuthFailed:)];
-    [request setDidFinishSelector:@selector(requestAuthFinished:)];
-    [request signInHeader]; // must have this
-    [request startAsynchronous];
-}
-
-- (void)requestAuthFinished:(ASIHTTPRequest *)request
-{
-    // Use when fetching text data
-    NSString *responseString = [request responseString];
-    
-    
-    // Use when fetching binary data
-    //NSData *responseData = [request responseData];
-    
-    AuthPageViewController *webVC = [[AuthPageViewController alloc] initWithNibName:@"AuthPageViewController" bundle:nil];
-    
-    webVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    webVC.baseURL = request.url;
-    webVC.body = responseString;
-    [self.navigationController pushViewController:webVC animated:YES];
-    
-    [webVC release];
-    
-}
-
-- (void)requestAuthFailed:(ASIHTTPRequest *)request
-{
-    NSError *error = [request error];
-    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 100, 66)];
-    NSLog(@"%@", [error description]);
-}
-
+//- (void)authRequest: (NSString *)path
+//{
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, path]];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    [request setDelegate:self];
+//    [request setDidFailSelector:@selector(requestAuthFailed:)];
+//    [request setDidFinishSelector:@selector(requestAuthFinished:)];
+//    [request signInHeader]; // must have this
+//    [request startAsynchronous];
+//}
 
 - (void)updateUserInfo
 {
@@ -482,7 +327,7 @@
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     CGRect viewFrame = self.mainView.frame;
-    viewFrame.origin.y = -222.0f;
+    viewFrame.origin.y = -60.0f;
     self.mainView.frame = viewFrame;
 }
 
@@ -584,17 +429,10 @@
         
         NSInteger code = [request responseStatusCode];
         if (200 == code){
-            // first save to profile
-            [ProfileManager sharedInstance].profile.avatar = self.image;
             
             // change current avatar
             self.avatarImage.image = [UIImage imageWithData:self.image];
             
-            // change the photo cache
-            NSMutableDictionary *photo = [[UserManager sharedInstance].photoCache objectForKey:[ProfileManager sharedInstance].profile.urn];
-            if (photo != nil){
-                [photo setObject:self.image forKey:@"avatar"];
-            }
             
             [self fadeInMsgWithText:@"上传头像成功" rect:CGRectMake(0, 0, 80, 66)];
             

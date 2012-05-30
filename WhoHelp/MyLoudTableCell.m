@@ -11,14 +11,15 @@
 
 @implementation MyLoudTableCell
 
-@synthesize  contentLabel, timeLabel, logoImage, commentLabel;
+@synthesize contentLabel=_contentLabel;
+@synthesize timeLabel=_timeLabel;
+@synthesize commentLabel=_commentLabel;
 
 -(void)dealloc
 {
-    [contentLabel release];
-    [timeLabel release];
-    [logoImage release];
-    [commentLabel release];
+    [_contentLabel release];
+    [_timeLabel release];
+    [_commentLabel release];
     
     [super dealloc];
 }
@@ -35,14 +36,8 @@
         UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
         
         
-        // about avatar image 
-        self.logoImage = [[[UIImageView alloc] initWithFrame:CGRectMake(17, 15, 24, 24)] autorelease];
-        self.logoImage.opaque = YES;
-        
-        [self.contentView addSubview:self.logoImage];
-        
         // reply content view
-        UIView *replyContentView = [[[UIView alloc] initWithFrame:CGRectMake(58, 10, 250, contentHeight+43)] autorelease];
+        UIView *replyContentView = [[[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, contentHeight+43)] autorelease];
         replyContentView.backgroundColor = [UIColor whiteColor];
         replyContentView.opaque = YES;
         // FIXME cost point
@@ -81,7 +76,7 @@
         [replyContentView addSubview:self.timeLabel];
         
         // comment infomation
-        self.commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(188, contentHeight+21, 50, 10)] autorelease]; // show
+        self.commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(224, contentHeight+21, 50, 10)] autorelease]; // show
         self.commentLabel.opaque = YES;
         self.commentLabel.font = [UIFont systemFontOfSize: 9.0f];
         self.commentLabel.textAlignment = UITextAlignmentRight;
@@ -99,13 +94,13 @@
         
         [self.contentView addSubview:replyContentView];
         
-        
-        UIImageView *tri = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tri.png"]] autorelease];
-        tri.frame = CGRectMake(50, 19, 8, 14);
-        tri.backgroundColor = [UIColor clearColor];
-        tri.opaque = NO;
-        
-        [self.contentView addSubview:tri];
+//        
+//        UIImageView *tri = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tri.png"]] autorelease];
+//        tri.frame = CGRectMake(50, 19, 8, 14);
+//        tri.backgroundColor = [UIColor clearColor];
+//        tri.opaque = NO;
+//        
+//        [self.contentView addSubview:tri];
         
         // bottom line
         UILabel *grayLine = [[[UILabel alloc] initWithFrame:CGRectMake(0, contentHeight+63, 320, 1)] autorelease];

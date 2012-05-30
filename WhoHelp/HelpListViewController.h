@@ -17,26 +17,17 @@
     BOOL _reloading;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
-    
-    NSMutableDictionary *curCollection_;
-    NSMutableArray *louds_;
-    NSString *etag_;
-    UITableViewCell *moreCell_;
-    NSDictionary *loudCates_, *payCates_;
-    UITableView *tableView_;
-    NSString *lastUpdated;
-    NSTimer *timer_;
 
 }
 
-@property (nonatomic, retain) NSMutableArray *louds;
-@property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property (nonatomic, retain) NSString *etag;
-@property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain) NSTimer *timer;
-@property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) NSString *lastUpdated;
+
+@property (strong, nonatomic) NSMutableArray *louds;
+@property (strong, nonatomic) NSMutableDictionary *curCollection;
+@property (strong, nonatomic) NSString *etag;
+@property (strong, nonatomic) UITableViewCell *moreCell;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSString *lastUpdated;
 
 
 - (void)reloadTableViewDataSource;
@@ -45,6 +36,6 @@
 - (void)fetchLoudList;
 - (void)fetchNextLoudList;
 - (void)fetchUpdatedInfo;
-- (void)fakeFetchLoudList;
+//- (void)fakeFetchLoudList;
 
 @end

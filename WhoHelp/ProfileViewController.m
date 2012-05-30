@@ -8,37 +8,40 @@
 
 #import "ProfileViewController.h"
 #import "CustomItems.h"
+#import "SBJson.h"
+#import "ASIHTTPRequest.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UserManager.h"
 
 @implementation ProfileViewController
 
-@synthesize user=user_;
-@synthesize toHelpIndicator=toHelpIndicator_;
-@synthesize beHelpedIndicator=beHelpedIndicator_;
-@synthesize starIndicator=starIndicator_;
-@synthesize toHelpView=toHelpView_;
-@synthesize beHelpedView=beHelpedView_;
-@synthesize starView=starView_;
-@synthesize nameLabel=nameLabel_;
-@synthesize descLabel=descLabel_;
-@synthesize avatarImage=avatarImage_;
-@synthesize descView=descView_;
+@synthesize user=_user;
+@synthesize toHelpIndicator=_toHelpIndicator;
+@synthesize beHelpedIndicator=_beHelpedIndicator;
+@synthesize starIndicator=_starIndicator;
+@synthesize toHelpView=_toHelpView;
+@synthesize beHelpedView=_beHelpedView;
+@synthesize starView=_starView;
+@synthesize nameLabel=_nameLabel;
+@synthesize descLabel=_descLabel;
+@synthesize avatarImage=_avatarImage;
+@synthesize descView=_descView;
+@synthesize userLink=_userLink;
 
 
 -(void)dealloc
 {
-    [user_ release];
-    [toHelpIndicator_ release];
-    [beHelpedIndicator_ release];
-    [starIndicator_ release];
-    [toHelpView_ release];
-    [beHelpedView_ release];
-    [starView_ release];
-    [descLabel_ release];
-    [descView_ release];
-    [nameLabel_ release];
-    [avatarImage_ release];
+    [_user release];
+    [_toHelpIndicator release];
+    [_beHelpedView release];
+    [_beHelpedIndicator release];
+    [_toHelpView release];
+    [_starView release];
+    [_descLabel release];
+    [_starIndicator release];
+    [_descView release];
+    [_nameLabel release];
+    [_avatarImage release];
+    [_userLink release];
     [super dealloc];
 }
 
@@ -109,40 +112,50 @@
     [self.toHelpView.layer setCornerRadius:5.0f];
 }
 
--(void)viewWillAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
+    
+    [self grapUserDetail];
     // config
 
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:self.user forBlock:^(NSData *data){
-        if (data != nil){
-            self.avatarImage.image = [UIImage imageWithData:data];
-        }
-    }];
-    
-    // maybe leak happen
-    [[UserManager sharedInstance] fetchUserRequestWithLink:self.user forBlock:^(NSDictionary *data){
-        self.nameLabel.text = [data objectForKey:@"name"];
-        self.toHelpIndicator.text = [[data objectForKey:@"to_help_num"] description];
-        self.beHelpedIndicator.text = [[data objectForKey:@"be_helped_num"] description];
-        self.starIndicator.text = [[data objectForKey:@"star_num"] description];
-        
-        NSString *brief = [data objectForKey:@"brief"] != [NSNull null] ? [data objectForKey:@"brief"] : nil;
-        // brief show
-        if (brief != nil && brief.length > 0){
-            CGSize theSize= [[data objectForKey:@"brief"] sizeWithFont:[UIFont systemFontOfSize:12.0f] 
-                                                          constrainedToSize:CGSizeMake(272.0, CGFLOAT_MAX) 
-                                                              lineBreakMode:UILineBreakModeWordWrap];
-            CGFloat contentHeight = theSize.height;
-            CGRect descLabelFrame = self.descLabel.frame;
-            descLabelFrame.size.height += contentHeight - 12.0f;
-            self.descLabel.frame = descLabelFrame;
-            
-            self.descLabel.text = [data objectForKey:@"brief"];
-        } 
-    }];
-    
+    [self.avatarImage loadImage:[self.user objectForKey:@"avatar_link"]];
 
+    // maybe leak happen
+    self.nameLabel.text = [self.user objectForKey:@"name"];
+    self.toHelpIndicator.text = [[self.user objectForKey:@"help_num"] description];
+    self.beHelpedIndicator.text = [[self.user objectForKey:@"loud_num"] description];
+    self.starIndicator.text = [[self.user objectForKey:@"star_num"] description];
+    
+    NSString *brief = [self.user objectForKey:@"brief"] != [NSNull null] ? [self.user objectForKey:@"brief"] : nil;
+    // brief show
+    if (brief != nil && brief.length > 0){
+        CGSize theSize= [[self.user objectForKey:@"brief"] sizeWithFont:[UIFont systemFontOfSize:12.0f] 
+                                                      constrainedToSize:CGSizeMake(272.0, CGFLOAT_MAX) 
+                                                          lineBreakMode:UILineBreakModeWordWrap];
+        CGFloat contentHeight = theSize.height;
+        CGRect descLabelFrame = self.descLabel.frame;
+        descLabelFrame.size.height += contentHeight - 12.0f;
+        self.descLabel.frame = descLabelFrame;
+        
+        self.descLabel.text = [self.user objectForKey:@"brief"];
+    }
+
+}
+
+- (void)grapUserDetail
+{
+    NSURL *url = [NSURL URLWithString:self.userLink];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200) {
+            NSString *response = [request responseString];
+            self.user = [response JSONValue];
+        }
+        
+    }
 }
 
 -(void)backAction:(id)sender

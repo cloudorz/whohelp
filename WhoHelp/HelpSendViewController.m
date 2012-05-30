@@ -12,45 +12,33 @@
 #import "Config.h"
 #import "Utils.h"
 #import "ProfileManager.h"
-#import "SelectDateViewController.h"
-#import "SelectWardViewController.h"
 #import "CustomItems.h"
-#import "LocationController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "POIViewController.h"
 
 
 @implementation HelpSendViewController
 
-@synthesize helpTextView=helpTextView_;
-@synthesize numIndicator=numIndicator_;
-@synthesize loadingIndicator=loadingIndicator_;
-@synthesize placeholderLabel=placeholderLabel_;
-@synthesize helpCategory=helpCategory_;
-@synthesize avatar=avatar_;
-@synthesize wardCategory=wardCategory_; 
-@synthesize duetime=duetime_;
-@synthesize duetimeButton=duetimeButton_;
-@synthesize wardButton=wardButton_;
-@synthesize wardText=wardText_;
-@synthesize renrenButton, doubanButton, weiboButton;
+@synthesize helpTextView=_helpTextView;
+@synthesize numIndicator=_numIndicator;
+@synthesize loadingIndicator=_loadingIndicator;
+@synthesize placeholderLabel=_placeholderLabel;
+@synthesize myNavigationItem=_myNavigationItem;
+@synthesize poi=_poi;
+@synthesize address=_address;
+@synthesize locaiton=_locaiton;
 
 #pragma mark - dealloc
 - (void)dealloc
 {
-    [helpTextView_ release];
-    [numIndicator_ release];
-    [loadingIndicator_ release];
-    [placeholderLabel_ release];
-    [helpCategory_ release];
-    [avatar_ release];
-    [duetime_ release];
-    [wardCategory_ release];
-    [wardButton_ release];
-    [duetimeButton_ release];
-    [wardText_ release];
-    [renrenButton release];
-    [doubanButton release];
-    [weiboButton release];
+    [_helpTextView release];
+    [_numIndicator release];
+    [_loadingIndicator release];
+    [_placeholderLabel release];
+    [_myNavigationItem release];
+    [_poi release];
+    [_address release];
+    [_locaiton release];
     [super dealloc];
 }
 
@@ -106,78 +94,25 @@
     // hidden char numberindicator
     self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
-    // new
-    // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:[self.helpCategory valueForKey:@"text"]] autorelease];
-    
-    self.avatar.image = [UIImage imageWithData:[ProfileManager sharedInstance].profile.avatar];
-    
-    // config buttons
-    [self.duetimeButton setImage:[UIImage imageNamed:@"duetime.png"] forState:UIControlStateNormal];
-    [self.duetimeButton setImage:[UIImage imageNamed:@"duetimedown.png"] forState:UIControlStateHighlighted];
-    
-    [self.wardButton setImage:[UIImage imageNamed:@"ward.png"] forState:UIControlStateNormal];
-    [self.wardButton setImage:[UIImage imageNamed:@"warddown.png"] forState:UIControlStateHighlighted];
     
     // navigation item config
-    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+    self.myNavigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
                                               action:@selector(backAction:)] autorelease];
     
-    self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+    self.myNavigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initSendBarButtonItemWithTarget:self 
                                               action:@selector(sendButtonPressed:)] autorelease];
     
     // init the weibo, renren, douban button enabled 
-   
-    if ([ProfileManager sharedInstance].profile.renren != nil){
-        
-//        hasRenren = YES;
-        hasRenren = NO;
-//        [self.renrenButton setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
-        [self.renrenButton setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
-
-    } else{
-        hasRenren = NO;
-        [self.renrenButton setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
-        self.renrenButton.enabled = NO;
-    }
-
-
-    if ([ProfileManager sharedInstance].profile.weibo != nil){
-        
-//        hasWeibo = YES;
-//        [self.weiboButton setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
-        hasWeibo = NO;
-        [self.weiboButton setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
-
-    } else{
-        
-        hasWeibo = NO;
-        [self.weiboButton setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
-        self.weiboButton.enabled = NO;
-    }
-
-
-    if ([ProfileManager sharedInstance].profile.douban != nil){
-        
-//        hasDouban = YES;
-//        [self.doubanButton setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
-        hasDouban = NO;
-        [self.doubanButton setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
-
-    } else{
-        hasDouban = NO;
-        [self.doubanButton setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
-        self.doubanButton.enabled = NO;
-    }
-
+//    [self.navigationController pushViewController:<#(UIViewController *)#> animated:<#(BOOL)#>]
+ 
     
 }
 
 -(void)backAction:(id)sender
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (BOOL)hidesBottomBarWhenPushed
@@ -201,22 +136,6 @@
     // so it can change the size of the text input.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
-    
-    // show setting time
-    if (nil != self.duetime){
-        
-        // config buttons
-        [self.duetimeButton setImage:[UIImage imageNamed:@"duetimeon.png"] forState:UIControlStateNormal];
-        [self.duetimeButton setImage:[UIImage imageNamed:@"duetimeondown.png"] forState:UIControlStateHighlighted];
-
-    }
-    
-    // show setting ward
-    if (nil != self.wardCategory){
-        [self.wardButton setImage:[UIImage imageNamed:@"wardon.png"] forState:UIControlStateNormal];
-        [self.wardButton setImage:[UIImage imageNamed:@"wardondown.png"] forState:UIControlStateHighlighted];
-    }
-    
     // send status
     [self turnOnSendEnabled];
 }
@@ -251,63 +170,31 @@
 {
     // check the send button enabled 
      NSInteger nonSpaceTextLength = [[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    if (self.helpCategory != nil && 
-        self.wardCategory != nil &&
-        nonSpaceTextLength > 0 &&
-        self.duetime != nil){
+    if (nonSpaceTextLength > 0){
         
-        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.myNavigationItem.rightBarButtonItem.enabled = YES;
     } else{
         
-        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.myNavigationItem.rightBarButtonItem.enabled = NO;
     }
 }
 
 - (void)sendButtonPressed:(id)sender
 {
-    [self fakePostHelpTextToRemoteServer];
-    [self.loadingIndicator startAnimating];
-    //[self fakeParsePosition];
-}
 
-- (void)fakePostHelpTextToRemoteServer
-{
-    if ([CLLocationManager locationServicesEnabled]){
-        [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        //    self.sendBarItem.enabled = NO;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self performSelector:@selector(postHelpTextToRemoteServer) withObject:nil afterDelay:1.5];
-    } else{
-        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
-    }       
+    [self postHelpTextToRemoteServer];
+    [self.loadingIndicator startAnimating];
+
 }
 
 - (void)postHelpTextToRemoteServer
 {
-    
-    if (NO == [LocationController sharedInstance].allow){
-        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
-        return;
-    }
-    
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
 
 
     NSDictionary *preLoud = [NSDictionary  dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithDouble:curloc.latitude], @"lat",
-                             [NSNumber numberWithDouble:curloc.longitude], @"lon",
-                             [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
-                             [self.wardCategory objectForKey:@"label"], @"paycate",
-                             [self.helpCategory objectForKey:@"label"], @"loudcate",
-                             self.duetime, @"expired",
-                             [NSNumber numberWithBool:hasWeibo], @"weibo",
-                             [NSNumber numberWithBool:hasDouban], @"douban",
-                             [NSNumber numberWithBool:hasRenren], @"renren",
-                             self.wardText, @"paydesc", // This is a tricker, wardText is nil, the dictionary cut down.
-                             
+                             [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"tag_content",
                              nil];
+    // other params TODO
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, LOUDURI]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -326,7 +213,7 @@
 
     if ([request responseStatusCode] == 201){
 
-        [self.navigationController popViewControllerAnimated:YES];
+        [self dismissModalViewControllerAnimated:YES];
         
     } else{
         
@@ -335,7 +222,7 @@
 
     // send ok cancel
     [self.loadingIndicator stopAnimating];
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.myNavigationItem.rightBarButtonItem.enabled = YES;
     
 
 }
@@ -346,7 +233,7 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
 
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.myNavigationItem.rightBarButtonItem.enabled = YES;
      
     //[Utils warningNotification:[[request error] localizedDescription]];
      [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
@@ -453,60 +340,16 @@
 }
 
 #pragma mark - actions
-
-- (IBAction)duetimeAction:(id)sender
+-(IBAction)poiFindAction:(id)sender
 {
-    SelectDateViewController *sdVC = [[SelectDateViewController alloc] initWithNibName:@"SelectDateViewController" bundle:nil];
-    sdVC.hlVC = self;
-    [self.navigationController pushViewController:sdVC animated:YES];
-    [sdVC release];
+    POIViewController *poivc = [[POIViewController alloc] initWithNibName:@"POIViewController" bundle:nil];
+    [self presentModalViewController:poivc animated:YES];
+    [poivc release];
 }
 
-- (IBAction)wadAction:(id)sender
+-(IBAction)cancelAction:(id)sender
 {
-    SelectWardViewController *swVC = [[SelectWardViewController alloc] initWithNibName:@"SelectWardViewController" bundle:nil];
-    swVC.hlVC = self;
-    [self.navigationController pushViewController:swVC animated:YES];
-    [swVC release];
-}
-
-- (IBAction)renrenAction:(id)sender
-{
-    UIButton *button = (UIButton *)sender;
-    if (hasRenren){
-        hasRenren = NO;
-        // do some thing here
-        [button setImage:[UIImage imageNamed:@"renrenx.png"] forState:UIControlStateNormal];
-    } else{
-        hasRenren = YES;
-        [button setImage:[UIImage imageNamed:@"renreno.png"] forState:UIControlStateNormal];
-    }
-}
-
-- (IBAction)weiboAction:(id)sender
-{
-    UIButton *button = (UIButton *)sender;
-    if (hasWeibo){
-        hasWeibo = NO;
-        // do some thing here
-        [button setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
-    } else{
-        hasWeibo = YES;
-        [button setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
-    }
-}
-
-- (IBAction)doubanAction:(id)sender
-{
-    UIButton *button = (UIButton *)sender;
-    if (hasDouban){
-        hasDouban = NO;
-        // do some thing here
-        [button setImage:[UIImage imageNamed:@"doubanx.png"] forState:UIControlStateNormal];
-    } else{
-        hasDouban = YES;
-        [button setImage:[UIImage imageNamed:@"doubano.png"] forState:UIControlStateNormal];
-    }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

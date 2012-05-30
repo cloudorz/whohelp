@@ -14,20 +14,23 @@
 #import "DoubanAuthViewController.h"
 #import "WhoHelpAppDelegate.h"
 #import "UIViewController+msg.h"
+#import "CustomItems.h"
 
 
 @implementation PreAuthViewController
 
-@synthesize authLinkWeibo=authLinkWeibo_;
-@synthesize authLinkDouban=authLinkDouban_;
-@synthesize authLinkRenren=authLinkRenren_;
+@synthesize authLinkWeibo=_authLinkWeibo;
+@synthesize authLinkDouban=_authLinkDouban;
+@synthesize authLinkRenren=_authLinkRenren;
+@synthesize myNavigationItem=_myNavigationItem;
 
 #pragma mark - dealloc
 - (void)dealloc
 {
-    [authLinkDouban_ release];
-    [authLinkRenren_ release];
-    [authLinkWeibo_ release];
+    [_authLinkWeibo release];
+    [_authLinkRenren release];
+    [_authLinkDouban release];
+    [_myNavigationItem release];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DismissPreAuthVC" object:nil];
     [super dealloc];
 }
@@ -78,6 +81,10 @@
     [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubano.png"] forState:UIControlStateNormal];
     [self.authLinkDouban setImage:[UIImage imageNamed:@"ldoubanx.png"] forState:UIControlStateHighlighted];
     
+    self.myNavigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                                initBackBarButtonItemWithTarget:self 
+                                                action:@selector(backAction:)] autorelease];
+    
 }
 
 - (void)viewDidUnload
@@ -99,23 +106,23 @@
 #pragma mark - Actions
 - (IBAction)linkToAuthDouban:(id)sender
 {
-    [self authRequest:@"/douban/auth"];
+//    [self authRequest:@"/auth/weibo"];
 }
 
 - (IBAction)linkToAuthWeibo:(id)sender
 {
-    [self authRequest:@"/weibo/auth"];
+    [self authRequest:@"/auth/weibo"];
 }
 
 - (IBAction)linkToAuthRenren:(id)sender
 {
-    [self authRequest:@"/renren/auth"];
+//    [self authRequest:@"/auth/renren"];
 }
 
 
 - (void)authRequest: (NSString *)path
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?uid=%@", HOST, path, [[UIDevice currentDevice] uniqueIdentifier]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?uid=%@", TESTHOST, path, [[UIDevice currentDevice] uniqueIdentifier]]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -146,6 +153,11 @@
     NSError *error = [request error];
     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
     NSLog(@"%@", [error description]);
+}
+
+- (void)backAction:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 

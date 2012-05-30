@@ -7,18 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AsyncImageView.h"
 
 @interface LoudTableCell : UITableViewCell
-{
-@private
-    UIImageView *avatarImage, *payCateImage, *loudCateImage, *loudCateLabel;
-    UILabel *nameLabel, *timeLabel, *cellText;
-    UILabel *payCateDescLabel, *commentLabel, *locationDescLabel;
-}
 
-@property (nonatomic, retain) UIImageView *avatarImage, *payCateImage, *loudCateImage, *loudCateLabel;
-@property (nonatomic, retain) UILabel *nameLabel, *timeLabel, *cellText;
-@property (nonatomic, retain) UILabel *payCateDescLabel, *commentLabel, *locationDescLabel;
+@property (nonatomic, strong) AsyncImageView *avatarImage;
+@property (nonatomic, strong) UILabel *nameLabel, *timeLabel, *cellText;
+@property (nonatomic, strong) UILabel *commentLabel, *locationDescLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight;
 

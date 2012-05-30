@@ -9,14 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MyLoudTableCell : UITableViewCell
-{
-@private
-    UIImageView *logoImage;
-    UILabel *contentLabel, *timeLabel, *commentLabel;
-}
 
-@property (nonatomic, retain) UIImageView *logoImage;
-@property (nonatomic, retain) UILabel *contentLabel, *timeLabel, *commentLabel;
+
+@property (nonatomic, strong) UILabel *contentLabel, *timeLabel, *commentLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight;
 

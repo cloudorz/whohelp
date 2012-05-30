@@ -12,26 +12,21 @@
 @interface HelpPrivateListViewController : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource>
 {
 @private
-    UITableView *tableView_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     
-    BOOL _reloading;
-    NSMutableDictionary *curCollection_;
-    NSMutableArray *messages_;
-    NSString *lastUpdated_;
-    NSTimer *timer_;
-    BOOL _loadloud;
+    BOOL _reloading, _loadloud;
 
 }
 
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) NSMutableArray *messages;
-@property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property (nonatomic, retain) NSString *lastUpdated;
-@property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) NSMutableDictionary *curCollection;
+@property (nonatomic, strong) NSString *lastUpdated;
+@property (nonatomic, strong) UITableViewCell *moreCell;
+@property (nonatomic, strong) NSString *etag;
 
 - (void)fetchMsgList;
-- (void)fetchLoud:(NSString *)urlString;
+- (void)fetchNextMsgList;
 
 @end

@@ -7,21 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AsyncImageView.h"
 
 @interface ProfileViewController : UIViewController
-{
-@private
-    NSDictionary *user_;
-    UILabel *toHelpIndicator_, *beHelpedIndicator_, *starIndicator_;
-    UIView *toHelpView_, *beHelpedView_, *starView_, *descView_;
-    UIImageView *avatarImage_;
-    UILabel *nameLabel_, *descLabel_;
-}
 
-@property (nonatomic, retain) NSDictionary *user;
-@property (nonatomic, retain) IBOutlet UILabel *toHelpIndicator, *beHelpedIndicator, *starIndicator;
-@property (nonatomic, retain) IBOutlet UILabel *nameLabel, *descLabel;
-@property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
-@property (nonatomic, retain) IBOutlet UIView *descView, *toHelpView, *beHelpedView, *starView;
+
+@property (nonatomic, strong) NSDictionary *user;
+@property (nonatomic, strong) NSString *userLink;
+@property (nonatomic, strong) IBOutlet UILabel *toHelpIndicator, *beHelpedIndicator, *starIndicator;
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel, *descLabel;
+@property (nonatomic, strong) IBOutlet AsyncImageView *avatarImage;
+@property (nonatomic, strong) IBOutlet UIView *descView, *toHelpView, *beHelpedView, *starView;
+
+- (void)grapUserDetail;
 
 @end

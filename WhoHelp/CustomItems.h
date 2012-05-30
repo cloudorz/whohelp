@@ -20,8 +20,6 @@
 #import "ReplyTableCell.h"
 #import "UserTableCell.h"
 #import "PrizeTableCell.h"
-#import "LoudCateTableCell.h"
-#import "PayCateTableCell.h"
 #import "MyLoudTableCell.h"
 #import "MessageTableViewCell.h"
 #import "UIViewController+msg.h"

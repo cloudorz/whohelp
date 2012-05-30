@@ -11,17 +11,23 @@
 
 @implementation ReplyTableCell
 
-@synthesize  contentLabel, timeLabel, locationLabel, avatarImage, button, phoneLogo, starLogo;
+@synthesize avatarImage=_avatarImage;
+@synthesize contentLabel=_contentLabel;
+@synthesize timeLabel=_timeLabel;
+@synthesize locationLabel=_locationLabel;
+@synthesize button=_button;
+@synthesize phoneLogo=_phoneLogo;
+@synthesize starLogo=_starLogo;
 
 -(void)dealloc
 {
-    [contentLabel release];
-    [timeLabel release];
-    [locationLabel release];
-    [avatarImage release];
-    [button release];
-    [phoneLogo release];
-    [starLogo release];
+    [_contentLabel release];
+    [_timeLabel release];
+    [_locationLabel release];
+    [_avatarImage release];
+    [_button release];
+    [_phoneLogo release];
+    [_starLogo release];
     
     [super dealloc];
 }
@@ -39,7 +45,7 @@
         
         
         // about avatar image 
-        self.avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, 10, 35, 35)] autorelease];
+        self.avatarImage = [[[AsyncImageView alloc] initWithFrame:CGRectMake(12, 10, 35, 35)] autorelease];
         self.avatarImage.opaque = YES;
         
         [self.contentView addSubview:self.avatarImage];

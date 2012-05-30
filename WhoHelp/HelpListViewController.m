@@ -11,14 +11,15 @@
 #import "SBJson.h"
 #import "Config.h"
 #import "Utils.h"
-#import "LocationController.h"
 #import "ProfileManager.h"
+#import "LocationController.h"
 // custom
 #import "NSString+URLEncoding.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "DetailLoudViewController.h"
-#import "UserManager.h"
 #import "CustomItems.h"
+#import "HelpSendViewController.h"
+#import "PreAuthViewController.h"
 
 
 @implementation HelpListViewController
@@ -38,35 +39,11 @@
     [etag_ release];
     [curCollection_ release];
     [timer_ release];
-    [loudCates_ release];
-    [payCates_ release];
     [tableView_ release];
     [lastUpdated release];
     [super dealloc];
 }
 
-- (NSDictionary *)loudCates
-{
-    if (nil == loudCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
-        loudCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
-    }
-    
-    return loudCates_;
-}
-
-- (NSDictionary *)payCates
-{
-    if (nil == payCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
-        payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
-        
-    }
-    
-    return payCates_;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -113,15 +90,21 @@
 	[_refreshHeaderView refreshLastUpdatedDate];
     
     // custom navigation item
-    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"附近的求助"] autorelease];
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"全部信息"] autorelease];
 
     
     // timer
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
-                                                  target:self 
-                                                selector:@selector(fetchUpdatedInfo) 
-                                                userInfo:nil 
-                                                 repeats:YES];
+//    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
+//                                                  target:self 
+//                                                selector:@selector(fetchUpdatedInfo) 
+//                                                userInfo:nil 
+//                                                 repeats:YES];
+    
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]  
+                                              initWithTitle:@"求助" 
+                                              style:UIBarButtonSystemItemAdd 
+                                              target:self 
+                                              action:@selector(sendLoudAction:)] autorelease];
     
 }
 
@@ -139,19 +122,17 @@
 {
     [super viewWillAppear:animated];
     
-    // filter the non show louds, clean
     if (self.louds != nil) {
         NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *loud, NSDictionary *bindings){
             
-            int interval = [[Utils dateFromISOStr:[loud objectForKey:@"expired"]] timeIntervalSinceNow];
-            
-            return [[loud objectForKey:@"status"] intValue] == 200 && interval > 0;
+            return ![[loud objectForKey:@"status"] isEqualToString:@"del"];
             
         }];
+        
         [self.louds filterUsingPredicate:p];
         [self.tableView reloadData];
     }
-    
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -164,7 +145,13 @@
     [super viewDidAppear:animated];
 
     // load remote data and init tableview
-    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
+//    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
+//    [_refreshHeaderView animationDidStart:(CAAnimation *)];
+//    [self.tableView setContentOffset:CGPointMake(0, -65) animated:YES];
+//    [self.tableView setContentOffset:CGPointMake(0, 0) animated:YES];
+
+
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -243,36 +230,30 @@
                                      reuseIdentifier:CellIdentifier 
                                               height:contentHeight] autorelease];
         } 
-    
-    
     // avatar
     
     NSDictionary *user = [loud objectForKey:@"user"];
     
     // name 
     cell.nameLabel.text = [user objectForKey:@"name"];
-    if (300 == [[user objectForKey:@"role"] intValue]){
-        // administractor
-        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-    }else {
-        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-    }
-    
-    [cell retain]; // #{ for tableview may dealloc
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        
-        if (nil != data){
-            cell.avatarImage.image = [UIImage imageWithData: data];
-        }
-        
-        [cell release]; // #} relase it
-    }];
+//    if ([user]){
+//        // administractor
+//        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
+//    }else {
+//        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+//    }
+//    
+
+    [cell.avatarImage loadImage:[user objectForKey:@"avatar_link"]];
     
     // content
     cell.cellText.text = [loud objectForKey:@"content"];
     
     // location infomation
-    cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
+//    cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
+    if (![[loud objectForKey:@"address"] isEqual:@""]) {
+        cell.locationDescLabel.text =  [loud objectForKey:@"address"];
+    }
     
     if (nil == [loud objectForKey:@"createdTime"]){
         [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
@@ -289,29 +270,7 @@
     } else {
         cell.commentLabel.hidden = YES;
     }
-    
-    // loud categories and pay categories
-    NSDictionary *loudcate = [self.loudCates objectForKey:[loud objectForKey:@"loudcate"]];
-    NSDictionary *paycate = [self.payCates objectForKey:[loud objectForKey:@"paycate"]];
-    
-    if (nil != loudcate){
-        cell.loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
-        cell.loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
-    }
-    
-    if (nil != paycate){
-        //NSLog(@"paycate %@ %@,%@", [paycate objectForKey:@"label"], [paycate objectForKey:@"logo"], [paycate objectForKey:@"showPic"]);
-        cell.payCateImage.image = [UIImage imageNamed:[paycate objectForKey:@"showPic"]];
-    }
-    
-    // pay categories description
-    if ([NSNull null] == [loud objectForKey:@"paydesc"] || [[loud objectForKey:@"paydesc"] isEqualToString:@""]){
-        cell.payCateDescLabel.text = [paycate objectForKey:@"text"];
-    } else{
-        cell.payCateDescLabel.text = [NSString stringWithFormat:@"%@, %@",
-                                      [paycate objectForKey:@"text"],
-                                      [loud objectForKey:@"paydesc"]];
-    }
+
     
     return cell;
 }
@@ -338,10 +297,24 @@
                                                    constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
                                                        lineBreakMode:UILineBreakModeWordWrap];
         
-        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 79 - 10;
+        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 39 - 10;
     } else{
         
         return 40.0f;
+    }
+}
+
+#pragma mark - actions
+-(void)sendLoudAction:(id)sender
+{
+    if (nil == [ProfileManager sharedInstance].profile) {
+        PreAuthViewController *preVc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+        [self.tabBarController presentModalViewController:preVc animated:YES];
+        [preVc release];
+    } else {
+        HelpSendViewController *helpVc = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
+        [self.tabBarController presentModalViewController:helpVc animated:YES];
+        [helpVc release];
     }
 }
 
@@ -356,7 +329,7 @@
         
         DetailLoudViewController *dlVC = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
         
-        dlVC.loud = [self.louds objectAtIndex:indexPath.row];
+        dlVC.loudLink = [[self.louds objectAtIndex:indexPath.row] objectForKey:@"link"];
         [self.navigationController pushViewController:dlVC animated:YES];
         [dlVC release];
     }
@@ -364,36 +337,14 @@
 }
 
 #pragma mark - RESTful request
-- (void)fakeFetchLoudList
-{
-    if ([CLLocationManager locationServicesEnabled]){
-        if (nil != [ProfileManager sharedInstance].profile){
-            [[LocationController sharedInstance].locationManager startUpdatingLocation];
-            [self performSelector:@selector(fetchLoudList) withObject:nil afterDelay:1.5];        
-        }
-
-    } else{
-        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
-    } 
-
-}
 
 - (void)fetchLoudList
 {
 
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
     
-    if (NO == [LocationController sharedInstance].allow){
-        return;
-    }
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=position:%f,%f&qs=%@&st=%d&qn=%d", 
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=all:&st=%d&qn=%d", 
                                         HOST,
                                         LOUDSEARCH,
-                                        curloc.latitude, 
-                                        curloc.longitude, 
-                                        [@"created desc" URLEncodedString],
                                          0, 20
                                        ]];
     
@@ -406,7 +357,7 @@
     [request setDelegate:self];
     [request setDidFinishSelector:@selector(requestListDone:)];
     [request setDidFailSelector:@selector(requestListWentWrong:)];
-    [request signInHeader];
+//    [request signInHeader];
     [request startAsynchronous];
 }
 
@@ -420,6 +371,7 @@
         // create the json parser 
         NSMutableDictionary * collection = [body JSONValue];
         
+//        NSLog(@"collection: %@", collection);
         
         self.curCollection = collection;
         self.louds = [collection objectForKey:@"louds"];
@@ -461,7 +413,7 @@
     [request setDelegate:self];
     [request setDidFinishSelector:@selector(requestNextListDone:)];
     [request setDidFailSelector:@selector(requestNextListWentWrong:)];
-    [request signInHeader];
+//    [request signInHeader];
     [request startAsynchronous];
     
 }
@@ -498,18 +450,11 @@
 #pragma mark - get update info
 - (void)fetchUpdatedInfo
 {
-    if ([LocationController sharedInstance].allow == NO){
-        return;
-    }
     
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?lat=%f&lon=%f", 
-                                       HOST,
-                                       ULOUDURI, 
-                                       curloc.latitude, 
-                                       curloc.longitude]
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", 
+                                       TESTHOST,
+                                       ULOUDURI
+                                       ]
                   ];
     __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
@@ -554,7 +499,7 @@
 - (void)reloadTableViewDataSource{
     
     //  should be calling your tableviews data source model to reload
-    [self fakeFetchLoudList];
+    [self fetchLoudList];
 
     _reloading = YES;
     
@@ -580,7 +525,7 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
     [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    
+
 }
 
 - (void)loadNextLoudList
@@ -624,5 +569,7 @@
     return [NSDate date]; // should return date data source was last changed
     
 }
+
+
 
 @end

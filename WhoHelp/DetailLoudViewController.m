@@ -9,85 +9,80 @@
 #import "DetailLoudViewController.h"
 #import "Config.h"
 #import "ProfileManager.h"
-#import "UserManager.h"
 #import "Utils.h"
-#import "LocationController.h"
 #import "CustomItems.h"
 
 // lots
-//#import "ToHelpViewController.h"
-//#import "PrizeHelperViewController.h"
 #import "ProfileViewController.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
 #import "DDAlertPrompt.h"
+#import "PreAuthViewController.h"
 
 @implementation DetailLoudViewController
 
-@synthesize loud=loud_;
-@synthesize tableView=tableView_;
-@synthesize toHelpNumIndicator=toHelpNumIndicator_;
-@synthesize starNumIndicator=starNumIndicator_;
-//@synthesize helpNumIndicator=helpNumIndicator_;
-//@synthesize justLookIndicaotr=justLookIndicaotr_;
-@synthesize otherUserView=otherUserView_;
-@synthesize myView=myView_;
-@synthesize avatarImage=avatarImage_;
-@synthesize name=name_;
-@synthesize replies=replies_;
-@synthesize curCollection=curCollection_;
-@synthesize etag=etag_;
-@synthesize moreCell=moreCell_;
-@synthesize tapUser=tapUser_;
-@synthesize textView=textView_;
-@synthesize messageView=messageView_;
-@synthesize tmpPhoneNum=tmpPhoneNum_;
+@synthesize loudLink=_loudLink;
+@synthesize tableView=_tableView;
+@synthesize toHelpNumIndicator=_toHelpNumIndicator;
+@synthesize starNumIndicator=_starNumIndicator;
+@synthesize otherUserView=_otherUserView;
+@synthesize myView=_myView;
+@synthesize avatarImage=_avatarImage;
+@synthesize name=_name;
+@synthesize replies=_replies;
+@synthesize curCollection=_curCollection;
+@synthesize etag=_etag;
+@synthesize moreCell=_moreCell;
+@synthesize tapUser=_tapUser;
+@synthesize textView=_textView;
+@synthesize messageView=_messageView;
+@synthesize tmpPhoneNum=_tmpPhoneNum;
+@synthesize loudDetail=_loudDetail;
+@synthesize atUrns=_atUrns;
+@synthesize prizeUids=_prizeUids;
 @synthesize justLookButton1, justLookButton2, helpDoneButton, phoneButton, sendButton;
 
 - (void)dealloc
 {
-    [loud_ release];
-    [tableView_ release];
-    [loudCates_ release];
-    [payCates_ release];
-    [toHelpNumIndicator_ release];
-    [starNumIndicator_ release];
-//    [helpNumIndicator_ release];
-//    [justLookIndicaotr_ release];
-    [otherUserView_ release];
-    [myView_ release];
-    [avatarImage_ release];
-    [name_ release];
-    [etag_ release];
-    [curCollection_ release];
-    [replies_ release];
-    [moreCell_ release];
-    [messageView_ release];
-    [textView_ release];
+    [_loudLink release];
+    [_tableView release];
+    [_toHelpNumIndicator release];
+    [_starNumIndicator release];
+    [_otherUserView release];
+    [_myView release];
+    [_avatarImage release];
+    [_name release];
+    [_etag release];
+    [_curCollection release];
+    [_replies release];
+    [_moreCell release];
+    [_messageView release];
+    [_textView release];
+    [_atUrns release];
+    [_prizeUids release];
     [super dealloc];
 }
 
-- (NSDictionary *)loudCates
+- (NSMutableArray *)atUrns
 {
-    if (nil == loudCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
-        loudCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    if (_atUrns == nil) {
+        _atUrns = [[NSMutableArray alloc] initWithObjects:[[self.loudDetail objectForKey:@"user"] objectForKey:@"id"], nil];
     }
-    
-    return loudCates_;
+    return _atUrns;
 }
 
-- (NSDictionary *)payCates
+- (NSMutableArray *)prizeUids
 {
-    if (nil == payCates_){
-        // read the plist loud category configure
-        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"PayCate" ofType:@"plist"];
-        payCates_ = [[NSDictionary alloc] initWithContentsOfFile:myFile];
-        
+    if (_prizeUids == nil) {
+        _prizeUids = [[NSMutableArray alloc] init];
+
+        for (NSMutableDictionary *e in [self.curCollection objectForKey:@"thanks"]) {
+            
+            [_prizeUids addObject:[e objectForKey:@"id"]];
+        }
     }
     
-    return payCates_;
+    return _prizeUids;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -113,12 +108,14 @@
 {
     [super viewDidLoad];
     
+    [self grapLoudDetail];
+    
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     // common variables
     //UIColor *bgColor = [UIColor colorWithRed:245/255.0 green:243/255.0 blue:241/255.0 alpha:1.0];
     UIColor *smallFontColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:151/225.0 alpha:1.0];
    
-    NSDictionary *user = [self.loud objectForKey:@"user"];
+    NSDictionary *user = [self.loudDetail objectForKey:@"user"];
     // common variables - check is owner
     isOwner = [[ProfileManager sharedInstance].profile.urn isEqual:[user objectForKey:@"id"]];
     
@@ -136,34 +133,25 @@
     }
     
 
-    self.toHelpNumIndicator.text = [[user objectForKey:@"to_help_num"] description];
+    self.toHelpNumIndicator.text = [[user objectForKey:@"help_num"] description];
     self.starNumIndicator.text = [[user objectForKey:@"star_num"] description];
     
     self.name.text = [user objectForKey:@"name"];
-    
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        if (data != nil){
-            self.avatarImage.image = [UIImage imageWithData:data];
-        }
-    }];
+    [self.avatarImage loadImage:[user objectForKey:@"avatar_link"]];
     
     if (isOwner){
         self.myView.hidden = NO;
-//        int justlook_num = [[self.loud objectForKey:@"reply_num"] intValue] - [[self.loud objectForKey:@"help_num"] intValue];
-//
-//        [self.helpNumIndicator setTitle:[[self.loud objectForKey:@"help_num"] description] forState:UIControlStateNormal];
-//        [self.justLookIndicaotr setTitle:[NSString stringWithFormat:@"%d", justlook_num] forState:UIControlStateNormal];
     } else{
         self.otherUserView.hidden = NO;
     }
     
     // conetent  put below in table header view
     
-    CGSize theSize= [[self.loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+    CGSize theSize= [[self.loudDetail objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
                                                constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
                                                    lineBreakMode:UILineBreakModeWordWrap];
     CGFloat contentHeight = theSize.height;
-    CGFloat heightForAll = 67 + contentHeight + SMALLFONTSIZE;
+    CGFloat heightForAll = 27 + contentHeight + SMALLFONTSIZE;
     
     UIView *tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0, 61, 320, heightForAll)] autorelease];
     tableHeaderView.backgroundColor = [UIColor whiteColor];
@@ -176,62 +164,12 @@
     contentText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     contentText.opaque = YES;
     contentText.backgroundColor = [UIColor clearColor];
-    contentText.text = [self.loud objectForKey:@"content"];
+    contentText.text = [self.loudDetail objectForKey:@"content"];
     
     [tableHeaderView addSubview:contentText];
     
-    // loud category color show
-    UIImageView *loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 20+contentHeight, 320, 24)] autorelease];
-    loudCateLabel.backgroundColor = [UIColor clearColor]; 
-    loudCateLabel.opaque = NO;
-    
-    UILabel *payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
-    payCateDescLabel.textAlignment = UITextAlignmentLeft;
-    payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
-    payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
-    payCateDescLabel.textColor = [UIColor whiteColor];
-    payCateDescLabel.numberOfLines = 1;
-    payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
-    payCateDescLabel.backgroundColor = [UIColor clearColor];
-    [loudCateLabel addSubview:payCateDescLabel];
-    
-    // loud category and pay category image show
-    UIImageView *loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 16+contentHeight, 32, 32)] autorelease];
-    loudCateImage.opaque = YES;
-    loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
-    
-    UIImageView *payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
-    payCateImage.backgroundColor = [UIColor clearColor];
-    
-    [loudCateImage addSubview:payCateImage];
-    
-    // loud categories and pay categories
-    NSDictionary *loudcate = [self.loudCates objectForKey:[self.loud objectForKey:@"loudcate"]];
-    NSDictionary *paycate = [self.payCates objectForKey:[self.loud objectForKey:@"paycate"]];
-    
-    if (nil != loudcate){
-        loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
-        loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
-    }
-    
-    if (nil != paycate){
-        payCateImage.image = [UIImage imageNamed:[paycate objectForKey:@"showPic"]];
-    }
-    
-    // pay categories description
-    if ([NSNull null] == [self.loud objectForKey:@"paydesc"] || [[self.loud objectForKey:@"paydesc"] isEqualToString:@""]){
-        payCateDescLabel.text = [paycate objectForKey:@"text"];
-    } else{
-        payCateDescLabel.text = [NSString stringWithFormat:@"%@, %@",
-                                 [paycate objectForKey:@"text"],
-                                 [self.loud objectForKey:@"paydesc"]];
-    }
-    
-    [tableHeaderView addSubview:loudCateLabel];
-    [tableHeaderView addSubview:loudCateImage];
-    
     // location descrtion
-    UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 55+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
+    UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 15+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
     locationLabel.backgroundColor = [UIColor clearColor];
     
     UIImageView *locationImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"location.png"]] autorelease];
@@ -248,14 +186,14 @@
     locationDescLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     locationDescLabel.backgroundColor = [UIColor clearColor];
     
-    locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:self.loud];
+//    locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:self.loud];
     
     [locationLabel addSubview:locationDescLabel];
     
     [tableHeaderView addSubview:locationLabel];
     
     // comment infomation
-    UILabel *commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 55+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
+    UILabel *commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 15+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
     commentLabel.opaque = YES;
     commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
     commentLabel.textAlignment = UITextAlignmentRight;
@@ -269,9 +207,9 @@
     commentImage.backgroundColor = [UIColor clearColor];
     
     // comments 
-    if ([[self.loud objectForKey:@"reply_num"] intValue] >= 0){
+    if ([[self.loudDetail objectForKey:@"reply_num"] intValue] >= 0){
         commentLabel.hidden = NO;
-        commentLabel.text = [NSString stringWithFormat:@"%d 条评论", [[self.loud objectForKey:@"reply_num"] intValue]];
+        commentLabel.text = [NSString stringWithFormat:@"%d 条评论", [[self.loudDetail objectForKey:@"reply_num"] intValue]];
         
     } else {
         commentLabel.hidden = YES;
@@ -402,17 +340,6 @@
 {
     [super viewWillAppear:animated];
     
-    // check the operation enable or unable
-    int loudStatusCode = [[self.loud objectForKey:@"status"] intValue];
-    if (200 != loudStatusCode || [[Utils dateFromISOStr:[self.loud objectForKey:@"expired"]] timeIntervalSinceNow] < 0){
-        self.justLookButton1.enabled = NO;
-        self.justLookButton2.enabled = NO;
-    }
-    
-    if (300 == loudStatusCode || -100 == loudStatusCode){
-        self.helpDoneButton.enabled = NO;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(keyboardWillShow:) 
@@ -437,7 +364,7 @@
 {
     [super viewDidAppear:animated];
     // init the list
-    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
+//    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -462,7 +389,7 @@
 -(void)userInfoShow
 {
     ProfileViewController *pvc = [[ProfileViewController alloc] initWithNibName:@"ProfileViewController" bundle:nil];
-    pvc.user = self.tapUser;
+    pvc.userLink = [self.tapUser objectForKey:@"link"];
     [self.navigationController pushViewController:pvc animated:YES];
     [pvc release];
 }
@@ -472,15 +399,15 @@
     UIButton *button = (UIButton *)sender;
     NSMutableDictionary *user = nil;
     if (button.tag == -1){
-        user = [self.loud objectForKey:@"user"];
+        user = [self.loudDetail objectForKey:@"user"];
     } else{
         user = [[self.replies objectAtIndex:button.tag] objectForKey:@"user"];
     }
     self.tapUser = user;
-    NSMutableArray *prizeUids = [self.curCollection objectForKey:@"prizes"];
+//    NSMutableArray *prizeUids = [self.curCollection objectForKey:@"prizes"];
     if (isOwner && 
-        ![[self.tapUser objectForKey:@"id"] isEqual:[[self.loud objectForKey:@"user"] objectForKey:@"id"]] && 
-        ![prizeUids containsObject:[self.tapUser objectForKey:@"id"]]) {
+        ![[self.tapUser objectForKey:@"id"] isEqual:[[self.loudDetail objectForKey:@"user"] objectForKey:@"id"]] && 
+        ![self.prizeUids containsObject:[self.tapUser objectForKey:@"id"]]) {
         
         UIActionSheet *contactSheet = [[UIActionSheet alloc] 
                                        initWithTitle:nil
@@ -508,15 +435,45 @@
 
 -(IBAction)justLookAction:(id)sender
 {
-    self.textView.text = nil;
-    [self.textView becomeFirstResponder];
+    if ([ProfileManager sharedInstance].profile) {
+        self.textView.text = nil;
+        [self.textView becomeFirstResponder];
+    } else {
+        PreAuthViewController *pvc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+        [self.tabBarController presentModalViewController:pvc animated:YES];
+        [pvc release];
+    }
+    
 }
 
 #pragma mark - grap the comments
+
+- (void)grapLoudDetail
+{
+    NSURL *url = [NSURL URLWithString:self.loudLink];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    [request signInHeader];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error) {
+        if ([request responseStatusCode] == 200) {
+            NSString *response = [request responseString];
+            self.loudDetail = [response JSONValue];
+            self.curCollection = [self.loudDetail objectForKey:@"reply_collection"];
+            self.replies = [self.curCollection objectForKey:@"replies"];
+        } else if ([request responseStatusCode] == 404) {
+            [Utils warningNotification:@"信息已删除"];
+        } else {
+            [Utils warningNotification:@"获取信息失败"];
+        }
+
+    }
+}
+
 - (void)fetchReplyList
 {
     
-    NSURL *url = [NSURL URLWithString:[self.loud objectForKey:@"replies_link"]];
+    NSURL *url = [NSURL URLWithString:[self.curCollection objectForKey:@"link"]];
     
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -544,10 +501,11 @@
         
         self.curCollection = collection;
         // update this loud comments number
-        [self.loud setValue:[collection objectForKey:@"total"] forKey:@"reply_num"];
+//        [self.loud setValue:[collection objectForKey:@"total"] forKey:@"reply_num"];
         
         
         self.replies = [collection objectForKey:@"replies"];
+        self.prizeUids = nil;
         self.etag = [[request responseHeaders] objectForKey:@"Etag"];
         
         // reload the tableview data
@@ -621,7 +579,7 @@
 
 - (void)deleteLoud
 {
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.loud objectForKey:@"link"]]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.loudDetail objectForKey:@"link"]]];
     [request setDelegate:self];
     [request setRequestMethod:@"DELETE"];
     [request setDidFinishSelector:@selector(requestDeleteLoudDone:)];
@@ -635,7 +593,7 @@
     NSInteger code = [request responseStatusCode];
     if (200 == code){
         
-        [self.loud setValue:[NSNumber numberWithInt:-100] forKey:@"status"];
+        [self.loudDetail setValue:@"del" forKey:@"status"];
         [self.navigationController popViewControllerAnimated:YES];
         
     } else{
@@ -718,16 +676,7 @@
     } 
     
     
-    // avatar
-    [cell retain]; // #{ for tableview may dealloc
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        
-        if (nil != data){
-            cell.avatarImage.image = [UIImage imageWithData: data];
-        }
-        
-        [cell release]; // #} relase it
-    }];
+    [cell.avatarImage loadImage:[user objectForKey:@"avatar_link"]];
     
     cell.button.tag = indexPath.row;
     [cell.button addTarget:self action:@selector(avatarButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -736,23 +685,19 @@
     cell.contentLabel.text = lenContent;
     
     // star prize
-    NSMutableArray *prizeUids = [self.curCollection objectForKey:@"prizes"];
-    if ([prizeUids containsObject:[[reply objectForKey:@"user"] objectForKey:@"id"]]) {
+
+    if ([self.prizeUids containsObject:[[reply objectForKey:@"user"] objectForKey:@"id"]]) {
         cell.starLogo.hidden = NO;
     }else {
         cell.starLogo.hidden = YES;
     }
     
     // show phone logo
-    if (1 == [[reply objectForKey:@"is_help"] intValue]){
+    if (1 == [[reply objectForKey:@"has_phone"] intValue]){
         cell.phoneLogo.hidden = NO;
     } else{
         cell.phoneLogo.hidden = YES;
     }
-    
-    // location infomation
-    [reply setObject:[self.loud objectForKey:@"loudcate"] forKey:@"loudcate"];
-    cell.locationLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:reply];
     
     
     // date time
@@ -768,8 +713,7 @@
 {
     if (indexPath.row == [self.replies count]) {
 		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
-	}
-	else {
+	} else {
 		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
 	}
 }
@@ -821,50 +765,58 @@
 {
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-    int interval = [[Utils dateFromISOStr:[self.loud objectForKey:@"expired"]] timeIntervalSinceNow];
-    if (indexPath.row < [self.replies count] && 
-        200 == [[self.loud objectForKey:@"status"] intValue] && 
-        interval > 0){
-        
-        NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
-        NSMutableDictionary *user= [reply objectForKey:@"user"];
-        if (isOwner && 1 == [[reply objectForKey:@"is_help"] intValue]){
-            // contact the loud's owner.
-            UIDevice *device = [UIDevice currentDevice];
-            UIActionSheet *contactSheet = nil;
-            if ([[device model] isEqualToString:@"iPhone"] ) {
+    if (indexPath.row < [self.replies count]) {
+        if ([ProfileManager sharedInstance].profile) {
+            if (![[self.loudDetail objectForKey:@"status"] isEqualToString:@"close"]){
                 
-                contactSheet = [[UIActionSheet alloc] 
-                                               initWithTitle:nil
-                                               delegate:self 
-                                               cancelButtonTitle:@"取消" 
-                                               destructiveButtonTitle:nil 
-                                               otherButtonTitles:@"电话", @"短信", @"回复", nil];
+                NSMutableDictionary *reply = [self.replies objectAtIndex:indexPath.row];
+                NSMutableDictionary *user= [reply objectForKey:@"user"];
+                if (isOwner && 1 == [[reply objectForKey:@"is_help"] intValue]){
+                    // contact the loud's owner.
+                    UIDevice *device = [UIDevice currentDevice];
+                    UIActionSheet *contactSheet = nil;
+                    if ([[device model] isEqualToString:@"iPhone"] ) {
+                        
+                        contactSheet = [[UIActionSheet alloc] 
+                                        initWithTitle:nil
+                                        delegate:self 
+                                        cancelButtonTitle:@"取消" 
+                                        destructiveButtonTitle:nil 
+                                        otherButtonTitles:@"电话", @"短信", @"回复", nil];
+                    } else {
+                        
+                        contactSheet = [[UIActionSheet alloc] 
+                                        initWithTitle:[NSString stringWithFormat:@"%@: %@", @"联系", [user objectForKey:@"phone"]]
+                                        delegate:self 
+                                        cancelButtonTitle:@"取消" 
+                                        destructiveButtonTitle:nil 
+                                        otherButtonTitles:@"回复", nil];
+                    }
+                    
+                    contactSheet.tag = 1;
+                    [contactSheet showFromTabBar:self.tabBarController.tabBar];
+                    [contactSheet release];
+                    
+                    self.tapUser = user;
+                } else{
+                    
+                    self.textView.text = [NSString stringWithFormat:@"@%@ ", [user objectForKey:@"name"]];
+                    [self.atUrns addObject:[user objectForKey:@"id"]];
+                    [self.textView becomeFirstResponder];
+                }
+                
+                
             } else {
-                
-                contactSheet = [[UIActionSheet alloc] 
-                                               initWithTitle:[NSString stringWithFormat:@"%@: %@", @"联系", [user objectForKey:@"phone"]]
-                                               delegate:self 
-                                               cancelButtonTitle:@"取消" 
-                                               destructiveButtonTitle:nil 
-                                               otherButtonTitles:@"回复", nil];
+                [Utils warningNotification:@"求助已关闭"];
             }
-            
-            contactSheet.tag = 1;
-            [contactSheet showFromTabBar:self.tabBarController.tabBar];
-            [contactSheet release];
-            
-            self.tapUser = user;
-        } else{
+        } else {
+            PreAuthViewController *pvc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+            [self.tabBarController presentModalViewController:pvc animated:YES];
+            [pvc release];
+        } 
 
-            self.textView.text = [NSString stringWithFormat:@"@%@ ", [user objectForKey:@"name"]];
-            [self.textView becomeFirstResponder];
-        }
-        
-        
-    } else {
-        [Utils warningNotification:@"无法操作，求助已过期或已完成。"];
     }
+        
 
 }
 
@@ -887,6 +839,7 @@
         } else{
             
             self.textView.text = [NSString stringWithFormat:@"@%@ ", [self.tapUser objectForKey:@"name"]];
+            [self.atUrns addObject:[self.tapUser objectForKey:@"id"]];
             [self.textView becomeFirstResponder];
             
         }
@@ -907,10 +860,9 @@
     //[self.loadingIndicator startAnimating];
     
     NSDictionary *prePost = [NSDictionary  dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithBool: YES], @"has_star",
-                             [self.loud objectForKey:@"id"], @"loud_urn",
+                             [self.loudDetail objectForKey:@"id"], @"loud_urn",
                              [self.tapUser objectForKey:@"id"], @"user_urn",
-                             @"非常感谢你提供的帮助", @"content",
+                             self.tapUser, @"user",
                              nil];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, PRIZEURI]];
@@ -931,55 +883,25 @@
 - (void)prizeRequestFinished:(ASIHTTPRequest *)request
 {
     NSInteger code = [request responseStatusCode];
-    if (201 == code){
+    if (200 == code){
         
-//        [self.navigationController popViewControllerAnimated:YES];
-        [self fadeInMsgWithText:@"感谢成功" rect:CGRectMake(0, 0, 80, 66)];
+//        [self fadeInMsgWithText:@"感谢成功" rect:CGRectMake(0, 0, 80, 66)];
         [self fetchReplyList];
         
-    } else if (412 == code) {
+    } else {
         
-        NSString *body = [request responseString];
-        NSDictionary *reason = [body JSONValue];
-        [self.loud setValuesForKeysWithDictionary:reason];        
+         [Utils warningNotification:@"操作失败"];
         
-        // notification
-        int statusCode = [[reason objectForKey:@"status"] intValue];
-        if (300 == statusCode){
-            
-//            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
-            [Utils warningNotification:@"无法操作，求助已完成"];
-            
-        } else if (100 == statusCode){
-            
-//            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
-            [Utils warningNotification:@"无法操作，求助过期"];
-            
-        }
-        
-    } else if (404 == code) {
-        
-        [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
-        
-        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
-        
-    } else{
-        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
     }
     
-    // send ok cancel
-//    [self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    
     
 }
 
 
 - (void)prizeRequestFailed:(ASIHTTPRequest *)request
 {
-    // notify the user
-//    [self.loadingIndicator stopAnimating];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
@@ -1053,7 +975,7 @@
 -(void)sendText:(id)sender
 {
 //    NSLog(@"sent now");
-    [self fakeSendPost];
+    [self sendPost];
 
 }
 
@@ -1127,6 +1049,7 @@
     if ([text isEqualToString:@"\n"]){
         
         [growingTextView resignFirstResponder];
+        self.atUrns = nil;
         
         return NO;
     }
@@ -1246,10 +1169,10 @@
 {
     
     NSDictionary *preInfo = [NSDictionary  dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithInt:300], @"status",
+                             @"close", @"status",
                              nil];
     
-    NSURL *url = [NSURL URLWithString:[self.loud objectForKey:@"link"]];
+    NSURL *url = [NSURL URLWithString:[self.loudDetail objectForKey:@"link"]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
     [request appendPostData:[[preInfo JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1270,8 +1193,9 @@
     if ([request responseStatusCode] == 200){
         
         // update profile
-        [self.loud setObject:[NSNumber numberWithInt:300] forKey:@"status"];
-        [self.navigationController popViewControllerAnimated:YES];
+//        [self.loud setObject:@"close" forKey:@"status"];
+//        [self.navigationController popViewControllerAnimated:YES];
+        [self fadeInMsgWithText:@"已关闭" rect:CGRectMake(0, 0, 80, 66)];
         
     } else{
 
@@ -1308,42 +1232,18 @@
 
 #pragma mark send post
 #pragma mark - send post
-- (void)fakeSendPost
-{
-    if ([CLLocationManager locationServicesEnabled]){
-        [[LocationController sharedInstance].locationManager startUpdatingLocation];
-//        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.sendButton.enabled = NO;
-        [self performSelector:@selector(sendPost) withObject:nil afterDelay:1.5];
-    } else{
-        [Utils tellNotification:@"请开启定位服务，乐帮需获取地理位置为你服务。"];
-    }       
-}
 
 - (void)sendPost
 {
-    
-    if (NO == [LocationController sharedInstance].allow){
-        [Utils tellNotification:@"乐帮需要获取你位置信息的许可，以便提供帮助的人查看你的求助地点。"];
-        return;
-    }
-    
-    //[self.loadingIndicator startAnimating];
-    
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    
-    
+    NSLog(@"urns: %@", self.atUrns);
     NSDictionary *prePost = [NSDictionary  dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithDouble:curloc.latitude], @"lat",
-                             [NSNumber numberWithDouble:curloc.longitude], @"lon",
-                             [NSNumber numberWithBool: hasPhone], @"is_help",
-                             [self.loud objectForKey:@"id"], @"urn",
+                             [NSNumber numberWithBool: hasPhone], @"has_phone",
+                             [self.loudDetail objectForKey:@"id"], @"loud_urn",
                              [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"content",
+                             self.atUrns, @"ats",
                              nil];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, REPLYURI]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", TESTHOST, REPLYURI]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[[prePost JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
@@ -1360,33 +1260,10 @@
     NSInteger code = [request responseStatusCode];
     if (201 == code){
         
+        self.atUrns = nil;
         [self.textView resignFirstResponder];
-        [self fadeInMsgWithText:@"回复成功" rect:CGRectMake(0, 0, 80, 66)];
+//        [self fadeInMsgWithText:@"回复成功" rect:CGRectMake(0, 0, 80, 66)];
         [self fetchReplyList]; // TODO 
-        
-    } else if (412 == code) {
-        
-        NSString *body = [request responseString];
-        NSDictionary *reason = [body JSONValue];
-        [self.loud setValuesForKeysWithDictionary:reason];        
-        
-        // notification
-        int statusCode = [[reason objectForKey:@"status"] intValue];
-        if (300 == statusCode){
-            
-//            [self fadeOutMsgWithText:@"求助已完成" rect:CGRectMake(0, 0, 80, 66)];
-            [Utils warningNotification:@"无法操作，求助已完成"];
-        } else if (100 == statusCode){
-            
-//            [self fadeOutMsgWithText:@"求助已过期" rect:CGRectMake(0, 0, 80, 66)];
-            [Utils warningNotification:@"无法操作，求助已过期"];
-        }
-        
-    } else if (404 == code) {
-        
-        [self.loud setObject:[NSNumber numberWithInt:-100] forKey:@"status"];
-        
-        [self fadeOutMsgWithText:@"求助已删除" rect:CGRectMake(0, 0, 80, 66)];
         
     } else{
         

@@ -9,57 +9,40 @@
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
 #import "HPGrowingTextView.h"
+#import "AsyncImageView.h"
 
 @interface DetailLoudViewController : UIViewController <HPGrowingTextViewDelegate, EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
 @private
-    NSMutableDictionary *loud_;
     
-    UITableView *tableView_;
     BOOL isOwner;
-    NSDictionary *loudCates_, *payCates_;
-    UILabel *toHelpNumIndicator_, *starNumIndicator_;
 //    UIButton *helpNumIndicator_, *justLookIndicaotr_;
     
-    UIView *otherUserView_, *myView_;
-    UIImageView *avatarImage_;
-    UILabel *name_;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
     
     BOOL _reloading, hasPhone;
     
-    NSMutableDictionary *curCollection_;
-    NSMutableArray *replies_;
-    NSString *etag_;
-    UITableViewCell *moreCell_;
-    
-    NSMutableDictionary *tapUser_;
-    
-    UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *phoneButton, *sendButton;
-    
-    UIView *messageView_;
-    HPGrowingTextView *textView_;
-    NSString *tmpPhoneNum_;
 }
 
-@property (nonatomic, retain) NSMutableDictionary *loud;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain, readonly) NSDictionary *loudCates, *payCates;
-@property (nonatomic, retain) IBOutlet UILabel *toHelpNumIndicator, *starNumIndicator;
-//@property (nonatomic, retain) IBOutlet UIButton *helpNumIndicator, *justLookIndicaotr;
-@property (nonatomic, retain) IBOutlet UIView *otherUserView, *myView;
-@property (nonatomic, retain) IBOutlet UIImageView *avatarImage;
-@property (nonatomic, retain) IBOutlet UILabel *name;
-@property (nonatomic, retain) NSMutableArray *replies;
-@property (nonatomic, retain) NSMutableDictionary *curCollection;
-@property (nonatomic, retain) NSString *etag;
-@property (nonatomic, retain) UITableViewCell *moreCell;
-@property (nonatomic, retain) NSMutableDictionary *tapUser;
-@property (nonatomic, retain) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *phoneButton, *sendButton;
-@property (nonatomic, retain) UIView *messageView;
-@property (nonatomic, retain) HPGrowingTextView *textView;
-@property (nonatomic, retain) NSString *tmpPhoneNum;
+@property (nonatomic, strong) NSString *loudLink;
+@property (nonatomic, strong) NSMutableDictionary *loudDetail;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UILabel *toHelpNumIndicator, *starNumIndicator;
+@property (nonatomic, strong) IBOutlet UIView *otherUserView, *myView;
+@property (nonatomic, strong) IBOutlet AsyncImageView *avatarImage;
+@property (nonatomic, strong) IBOutlet UILabel *name;
+@property (nonatomic, strong) NSMutableArray *replies;
+@property (nonatomic, strong) NSMutableDictionary *curCollection;
+@property (nonatomic, strong) NSString *etag;
+@property (nonatomic, strong) UITableViewCell *moreCell;
+@property (nonatomic, strong) NSMutableDictionary *tapUser;
+@property (nonatomic, strong) IBOutlet UIButton *justLookButton1, *justLookButton2, *helpDoneButton, *phoneButton, *sendButton;
+@property (nonatomic, strong) UIView *messageView;
+@property (nonatomic, strong) HPGrowingTextView *textView;
+@property (nonatomic, strong) NSString *tmpPhoneNum;
+@property (nonatomic, strong) NSMutableArray *atUrns;
+@property (nonatomic, strong) NSMutableArray *prizeUids;
 
 -(IBAction)avatarButtonAction:(id)sender;
 
@@ -70,5 +53,6 @@
 -(void)fetchNextReplyList;
 -(void)deleteLoud;
 - (void)updateLoudInfo;
+- (void)grapLoudDetail;
 
 @end

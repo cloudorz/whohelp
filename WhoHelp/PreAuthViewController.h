@@ -9,18 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface PreAuthViewController : UIViewController
-{
-@private
-    UIButton *authLinkDouban_;
-    UIButton *authLinkWeibo_;
-    UIButton *authLinkRenren_;
 
 
-}
-
-@property (nonatomic, retain) IBOutlet UIButton *authLinkDouban;
-@property (nonatomic, retain) IBOutlet UIButton *authLinkWeibo;
-@property (nonatomic, retain) IBOutlet UIButton *authLinkRenren;
+@property (nonatomic, strong) IBOutlet UIButton *authLinkDouban;
+@property (nonatomic, strong) IBOutlet UIButton *authLinkWeibo;
+@property (nonatomic, strong) IBOutlet UIButton *authLinkRenren;
+@property (nonatomic, strong) IBOutlet UINavigationItem *myNavigationItem;
 
 
 - (IBAction)linkToAuthDouban:(id)sender;

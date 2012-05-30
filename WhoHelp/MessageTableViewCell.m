@@ -11,18 +11,18 @@
 
 @implementation MessageTableViewCell
 
-@synthesize  contentLabel, timeLabel, avatarImage;
+@synthesize contentLabel=_contentLabel;
+@synthesize timeLabel=_timeLabel;
 
 -(void)dealloc
 {
-    [contentLabel release];
-    [timeLabel release];
-    [avatarImage release];
+    [_contentLabel release];
+    [_timeLabel release];
     
     [super dealloc];
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -35,7 +35,7 @@
         
         
         // reply content view
-        UIView *replyContentView = [[[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 47)] autorelease];
+        UIView *replyContentView = [[[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, contentHeight + 35)] autorelease];
         replyContentView.backgroundColor = [UIColor whiteColor];
         replyContentView.opaque = YES;
         // FIXME cost point
@@ -46,26 +46,8 @@
         [replyContentView.layer setShadowOpacity:0.25f];
         [replyContentView.layer setCornerRadius:5.0f];
         
-        UIImageView *tri = [[[UIImageView alloc] initWithFrame:CGRectMake(275, 17, 9, 13)] autorelease];
-        tri.backgroundColor = [UIColor clearColor];
-        tri.image = [UIImage imageNamed:@"graytri.png"];
-        
-        [replyContentView addSubview:tri];
-        
-        // about avatar image 
-        self.avatarImage = [[[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 35, 35)] autorelease];
-        self.avatarImage.opaque = YES;
-        
-        [replyContentView addSubview:self.avatarImage];
-        
-        
-        UIImageView *avatarFrame = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarFrame.png"]] autorelease];
-        avatarFrame.frame = CGRectMake(6, 6, 35, 36);
-        avatarFrame.backgroundColor = [UIColor clearColor];
-        [replyContentView addSubview:avatarFrame];
-        
         // reply content view - content label
-        self.contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(51, 9, 200, 15)] autorelease];
+        self.contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12, 9, 272, contentHeight)] autorelease];
         self.contentLabel.backgroundColor = [UIColor clearColor];
         self.contentLabel.font = [UIFont systemFontOfSize:14.0f];
         self.contentLabel.textAlignment = UITextAlignmentLeft;
@@ -76,13 +58,13 @@
         
         
         // reply content view - time show
-        UIImageView *timeImage = [[[UIImageView alloc] initWithFrame:CGRectMake(51, 32, 9, 9)] autorelease];
+        UIImageView *timeImage = [[[UIImageView alloc] initWithFrame:CGRectMake(12, contentHeight+17, 9, 9)] autorelease];
         timeImage.image = [UIImage imageNamed:@"time.png"];
         timeImage.backgroundColor = [UIColor clearColor];
         
         [replyContentView addSubview:timeImage];
         
-        self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(64, 32, 70, 10)] autorelease];
+        self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(25, contentHeight+17, 70, 10)] autorelease];
         self.timeLabel.backgroundColor = [UIColor clearColor];
         self.timeLabel.opaque = YES;
         self.timeLabel.textAlignment = UITextAlignmentLeft;

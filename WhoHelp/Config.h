@@ -10,8 +10,9 @@
 #define WhoHelp_Config_h
 
 // new
-#define HOST @"http://i.n2u.in"
-#define APPKEY @"apple2011122801"
+#define TESTHOST @"http://help.test"
+#define HOST @"http://help.test"
+#define APPKEY @"nausicaa"
 #define SECRET @"3afb9fb7f605476d92b9ee7000b41ba0"
 #define LOUDURI @"/l/"
 #define LOUDSEARCH @"/s"

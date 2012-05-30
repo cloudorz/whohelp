@@ -23,7 +23,7 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize tabBarController=tabBarController_;
-@synthesize nearbyItem, myListItem, helpItem, prizeItem, settingItem;
+@synthesize nearbyItem, myListItem, settingItem;
 
 - (void)dealloc
 {
@@ -34,8 +34,6 @@
     [tabBarController_ release];
     [nearbyItem release]; 
     [myListItem release]; 
-    [helpItem release]; 
-    [prizeItem release]; 
     [settingItem release];
     [super dealloc];
 }
@@ -47,7 +45,7 @@
     // Override point for customization after application launch.
     self.window.rootViewController = self.tabBarController;
     // select the middle post help tab bar item.
-    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
     self.tabBarController.delegate = self;
     self.tabBarController.tabBar.opaque = YES;
     
@@ -59,10 +57,10 @@
                       withFinishedUnselectedImage:[UIImage imageNamed:@"nearby.png"]];
         [self.myListItem setFinishedSelectedImage:[UIImage imageNamed:@"mylisto.png"] 
                       withFinishedUnselectedImage:[UIImage imageNamed:@"mylist.png"]];
-        [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
-                    withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
-        [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
-                     withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
+//        [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
+//                    withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
+//        [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
+//                     withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
         [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"]
                        withFinishedUnselectedImage:[UIImage imageNamed:@"setting.png"]];
     }
@@ -304,9 +302,9 @@
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if (nil == [ProfileManager sharedInstance].profile){
+    if (nil == [ProfileManager sharedInstance].profile && 12 != viewController.tabBarItem.tag){
         PreAuthViewController *preAVC = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
-        [self.tabBarController presentModalViewController:preAVC animated:NO];
+        [self.tabBarController presentModalViewController:preAVC animated:YES];
         [preAVC release];
         
         return NO;

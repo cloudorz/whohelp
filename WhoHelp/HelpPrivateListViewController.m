@@ -9,7 +9,6 @@
 #import "HelpPrivateListViewController.h"
 #import "CustomItems.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
-#import "UserManager.h"
 #import "SBJson.h"
 #import "Utils.h"
 #import "Config.h"
@@ -18,20 +17,22 @@
 
 @implementation HelpPrivateListViewController
 
-@synthesize messages=messages_;
-@synthesize curCollection=curCollection_;
-@synthesize lastUpdated=lastUpdated_;
-@synthesize tableView=tableView_;
-@synthesize timer=timer_;
+@synthesize messages=_messages;
+@synthesize curCollection=_curCollection;
+@synthesize lastUpdated=_lastUpdated;
+@synthesize tableView=_tableView;
+@synthesize moreCell=_moreCell;
+@synthesize etag=_etag;
+
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
-    [messages_ release];
-    [curCollection_ release];
-    [tableView_ release];
-    [timer_ release];
-    [lastUpdated_ release];
+    [_tableView release];
+    [_curCollection release];
+    [_lastUpdated release];
+    [_messages release];
+    [_etag release];
     [super dealloc];
 }
 
@@ -80,12 +81,6 @@
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"我的消息"] autorelease];
     
-    // timer
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
-                                                  target:self 
-                                                selector:@selector(fetchUpdatedInfo) 
-                                                userInfo:nil 
-                                                 repeats:YES];
     _loadloud = NO;
     
 }
@@ -95,7 +90,7 @@
     [super viewDidUnload];
     
     _refreshHeaderView=nil;
-    [self.timer invalidate];
+//    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -112,15 +107,6 @@
     [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -145,53 +131,121 @@
 
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+
+-(UITableViewCell *)createMoreCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moretag"] autorelease];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
     
+	if (nil == self.curCollection){
+        labelNumber.text = @"正在加载...";
+    } else if (nil == [self.curCollection objectForKey:@"next"]){
+        labelNumber.text = @"";
+    } else {
+        labelNumber.text = @"获取更多";
+    }
     
-    static NSString *CellIdentifier = @"messageCateCell";
+	[labelNumber setTag:1];
+	labelNumber.backgroundColor = [UIColor clearColor];
+	labelNumber.font = [UIFont boldSystemFontOfSize:14];
+	[cell.contentView addSubview:labelNumber];
+	[labelNumber release];
+	
+    self.moreCell = cell;
+    
+    return self.moreCell;
+}
+
+- (UITableViewCell *)creatNormalCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *msg = [self.messages objectAtIndex:indexPath.row];
+
+    NSString *lenContent = [msg objectForKey:@"content"];
+    
+    static NSString *CellIdentifier;
+    CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                  constrainedToSize:CGSizeMake(272.0f, CGFLOAT_MAX) 
+                                      lineBreakMode:UILineBreakModeWordWrap].height;
+    
+    CellIdentifier = [NSString stringWithFormat:@"msgEntry:%.0f", contentHeight];
     
     MessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    
     if (cell == nil) {
         
         cell = [[[MessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
-                                            reuseIdentifier:CellIdentifier] autorelease];
+                                      reuseIdentifier:CellIdentifier 
+                                               height:contentHeight] autorelease];
     } 
     
     
-    NSMutableDictionary *message = [self.messages objectAtIndex:indexPath.row];
-    
-    // avatar
-    
-    NSDictionary *user = [message objectForKey:@"user"];
-    
-    [cell retain]; // #{ for tableview may dealloc
-    [[UserManager sharedInstance] fetchPhotoRequestWithLink:user forBlock:^(NSData *data){
-        
-        if (nil != data){
-            cell.avatarImage.image = [UIImage imageWithData: data];
-        }
-        
-        [cell release]; // #} relase it
-    }];
-    
     // content
-    if ([[message objectForKey:@"label"] isEqualToString:@"help"]) {
-        cell.contentLabel.text = [NSString stringWithFormat:@"%@的求助有人提供帮助", [user objectForKey:@"name"]];
-    } else{
-        cell.contentLabel.text = [NSString stringWithFormat:@"%@的求助有了新的回复", [user objectForKey:@"name"]]; 
-    }
+    cell.contentLabel.text = lenContent;
     
     
-    if (nil == [message objectForKey:@"createdTime"]){
-        [message setObject:[Utils dateFromISOStr:[message objectForKey:@"created"]] forKey:@"createdTime"];
+    if (nil == [msg objectForKey:@"createdTime"]){
+        [msg setObject:[Utils dateFromISOStr:[msg objectForKey:@"created"]] forKey:@"createdTime"];
     }
     
     // date time
-    cell.timeLabel.text = [Utils descriptionForTime:[message objectForKey:@"createdTime"]];
+    cell.timeLabel.text = [Utils descriptionForTime:[msg objectForKey:@"createdTime"]];
     
     
     return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == [self.messages count]) {
+		return [self createMoreCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self creatNormalCell:tableView cellForRowAtIndexPath:indexPath];
+	}
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //return [indexPath row] * 20;
+    if (indexPath.row < [self.messages count]){
+        
+        NSDictionary *reply = [self.messages objectAtIndex:indexPath.row];
+        NSDictionary *user = [reply objectForKey:@"user"];
+        NSString *lenContent = [NSString stringWithFormat:@"%@: %@", [user objectForKey:@"name"], [reply objectForKey:@"content"]];
+        
+        CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
+                                      constrainedToSize:CGSizeMake(272.0f, CGFLOAT_MAX) 
+                                          lineBreakMode:UILineBreakModeWordWrap].height;
+        
+        return contentHeight + 40;
+    } else{
+        
+        return 40.0f;
+    }
+}
+
+- (void)loadNextReplyList
+{
+    UILabel *label = (UILabel*)[self.moreCell.contentView viewWithTag:1];
+    label.text = @"正在加载..."; // bug no reload table not show it.
+    
+    [self fetchNextMsgList];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (nil != self.curCollection && 
+        indexPath.row == [self.messages count] && 
+        nil != [self.curCollection objectForKey:@"next"]) 
+    {
+        
+        [self performSelector:@selector(loadNextReplyList) withObject:nil afterDelay:0.2];
+    }
 }
 
 
@@ -199,8 +253,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!_loadloud){
-        [self fetchLoud:[[self.messages objectAtIndex:indexPath.row] objectForKey:@"loud_link"]];
+    NSMutableDictionary *msg = [self.messages objectAtIndex:indexPath.row];
+    if (!_loadloud && 
+        indexPath.row < [self.messages count] && 
+        [[msg objectForKey:@"category"] isEqualToString:@"reply"]){
+
+        DetailLoudViewController *detailViewController = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
+        detailViewController.loudLink = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"obj_link"];
+
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
     }
      
 }
@@ -208,12 +270,15 @@
 - (void)fetchMsgList
 {
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, MSGURI]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?st=%d&qn=%d", HOST, MSGURI, 0, 20]];
     
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != self.lastUpdated){
-        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+//    if (nil != self.lastUpdated){
+//        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
+//    }
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
     }
     //[request setValidatesSecureCertificate:NO];
     [request setDelegate:self];
@@ -229,30 +294,21 @@
     if (200 == code){
         NSString *body = [request responseString];
         
-        //NSLog(@"body: %@", body);
         // create the json parser 
         NSMutableDictionary * collection = [body JSONValue];
         self.curCollection = collection;
         
-        NSMutableArray *tmpArray = [collection objectForKey:@"messages"];
-        
-        if (tmpArray.count > 0){
-            [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
-        }
-        
-        if (self.messages != nil) {
-            [tmpArray addObjectsFromArray:self.messages];
-        }
-        self.messages = tmpArray;
-        
-        self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
+        self.messages = [collection objectForKey:@"messages"];
+         self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+//        self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
         
         // reload the tableview data
         [self.tableView reloadData];
         
-        [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil ];
+//        [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil ];
         
-        
+    } else if (304 == code){
+        // do nothing
     } else{
         
         [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
@@ -268,97 +324,51 @@
     
 }
 
-- (void)fetchLoud:(NSString *)urlString
+- (void)fetchNextMsgList
 {
+    if (nil == self.messages || nil == [self.curCollection objectForKey:@"next"]){
+        return;
+    }
     
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    _loadloud = YES;
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-
-    //[request setValidatesSecureCertificate:NO];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
     [request setDelegate:self];
-    [request setDidFinishSelector:@selector(requestLoudDone:)];
-    [request setDidFailSelector:@selector(requestLoudWentWrong:)];
+    [request setDidFinishSelector:@selector(requestNextListDone:)];
+    [request setDidFailSelector:@selector(requestNextListWentWrong:)];
     [request signInHeader];
     [request startAsynchronous];
+    
 }
 
-- (void)requestLoudDone:(ASIHTTPRequest *)request
+- (void)requestNextListDone:(ASIHTTPRequest *)request
 {
     NSInteger code = [request responseStatusCode];
     if (200 == code){
+        
         NSString *body = [request responseString];
-        
-        //NSLog(@"body: %@", body);
         // create the json parser 
-        NSMutableDictionary * loud = [body JSONValue];
-        DetailLoudViewController *detailViewController = [[DetailLoudViewController alloc] initWithNibName:@"DetailLoudViewController" bundle:nil];
-        detailViewController.loud = loud;
-
-        [self.navigationController pushViewController:detailViewController animated:YES];
-        [detailViewController release];
+        NSMutableDictionary *collection = [body JSONValue];
         
-    } else{        
-
-        [self fadeOutMsgWithText:@"求助信息已无效" rect:CGRectMake(0, 0, 100, 66)];
+        self.curCollection = collection;
+        [self.messages addObjectsFromArray:[collection objectForKey:@"replies"]];
         
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else{
+        
+        [self fadeOutMsgWithText:@"获取数据失败" rect:CGRectMake(0, 0, 80, 66)];
     }
-    _loadloud = NO;
+    
 }
 
-- (void)requestLoudWentWrong:(ASIHTTPRequest *)request
+- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
-    NSLog(@"request loud list: %@", [error localizedDescription]);
+    NSLog(@"request next loud list: %@", [error localizedDescription]);
     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
-    _loadloud = NO;
+    
 }
 
-#pragma mark - get update info
-- (void)fetchUpdatedInfo
-{
-
-    // make json data for post
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, UMSGURI]];
-    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil != self.lastUpdated){
-        [request addRequestHeader:@"If-Modified-Since" value:self.lastUpdated];
-    }
-    //[request setValidatesSecureCertificate:NO];
-    [request setCompletionBlock:^{
-        // Use when fetching text data
-        
-        if (200 == [request responseStatusCode]) {
-            NSString *body = [request responseString];
-            NSDictionary *info = [body JSONValue];
-            
-            
-            int messageNum = [[info objectForKey:@"num"] intValue];
-            if (messageNum > 0 ){
-                [[[self.tabBarController.tabBar items] objectAtIndex:1] 
-                 setBadgeValue:[NSString stringWithFormat:@"%d", messageNum]];
-            } else{
-                [[[self.tabBarController.tabBar items] objectAtIndex:1] setBadgeValue:nil];
-            }
-            
-            
-        } else{
-            NSLog(@"error: %@", @"非正常返回");
-        }
-        
-    }];
-    
-    [request setFailedBlock:^{
-        NSError *error = [request error];
-        NSLog(@"network link error:%@", [error localizedDescription]);
-
-    }];
-    [request signInHeader];
-    [request startAsynchronous];
-
-}
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

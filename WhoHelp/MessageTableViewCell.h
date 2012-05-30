@@ -9,13 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MessageTableViewCell : UITableViewCell
-{
-@private
-    UIImageView *avatarImage;
-    UILabel *contentLabel, *timeLabel;
-}
 
-@property (nonatomic, retain) UIImageView *avatarImage;
-@property (nonatomic, retain) UILabel *contentLabel, *timeLabel;
+@property (nonatomic, strong) UILabel *contentLabel, *timeLabel;
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight;
 
 @end

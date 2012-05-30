@@ -37,7 +37,7 @@
 			if (!sISO8601) {
 				sISO8601 = [[NSDateFormatter alloc] init];
 				[sISO8601 setTimeStyle:NSDateFormatterFullStyle];
-				[sISO8601 setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+				[sISO8601 setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
 			}
 			if ([str hasSuffix:@"Z"]) {
 				str = [str stringByReplacingOccurrencesOfString:@"Z" withString:@"-0000"];
