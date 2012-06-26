@@ -10,7 +10,6 @@
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "ASIFormDataRequest.h"
 #import "Utils.h"
-#import "Config.h"
 #import "CustomItems.h"
 #import "SBJson.h"
 #import <QuartzCore/QuartzCore.h>

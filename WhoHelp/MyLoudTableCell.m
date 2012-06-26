@@ -49,12 +49,12 @@
         [replyContentView.layer setCornerRadius:5.0f];
         
         // reply content view - content label
-        self.contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, 228, contentHeight)] autorelease];
+        self.contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, 268, contentHeight)] autorelease];
         self.contentLabel.backgroundColor = [UIColor clearColor];
         self.contentLabel.font = [UIFont systemFontOfSize:14.0f];
         self.contentLabel.textAlignment = UITextAlignmentLeft;
+        self.contentLabel.lineBreakMode = UILineBreakModeCharacterWrap;
         self.contentLabel.numberOfLines = 0;
-        self.contentLabel.lineBreakMode = UILineBreakModeWordWrap;
         
         [replyContentView addSubview:self.contentLabel];
         

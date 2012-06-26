@@ -7,7 +7,6 @@
 //
 
 #import "ASIHTTPRequest+HeaderSignAuth.h"
-#import "Config.h"
 #import "ProfileManager.h"
 #import "OAHMAC_SHA1SignatureProvider.h"
 #import "NSString+URLEncoding.h"

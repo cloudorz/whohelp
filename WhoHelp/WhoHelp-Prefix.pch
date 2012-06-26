@@ -13,3 +13,43 @@
     #import <Foundation/Foundation.h>
     #import <CoreData/CoreData.h>
 #endif
+
+
+#ifndef WhoHelp_Config_h
+#define WhoHelp_Config_h
+
+// new
+#define HOST @"http://192.168.0.102"
+#define APPKEY @"nausicaa"
+#define SECRET @"3afb9fb7f605476d92b9ee7000b41ba0"
+#define LOUDURI @"/l/"
+#define LOUDSEARCH @"/s"
+#define USERURI @"/u/"
+#define REPLYURI @"/reply/"
+#define PRIZEURI @"/prize/"
+#define UPLOADURI @"/upload"
+#define DURI @"/device/"
+#define MSGURI @"/msg/"
+#define ULOUDURI @"/loudupdate"
+#define UMSGURI @"/msgupdate"
+#define GKEY @"AIzaSyBlljzdGrXR0IdKd0McWN-sSAcp8h_cASc"
+#define JPAPPID @"100475"
+#define JPSECRET @"c52e55612ff7cc039fbdcdbd75c37fcc"
+
+#define TEXTWIDTH 246.0f
+
+#define NAMEFONTSIZE 14.0f
+#define SMALLFONTSIZE 9.0f 
+#define TEXTFONTSIZE 15.0f
+
+// cache time
+#define PHOTODUE 6*60
+#define USERDUE 60
+
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+#endif

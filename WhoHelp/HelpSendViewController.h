@@ -7,18 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HZAnnotation.h"
 
 @interface HelpSendViewController : UIViewController <UITextViewDelegate>
-
+{
+    BOOL hasWeibo;
+}
 
 @property (strong, nonatomic) IBOutlet UITextView *helpTextView;
 @property (strong, nonatomic) IBOutlet UILabel *numIndicator;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (strong, nonatomic) UILabel *placeholderLabel;
-@property (strong, nonatomic) IBOutlet UINavigationItem *myNavigationItem;
 @property (strong, nonatomic) NSArray *locaiton;
 @property (strong, nonatomic) NSString *address;
 @property (strong, nonatomic) NSString *poi;
+@property (strong, nonatomic) NSDictionary *helpCategory;
+@property (strong, nonatomic) IBOutlet UIView *uv;
+@property (strong, nonatomic) IBOutlet UILabel *poiLabel;
+@property (strong, nonatomic) HZAnnotation *ann;
 
 
 - (void)sendButtonPressed:(id)sender;

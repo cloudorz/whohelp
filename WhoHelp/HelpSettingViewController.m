@@ -9,7 +9,6 @@
 #import "HelpSettingViewController.h"
 //#import "LawViewController.h"
 
-#import "Config.h"
 #import "Utils.h"
 #import "SBJson.h"
 #import "ProfileManager.h"
@@ -255,6 +254,13 @@
         cell.commentLabel.hidden = YES;
     }
     
+    if (nil == [loud objectForKey:@"createdTime"]){
+        [loud setObject:[Utils dateFromISOStr:[loud objectForKey:@"created"]] forKey:@"createdTime"];
+    }
+    
+    // date time
+    cell.timeLabel.text = [Utils descriptionForTime:[loud objectForKey:@"createdTime"]];
+    
     return cell;
 }
 
@@ -300,7 +306,7 @@
         NSString *content = [NSString stringWithFormat:@"%@ 报酬: %@", [loud objectForKey:@"content"], payDesc];
         
         CGFloat contentHeight= [content sizeWithFont:[UIFont systemFontOfSize:14.0f] 
-                                      constrainedToSize:CGSizeMake(228.0f, CGFLOAT_MAX) 
+                                      constrainedToSize:CGSizeMake(268.0f, CGFLOAT_MAX) 
                                           lineBreakMode:UILineBreakModeWordWrap].height;
         
         return contentHeight + 65;
@@ -315,7 +321,7 @@
     
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?q=author:%@&qs=%@&st=%d&qn=%d", 
-                                       TESTHOST,
+                                       HOST,
                                        LOUDSEARCH,
                                        [ProfileManager sharedInstance].profile.userkey,
                                        [@"created desc" URLEncodedString],

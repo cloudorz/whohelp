@@ -22,6 +22,7 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
     
     BOOL _reloading, hasPhone;
+    NSDictionary *_loudCates, *_statuses;
     
 }
 
@@ -43,6 +44,8 @@
 @property (nonatomic, strong) NSString *tmpPhoneNum;
 @property (nonatomic, strong) NSMutableArray *atUrns;
 @property (nonatomic, strong) NSMutableArray *prizeUids;
+@property (nonatomic, retain, readonly) NSDictionary *loudCates, *statuses;
+
 
 -(IBAction)avatarButtonAction:(id)sender;
 

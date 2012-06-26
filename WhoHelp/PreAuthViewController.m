@@ -8,7 +8,6 @@
 
 #import "PreAuthViewController.h"
 #import "ASIHTTPRequest.h"
-#import "Config.h"
 #import "Utils.h"
 #import "ProfileManager.h"
 #import "DoubanAuthViewController.h"
@@ -122,7 +121,7 @@
 
 - (void)authRequest: (NSString *)path
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?uid=%@", TESTHOST, path, [[UIDevice currentDevice] uniqueIdentifier]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@?uid=%@", HOST, path, [[UIDevice currentDevice] uniqueIdentifier]]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];

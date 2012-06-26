@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) UIImageView *phoneLogo, *starLogo;
 @property (nonatomic, strong) AsyncImageView *avatarImage;
-@property (nonatomic, strong) UILabel *contentLabel, *timeLabel, *locationLabel;
+@property (nonatomic, strong) UILabel *contentLabel, *timeLabel;
 @property (nonatomic, strong) UIButton *button;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)contentHeight;

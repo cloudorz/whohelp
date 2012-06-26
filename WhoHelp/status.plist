@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>close</key>
+	<dict>
+		<key>label</key>
+		<string>close</string>
+		<key>pic</key>
+		<string>food.png</string>
+		<key>desc</key>
+		<string>已关闭</string>
+	</dict>
+	<key>wait</key>
+	<dict>
+		<key>label</key>
+		<string>wait</string>
+		<key>pic</key>
+		<string>movie.png</string>
+		<key>desc</key>
+		<string>等待解答中</string>
+	</dict>
+	<key>processing</key>
+	<dict>
+		<key>label</key>
+		<string>processing</string>
+		<key>pic</key>
+		<string>gift.png</string>
+		<key>desc</key>
+		<string>解答中</string>
+	</dict>
+	<key>err</key>
+	<dict>
+		<key>label</key>
+		<string>err</string>
+		<key>pic</key>
+		<string>mony.png</string>
+		<key>desc</key>
+		<string>未知错误</string>
+	</dict>
+</dict>
+</plist>

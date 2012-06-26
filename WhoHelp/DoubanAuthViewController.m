@@ -7,7 +7,6 @@
 //
 
 #import "DoubanAuthViewController.h"
-#import "Config.h"
 #import "Utils.h"
 #import "SBJson.h"
 #import "ProfileManager.h"
@@ -57,7 +56,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.webview.scalesPageToFit =NO;
+//    self.webview.scalesPageToFit =NO;
     self.webview.delegate = self;
     [self.loading stopAnimating];
     
@@ -114,11 +113,14 @@
     for (cookie in [storage cookies]) {
         [storage deleteCookie:cookie];
     }
+
 }
+
+
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqual:TESTHOST]){
+    if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqualToString:HOST]){
         NSError *error;
         NSString *content = [NSString stringWithContentsOfURL:[request URL] 
                                                   encoding:NSUTF8StringEncoding
@@ -141,7 +143,7 @@
             } else{
                 [Utils warningNotification:@"授权失败"];
                 [self clearCookies];
-                [self dismissModalViewControllerAnimated:YES];// Animated must be 'NO', I don't why...     
+                [self dismissModalViewControllerAnimated:YES];     
             }
 
 

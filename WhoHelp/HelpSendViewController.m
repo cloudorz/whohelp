@@ -9,11 +9,10 @@
 #import "HelpSendViewController.h"
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
-#import "Config.h"
 #import "Utils.h"
 #import "ProfileManager.h"
 #import "CustomItems.h"
-#import <QuartzCore/QuartzCore.h>
+//#import <QuartzCore/QuartzCore.h>
 #import "POIViewController.h"
 
 
@@ -23,10 +22,13 @@
 @synthesize numIndicator=_numIndicator;
 @synthesize loadingIndicator=_loadingIndicator;
 @synthesize placeholderLabel=_placeholderLabel;
-@synthesize myNavigationItem=_myNavigationItem;
 @synthesize poi=_poi;
 @synthesize address=_address;
 @synthesize locaiton=_locaiton;
+@synthesize helpCategory=_helpCategory;
+@synthesize uv=_uv;
+@synthesize ann=_ann;
+@synthesize poiLabel=_poiLabel;
 
 #pragma mark - dealloc
 - (void)dealloc
@@ -35,10 +37,13 @@
     [_numIndicator release];
     [_loadingIndicator release];
     [_placeholderLabel release];
-    [_myNavigationItem release];
     [_poi release];
     [_address release];
     [_locaiton release];
+    [_helpCategory release];
+    [_uv release];
+    [_ann release];
+    [_poiLabel release];
     [super dealloc];
 }
 
@@ -67,52 +72,39 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
-    // display the keyboard
-    // you might have to play around a little with numbers in CGRectMake method
-    // they work fine with my settings
-    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12, 9, self.helpTextView.frame.size.width - 20.0, 16.0)] autorelease];
-    self.placeholderLabel.text = @"请描述你的问题";
-    
-    // placeholderLabel is instance variable retained by view controller
-    self.placeholderLabel.backgroundColor = [UIColor clearColor];
-    self.placeholderLabel.font = [UIFont systemFontOfSize: 14.0];
-    self.placeholderLabel.textColor = [UIColor lightGrayColor];
-    
-    // textView is UITextView object you want add placeholder text to
-    [self.helpTextView addSubview:self.placeholderLabel];
     
     [self.loadingIndicator stopAnimating];
-    
-    self.helpTextView.clipsToBounds = NO;
-    [self.helpTextView.layer setShadowColor:[[UIColor blackColor] CGColor]];
-    [self.helpTextView.layer setShadowRadius:0.7f];
-    [self.helpTextView.layer setShadowOffset:CGSizeMake(0, 1)];
-    [self.helpTextView.layer setShadowOpacity:0.25f];
-    
-    [self.helpTextView.layer setCornerRadius:5.0f];
     
     // hidden char numberindicator
     self.numIndicator.hidden = YES;
     // Do any additional setup after loading the view from its nib.
     
     // navigation item config
-    self.myNavigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initBackBarButtonItemWithTarget:self 
                                               action:@selector(backAction:)] autorelease];
     
-    self.myNavigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+    self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
                                               initSendBarButtonItemWithTarget:self 
                                               action:@selector(sendButtonPressed:)] autorelease];
     
     // init the weibo, renren, douban button enabled 
-//    [self.navigationController pushViewController:<#(UIViewController *)#> animated:<#(BOOL)#>]
- 
+    hasWeibo = NO;
+    
+    // custom navigation item
+    self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:[self.helpCategory valueForKey:@"text"]] autorelease];
+    
+    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10, 7, 120, 20)] autorelease];
+    self.placeholderLabel.font = [UIFont systemFontOfSize:16.0];
+    self.placeholderLabel.textColor = [UIColor grayColor];
+    self.placeholderLabel.backgroundColor = [UIColor clearColor];
+    self.placeholderLabel.text = @"描述你的问题";
     
 }
 
 -(void)backAction:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated: YES];
 }
 
 - (BOOL)hidesBottomBarWhenPushed
@@ -137,13 +129,19 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) 
                                                  name:UIKeyboardWillShowNotification object:self.view.window];
     // send status
-    [self turnOnSendEnabled];
+//    [self turnOnSendEnabled];
+    [self.helpTextView becomeFirstResponder];
+    [self textViewDidChange:self.helpTextView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     //[self fakeParsePosition];
+//    self.helpTextView.text = [NSString stringWithFormat:@"#%@#", [self.helpCategory valueForKey:@"text"]];
+    if (self.ann != nil) {
+        self.poiLabel.text = self.ann.title;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -172,10 +170,10 @@
      NSInteger nonSpaceTextLength = [[self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
     if (nonSpaceTextLength > 0){
         
-        self.myNavigationItem.rightBarButtonItem.enabled = YES;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     } else{
         
-        self.myNavigationItem.rightBarButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
     }
 }
 
@@ -190,10 +188,17 @@
 - (void)postHelpTextToRemoteServer
 {
 
+    NSArray *locaction = [NSArray arrayWithObjects: [NSNumber numberWithFloat:self.ann.coordinate.longitude], 
+                          [NSNumber numberWithFloat:self.ann.coordinate.latitude], nil];
 
     NSDictionary *preLoud = [NSDictionary  dictionaryWithObjectsAndKeys:
                              [self.helpTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], @"tag_content",
+                             [self.helpCategory objectForKey:@"label"], @"category",
+                             self.ann.title, @"poi",
+                             self.ann.subtitle, @"address",
+                             locaction, @"location",
                              nil];
+
     // other params TODO
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, LOUDURI]];
@@ -213,16 +218,17 @@
 
     if ([request responseStatusCode] == 201){
 
-        [self dismissModalViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
         
     } else{
         
-        [self fadeOutMsgWithText:@"发送求助失败" rect:CGRectMake(0, 0, 80, 66)];
+        [self fadeOutMsgWithText:@"发送求助失败" rect:CGRectMake(0, 0, 90, 60) offSetY:120];
+
     }
 
     // send ok cancel
     [self.loadingIndicator stopAnimating];
-    self.myNavigationItem.rightBarButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     
 
 }
@@ -233,11 +239,24 @@
     // notify the user
     [self.loadingIndicator stopAnimating];
 
-    self.myNavigationItem.rightBarButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
      
     //[Utils warningNotification:[[request error] localizedDescription]];
-     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+     [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 60) offSetY:120];
 
+}
+
+- (IBAction)weiboAction:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    if (hasWeibo){
+        hasWeibo = NO;
+        // do some thing here
+        [button setImage:[UIImage imageNamed:@"weibox.png"] forState:UIControlStateNormal];
+    } else{
+        hasWeibo = YES;
+        [button setImage:[UIImage imageNamed:@"weiboo.png"] forState:UIControlStateNormal];
+    }
 }
 
 #pragma mark - text view delegate
@@ -250,15 +269,12 @@
         [textView addSubview:self.placeholderLabel];
         self.numIndicator.hidden = YES;
         
-    } else if ([[textView subviews] containsObject:self.placeholderLabel]) {
-        
-        [self.placeholderLabel removeFromSuperview];
+    } else {
         self.numIndicator.hidden = NO;
-        
+        [self.placeholderLabel removeFromSuperview];
     }
-        
-    //NSInteger nonSpaceTextLength = [[textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length];
-    self.numIndicator.text = [NSString stringWithFormat:@"%d", 70 - /*nonSpaceTextLength*/[self.helpTextView.text length]];
+
+    self.numIndicator.text = [NSString stringWithFormat:@"%d", 140 - /*nonSpaceTextLength*/[self.helpTextView.text length]];
     
     [self turnOnSendEnabled];
 
@@ -269,53 +285,21 @@
     if (![theTextView hasText]) {
         [theTextView addSubview:self.placeholderLabel];
         self.numIndicator.hidden = YES;
+    } else {
+        [self.placeholderLabel removeFromSuperview];
     }
 }
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    //NSInteger inputedTextLength = [textView.text length];
-    if ([text isEqualToString:@"\n"]){
 
-        [textView resignFirstResponder];
-        
-        // change the size
-        CGRect numIndicatorFrame = self.numIndicator.frame;
-        CGRect contentFrame = self.helpTextView.frame;
-        
-        numIndicatorFrame.origin.y = 163.0f;
-        contentFrame.size.height = 172.0f;
-        
-        self.numIndicator.frame = numIndicatorFrame;
-        self.helpTextView.frame = contentFrame;
-        
-        return NO;
-    }
     
-    if (textView.text.length + [text length] > 70){
+    if (textView.text.length + [text length] > 140){
         
         return NO;
     } 
     
     return YES;
-}
-
-#pragma mark - dimiss the keyboard
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    
-    [self.helpTextView resignFirstResponder];
-    
-    // change the size
-    CGRect numIndicatorFrame = self.numIndicator.frame;
-    CGRect contentFrame = self.helpTextView.frame;
-    
-    numIndicatorFrame.origin.y = 163.0f;
-    contentFrame.size.height = 172.0f;
-    
-    self.numIndicator.frame = numIndicatorFrame;
-    self.helpTextView.frame = contentFrame;
 }
 
 
@@ -328,13 +312,13 @@
     CGRect frame;
     [endingFrame getValue:&frame];
     
-    CGRect numIndicatorFrame = self.numIndicator.frame;
+    CGRect uvFrame = self.uv.frame;
     CGRect contentFrame = self.helpTextView.frame;
     
-    numIndicatorFrame.origin.y = 411.0f - (frame.size.height + 32.0f);
-    contentFrame.size.height = 411.0f - (frame.size.height + 23.0f);
+    uvFrame.origin.y = 411.0f - (frame.size.height + 32.0f);
+    contentFrame.size.height = 411.0f - (frame.size.height + 32.0f);
     
-    self.numIndicator.frame = numIndicatorFrame;
+    self.uv.frame = uvFrame;
     self.helpTextView.frame = contentFrame;
     
 }
@@ -343,13 +327,15 @@
 -(IBAction)poiFindAction:(id)sender
 {
     POIViewController *poivc = [[POIViewController alloc] initWithNibName:@"POIViewController" bundle:nil];
+    poivc.helpVc = self;
     [self presentModalViewController:poivc animated:YES];
     [poivc release];
 }
 
--(IBAction)cancelAction:(id)sender
+-(IBAction)topicAction:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    self.helpTextView.text = [NSString stringWithFormat:@"%@##", self.helpTextView.text];
+    self.helpTextView.selectedRange = NSMakeRange(self.helpTextView.text.length - 1, 0);
 }
 
 @end

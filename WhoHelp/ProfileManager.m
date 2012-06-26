@@ -12,7 +12,7 @@
 static ProfileManager *sharedProfileManager = nil;
 
 @implementation ProfileManager
-@synthesize profile=profile_, moc=moc_;
+@synthesize profile=profile_, moc=moc_, device=_device;
 
 
 - (id)init
@@ -53,6 +53,30 @@ static ProfileManager *sharedProfileManager = nil;
         }
         
         [mutableFetchResults release];
+        
+        // Create request
+        NSFetchRequest *request2 = [[NSFetchRequest alloc] init];
+        
+        // config the request
+        NSEntityDescription *entity2 = [NSEntityDescription entityForName:@"Device"  inManagedObjectContext:self.moc];
+        [request2 setEntity:entity2];
+        
+        NSError *error2 = nil;
+        NSMutableArray *mutableFetchResults2 = [[self.moc executeFetchRequest:request2 error:&error2] mutableCopy];
+        [request2 release];
+        
+        if (error2 == nil) {
+            if ([mutableFetchResults2 count] > 0) {
+                
+                self.device = [mutableFetchResults2 objectAtIndex:0];
+            }
+            
+        } else {
+            // Handle the error FIXME
+            NSLog(@"Get by profile error: %@, %@", error2, [error2 userInfo]);
+        }
+        
+        [mutableFetchResults2 release];
         
 	}
 	return self;

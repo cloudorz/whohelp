@@ -7,7 +7,6 @@
 //
 
 #import "DetailLoudViewController.h"
-#import "Config.h"
 #import "ProfileManager.h"
 #import "Utils.h"
 #import "CustomItems.h"
@@ -18,6 +17,13 @@
 #import "SBJson.h"
 #import "DDAlertPrompt.h"
 #import "PreAuthViewController.h"
+#import "OHAttributedLabel.h"
+
+@interface DetailLoudViewController ()
+
+-(void)loadReplyList;
+
+@end
 
 @implementation DetailLoudViewController
 
@@ -61,6 +67,28 @@
     [_atUrns release];
     [_prizeUids release];
     [super dealloc];
+}
+
+- (NSDictionary *)loudCates
+{
+    if (nil == _loudCates){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
+        _loudCates = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    }
+    
+    return _loudCates;
+}
+
+- (NSDictionary *)statuses
+{
+    if (nil == _statuses){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"status" ofType:@"plist"];
+        _statuses = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    }
+    
+    return _statuses;
 }
 
 - (NSMutableArray *)atUrns
@@ -147,29 +175,38 @@
     
     // conetent  put below in table header view
     
-    CGSize theSize= [[self.loudDetail objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+    NSString *content;
+    if ([[self.loudDetail objectForKey:@"poi"] isEqualToString:@""]) {
+        content = [self.loudDetail objectForKey:@"content"];
+    } else {
+        content = [NSString stringWithFormat:@"我在这里:#%@#, %@", 
+                   [self.loudDetail objectForKey:@"poi"], 
+                   [self.loudDetail objectForKey:@"content"] ];
+    }
+    
+    CGSize theSize= [content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
                                                constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
                                                    lineBreakMode:UILineBreakModeWordWrap];
     CGFloat contentHeight = theSize.height;
-    CGFloat heightForAll = 27 + contentHeight + SMALLFONTSIZE;
+    CGFloat heightForAll = 67 + contentHeight + SMALLFONTSIZE;
     
     UIView *tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0, 61, 320, heightForAll)] autorelease];
     tableHeaderView.backgroundColor = [UIColor whiteColor];
     
-    UILabel *contentText = [[[UILabel alloc] initWithFrame:CGRectMake(58,  10, TEXTWIDTH, contentHeight)] autorelease];
+    OHAttributedLabel *contentText = [[[OHAttributedLabel alloc] initWithFrame:CGRectMake(58,  10, TEXTWIDTH, contentHeight)] autorelease];
     contentText.textAlignment = UITextAlignmentLeft;
-    contentText.lineBreakMode = UILineBreakModeWordWrap;
+    contentText.lineBreakMode = UILineBreakModeCharacterWrap;
     contentText.numberOfLines = 0;
     contentText.font = [UIFont systemFontOfSize:TEXTFONTSIZE];
     contentText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     contentText.opaque = YES;
     contentText.backgroundColor = [UIColor clearColor];
-    contentText.text = [self.loudDetail objectForKey:@"content"];
+    contentText.attributedText = [Utils tagContent:content];
     
     [tableHeaderView addSubview:contentText];
     
     // location descrtion
-    UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 15+contentHeight, 180, SMALLFONTSIZE+2)] autorelease];
+    UILabel *locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 55+contentHeight, 190, SMALLFONTSIZE+2)] autorelease];
     locationLabel.backgroundColor = [UIColor clearColor];
     
     UIImageView *locationImage = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"location.png"]] autorelease];
@@ -177,7 +214,7 @@
     locationImage.backgroundColor = [UIColor clearColor];
     [locationLabel addSubview:locationImage];
     
-    UILabel *locationDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 150, SMALLFONTSIZE+2)] autorelease];
+    UILabel *locationDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(SMALLFONTSIZE+4, 0, 190, SMALLFONTSIZE+2)] autorelease];
     locationDescLabel.textAlignment = UITextAlignmentLeft;
     locationDescLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
     locationDescLabel.textColor = smallFontColor;
@@ -186,14 +223,60 @@
     locationDescLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
     locationDescLabel.backgroundColor = [UIColor clearColor];
     
-//    locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:self.loud];
-    
     [locationLabel addSubview:locationDescLabel];
     
     [tableHeaderView addSubview:locationLabel];
+    if (![[self.loudDetail objectForKey:@"address"] isEqual:@""]) {
+        locationDescLabel.text =  [self.loudDetail objectForKey:@"address"];
+    }
+    
+    // loud category color show
+    UIImageView *loudCateLabel = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 20+contentHeight, 320, 24)] autorelease];
+    loudCateLabel.backgroundColor = [UIColor clearColor]; 
+    loudCateLabel.opaque = NO;
+    
+    UILabel *payCateDescLabel = [[[UILabel alloc] initWithFrame:CGRectMake(58, 0, TEXTWIDTH, 24)] autorelease];
+    payCateDescLabel.textAlignment = UITextAlignmentLeft;
+    payCateDescLabel.lineBreakMode = UILineBreakModeTailTruncation;
+    payCateDescLabel.font = [UIFont boldSystemFontOfSize:NAMEFONTSIZE];
+    payCateDescLabel.textColor = [UIColor whiteColor];
+    payCateDescLabel.numberOfLines = 1;
+    payCateDescLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingNone;
+    payCateDescLabel.backgroundColor = [UIColor clearColor];
+    [loudCateLabel addSubview:payCateDescLabel];
+    
+    // loud category and pay category image show
+    UIImageView *loudCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(13, 16+contentHeight, 32, 32)] autorelease];
+    loudCateImage.opaque = YES;
+    loudCateImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingNone;
+    
+    UIImageView *payCateImage = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 24, 24)] autorelease];
+    payCateImage.backgroundColor = [UIColor clearColor];
+    
+    [loudCateImage addSubview:payCateImage];
+    
+    // loud categories and pay categories
+    NSDictionary *loudcate = [self.loudCates objectForKey:[self.loudDetail objectForKey:@"category"]];
+    NSDictionary *status = [self.statuses objectForKey:[self.loudDetail objectForKey:@"status"]];
+    
+    if (nil != loudcate){
+        loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
+        loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
+    }
+    
+    if (nil != status){
+        payCateImage.image = [UIImage imageNamed:[status objectForKey:@"pic"]];
+        payCateDescLabel.text = [NSString stringWithFormat:@"%@【%@】", 
+                                      [loudcate objectForKey:@"text"], 
+                                      [status objectForKey:@"desc"]
+                                      ];
+    }
+    
+    [tableHeaderView addSubview:loudCateLabel];
+    [tableHeaderView addSubview:loudCateImage];
     
     // comment infomation
-    UILabel *commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 15+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
+    UILabel *commentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(258, 55+contentHeight, 50, SMALLFONTSIZE+2)] autorelease]; // show
     commentLabel.opaque = YES;
     commentLabel.font = [UIFont systemFontOfSize: SMALLFONTSIZE];
     commentLabel.textAlignment = UITextAlignmentRight;
@@ -371,6 +454,20 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+
+-(void)loadReplyList
+{
+    [UIView animateWithDuration:0.7f animations:^{
+        
+        self.tableView.contentOffset = CGPointMake(0, -65);
+        
+    } completion:^(BOOL finished) {
+        
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:self.tableView];
+        
+    }];
 }
 
 #pragma mark - actions for button
@@ -1044,6 +1141,7 @@
 //    [self.textView resignFirstResponder];
 //}
 
+
 -(BOOL)growingTextView:(HPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]){
@@ -1235,7 +1333,7 @@
 
 - (void)sendPost
 {
-    NSLog(@"urns: %@", self.atUrns);
+//    NSLog(@"urns: %@", self.atUrns);
     NSDictionary *prePost = [NSDictionary  dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool: hasPhone], @"has_phone",
                              [self.loudDetail objectForKey:@"id"], @"loud_urn",
@@ -1243,7 +1341,7 @@
                              self.atUrns, @"ats",
                              nil];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", TESTHOST, REPLYURI]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@%@", HOST, REPLYURI]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request appendPostData:[[prePost JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
@@ -1263,7 +1361,8 @@
         self.atUrns = nil;
         [self.textView resignFirstResponder];
 //        [self fadeInMsgWithText:@"回复成功" rect:CGRectMake(0, 0, 80, 66)];
-        [self fetchReplyList]; // TODO 
+//        [self fetchReplyList]; // TODO 
+        [self loadReplyList];
         
     } else{
         

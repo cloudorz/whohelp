@@ -17,6 +17,7 @@
     BOOL _reloading;
     
     EGORefreshTableHeaderView *_refreshHeaderView;
+    NSDictionary *_loudCates, *_statuses;
 
 }
 
@@ -28,6 +29,10 @@
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSString *lastUpdated;
+@property (nonatomic, retain, readonly) NSDictionary *loudCates, *statuses;
+
+
+-(void)loadLoudList;
 
 
 - (void)reloadTableViewDataSource;

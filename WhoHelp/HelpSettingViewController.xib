@@ -79,7 +79,7 @@
 								<string key="NSFrame">{{12, 13}, {35, 36}}</string>
 								<reference key="NSSuperview" ref="684213408"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="246487165"/>
+								<reference key="NSNextKeyView" ref="1040901832"/>
 								<string key="NSReuseIdentifierKey">_NS:567</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -95,7 +95,7 @@
 								<string key="NSFrame">{{58, 23}, {120, 14}}</string>
 								<reference key="NSSuperview" ref="684213408"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="1040901832"/>
+								<reference key="NSNextKeyView" ref="1059531025"/>
 								<string key="NSReuseIdentifierKey">_NS:328</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="243174619">
 									<int key="NSColorSpace">3</int>
@@ -145,7 +145,7 @@
 								<string key="NSFrame">{{58, 0}, {262, 60}}</string>
 								<reference key="NSSuperview" ref="684213408"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="1059531025"/>
+								<reference key="NSNextKeyView" ref="246487165"/>
 								<string key="NSReuseIdentifierKey">_NS:225</string>
 								<reference key="IBUIBackgroundColor" ref="243174619"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -277,7 +277,7 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<string key="IBUIText">被人帮助</string>
+										<string key="IBUIText">发送求助</string>
 										<object class="NSColor" key="IBUITextColor">
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC43ODQzMTM3MjU1IDAuNzQ1MDk4MDM5MiAwLjcxNzY0NzA1ODgAA</bytes>
@@ -491,6 +491,7 @@
 						<string key="NSFrame">{{0, 120}, {320, 296}}</string>
 						<reference key="NSSuperview" ref="989245980"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC45NjA3ODQzMTM3IDAuOTUyOTQxMTc2NSAwLjk0NTA5ODAzOTIAA</bytes>
@@ -909,7 +910,7 @@
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIImageView</string>
+							<string>AsyncImageView</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
@@ -932,7 +933,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">avatarImage</string>
-								<string key="candidateClassName">UIImageView</string>
+								<string key="candidateClassName">AsyncImageView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">beHelpedIndicator</string>

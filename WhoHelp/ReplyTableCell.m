@@ -14,7 +14,6 @@
 @synthesize avatarImage=_avatarImage;
 @synthesize contentLabel=_contentLabel;
 @synthesize timeLabel=_timeLabel;
-@synthesize locationLabel=_locationLabel;
 @synthesize button=_button;
 @synthesize phoneLogo=_phoneLogo;
 @synthesize starLogo=_starLogo;
@@ -23,7 +22,6 @@
 {
     [_contentLabel release];
     [_timeLabel release];
-    [_locationLabel release];
     [_avatarImage release];
     [_button release];
     [_phoneLogo release];
@@ -96,30 +94,9 @@
         self.contentLabel.font = [UIFont systemFontOfSize:14.0f];
         self.contentLabel.textAlignment = UITextAlignmentLeft;
         self.contentLabel.numberOfLines = 0;
-        self.contentLabel.lineBreakMode = UILineBreakModeWordWrap;
+        self.contentLabel.lineBreakMode = UILineBreakModeCharacterWrap;
         
         [replyContentView addSubview:self.contentLabel];
-        
-        // reply content view - location 
-        UIView *locationView = [[[UIView alloc] initWithFrame:CGRectMake(10, contentHeight+21, 140, 11)] autorelease];
-        locationView.backgroundColor = [UIColor clearColor];
-        locationView.opaque = NO;
-        
-        UIImageView *locationLogo = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 9)] autorelease];
-        locationLogo.image = [UIImage imageNamed:@"location.png"];
-        locationLogo.backgroundColor = [UIColor clearColor];
-        
-        [locationView addSubview:locationLogo];
-        
-        self.locationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(13, 0, 125, 10)] autorelease];
-        self.locationLabel.backgroundColor = [UIColor clearColor];
-        self.locationLabel.opaque = NO;
-        self.locationLabel.font = [UIFont systemFontOfSize:9.0f];
-        self.locationLabel.textColor = smallFontColor;
-        
-        [locationView addSubview:self.locationLabel];
-        
-        [replyContentView addSubview:locationView];
         
         // reply content view - time show
         self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(168, contentHeight+21, 70, 10)] autorelease];

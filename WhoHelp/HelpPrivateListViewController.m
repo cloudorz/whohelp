@@ -11,9 +11,14 @@
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
 #import "Utils.h"
-#import "Config.h"
 #import "NSString+URLEncoding.h"
 #import "DetailLoudViewController.h"
+
+@interface HelpPrivateListViewController ()
+
+-(void)loadMsgList;
+
+@end
 
 @implementation HelpPrivateListViewController
 
@@ -104,9 +109,25 @@
 {
     [super viewDidAppear:animated];
     // init the list
-    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
+    if (self.curCollection == nil) {
+        [self loadMsgList];
+    }
+
 }
 
+
+-(void)loadMsgList
+{
+    [UIView animateWithDuration:0.7f animations:^{
+        
+        self.tableView.contentOffset = CGPointMake(0, -65);
+        
+    } completion:^(BOOL finished) {
+        
+         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:self.tableView];
+        
+    }];
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -219,7 +240,7 @@
         
         CGFloat contentHeight= [lenContent sizeWithFont:[UIFont systemFontOfSize:14.0f] 
                                       constrainedToSize:CGSizeMake(272.0f, CGFLOAT_MAX) 
-                                          lineBreakMode:UILineBreakModeWordWrap].height;
+                                          lineBreakMode:UILineBreakModeCharacterWrap].height;
         
         return contentHeight + 40;
     } else{

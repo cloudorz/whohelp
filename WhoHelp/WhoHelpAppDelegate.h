@@ -7,17 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iVersion.h"
 
-@interface WhoHelpAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate>
-{
-@private
-    UITabBarController *tabBarController_;
-    UITabBarItem *nearbyItem, *myListItem, *settingItem;
-}
+@interface WhoHelpAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, iVersionDelegate>
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-@property (nonatomic, retain) IBOutlet UITabBarItem *nearbyItem, *myListItem, *settingItem;
+@property (nonatomic, strong) IBOutlet UIWindow *window;
+@property (nonatomic, strong) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, strong) IBOutlet UITabBarItem *nearbyItem, *myListItem, *helpItem, *settingItem;
 
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;

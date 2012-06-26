@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1171" systemVersion="11E53" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="iOS 4.3">
+    <entity name="Device" representedClassName="Device" syncable="YES">
+        <attribute name="dtoken" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Profile" representedClassName="Profile">
         <attribute name="avatar_link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="brief" optional="YES" attributeType="String" syncable="YES"/>
@@ -13,5 +16,6 @@
     </entity>
     <elements>
         <element name="Profile" positionX="160" positionY="117" width="128" height="180"/>
+        <element name="Device" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>

@@ -29,5 +29,7 @@
 + (NSString *)postionInfoFrom: (CLLocation *)curPos toLoud:(NSDictionary *)loud;
 +(NSMutableAttributedString *)descWithName:(NSString *)name content:(NSString *)content;
 + (NSString *)pastDueTimeDesc:(NSDate *)date;
++(NSMutableAttributedString *)tagContent:(NSString *)content;
++(float)distanceFrom:(CLLocationCoordinate2D)posA to:(CLLocationCoordinate2D)posB;
 
 @end

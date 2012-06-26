@@ -8,15 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "Profile.h"
+#import "Device.h"
 
 @interface ProfileManager : NSObject
-{
-    Profile *profile_;
-    NSManagedObjectContext *moc_;
-}
 
-@property (nonatomic, retain) Profile *profile;
-@property (nonatomic, retain) NSManagedObjectContext *moc;
+@property (nonatomic, strong) Profile *profile;
+@property (nonatomic, strong) NSManagedObjectContext *moc;
+@property (nonatomic, strong) Device *device; 
 
 + (ProfileManager *)sharedInstance;
 

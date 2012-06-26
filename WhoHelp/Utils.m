@@ -10,8 +10,8 @@
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "ASIFormDataRequest.h"
 #import "NSAttributedString+Attributes.h"
-#import "Config.h"
 #import "NSDate+IsoFormat.h"
+#import "math.h"
 
 @implementation Utils
 
@@ -230,6 +230,17 @@
     
 }
 
++(float)distanceFrom:(CLLocationCoordinate2D)posA to:(CLLocationCoordinate2D)posB
+{
+//    float d = 6378137*acos(sin(posA.latitude)*sin(posB.latitude)*cos(posA.longitude - posB.longitude)+cos(posA.latitude)*cos(posB.latitude))*M_PI/180;
+    CLLocation *posAL = [[[CLLocation alloc] initWithLatitude:posA.latitude
+                                                    longitude:posA.longitude] autorelease];
+    CLLocation *posBL = [[[CLLocation alloc] initWithLatitude:posB.latitude
+                                                    longitude:posB.longitude] autorelease];
+    return [posAL distanceFromLocation:posBL];
+    
+}
+
 #pragma mark - wrong notify
 + (NSMutableAttributedString *)wrongInfoString: (NSString *)rawString
 {
@@ -266,6 +277,31 @@
     [nameAndContent appendAttributedString:contentAttr];
     
     return nameAndContent;
+}
+
++(NSMutableAttributedString *)tagContent:(NSString *)content
+{
+    // index the '#'
+    NSMutableAttributedString * attrContent = [NSMutableAttributedString attributedStringWithString:content];
+    [attrContent setFont:[UIFont systemFontOfSize: 14.0f]];
+    NSArray *arrayBySharp = [content componentsSeparatedByString:@"#"];
+    if (arrayBySharp.count >= 3){
+        NSInteger totalIndex = 0;
+        for (int i=1; i<arrayBySharp.count-1; i+=2) {
+            NSString *preString = [arrayBySharp objectAtIndex:i-1];
+            NSString *currentString = [arrayBySharp objectAtIndex:i];
+            totalIndex += preString.length + 1;
+            if (i>=3) {
+                NSString *ppreString = [arrayBySharp objectAtIndex:i-2];
+                totalIndex += ppreString.length + 1;
+            }
+            
+
+            [attrContent setTextColor:[UIColor colorWithRed:0/255.0 green:127/255.0 blue:177/255.0 alpha:1.0] range:NSMakeRange(totalIndex-1, currentString.length+2)];
+        }
+    }
+    
+    return attrContent;
 }
 
 

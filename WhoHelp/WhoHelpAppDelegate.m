@@ -11,10 +11,17 @@
 #import "PreAuthViewController.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
-#import "Config.h"
 #import "SBJson.h"
-#import "ASIHTTPRequest.h"
+#import "ASIHTTPRequest+HeaderSignAuth.h"
+//#import "iVersion.h"
 
+@interface WhoHelpAppDelegate ()
+
+- (void)updatePos;
+- (void)fakeUpdatePos;
+- (void)updateTokenRequest:(NSString *)token;
+
+@end
 
 @implementation WhoHelpAppDelegate
 
@@ -22,8 +29,11 @@
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
-@synthesize tabBarController=tabBarController_;
-@synthesize nearbyItem, myListItem, settingItem;
+@synthesize tabBarController=_tabBarController;
+@synthesize nearbyItem=_nearbyItem;
+@synthesize myListItem=_myListItem;
+@synthesize settingItem=_settingItem;
+@synthesize helpItem=_helpItem;
 
 - (void)dealloc
 {
@@ -31,12 +41,17 @@
     [__managedObjectContext release];
     [__managedObjectModel release];
     [__persistentStoreCoordinator release];
-    [tabBarController_ release];
-    [nearbyItem release]; 
-    [myListItem release]; 
-    [settingItem release];
+    [_tabBarController release];
+    [_nearbyItem release]; 
+    [_myListItem release]; 
+    [_settingItem release];
     [super dealloc];
 }
+
+//+ (void)initialize
+//{
+//    [iVersion sharedInstance];
+//}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -45,7 +60,7 @@
     // Override point for customization after application launch.
     self.window.rootViewController = self.tabBarController;
     // select the middle post help tab bar item.
-    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
     self.tabBarController.delegate = self;
     self.tabBarController.tabBar.opaque = YES;
     
@@ -57,8 +72,8 @@
                       withFinishedUnselectedImage:[UIImage imageNamed:@"nearby.png"]];
         [self.myListItem setFinishedSelectedImage:[UIImage imageNamed:@"mylisto.png"] 
                       withFinishedUnselectedImage:[UIImage imageNamed:@"mylist.png"]];
-//        [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
-//                    withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
+        [self.helpItem setFinishedSelectedImage:[UIImage imageNamed:@"helpo.png"] 
+                    withFinishedUnselectedImage:[UIImage imageNamed:@"help.png"]];
 //        [self.prizeItem setFinishedSelectedImage:[UIImage imageNamed:@"prizeo.png"] 
 //                     withFinishedUnselectedImage:[UIImage imageNamed:@"prize.png"]];
         [self.settingItem setFinishedSelectedImage:[UIImage imageNamed:@"settingo.png"]
@@ -105,6 +120,10 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     [self tabBarController:self.tabBarController shouldSelectViewController:self.tabBarController.selectedViewController];
+    
+    if ([ProfileManager sharedInstance].profile != nil) {
+        [self fakeUpdatePos];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -113,45 +132,16 @@
     [self saveContext];
 }
 
-- (void)updateTokenRequest:(NSString *)token
-{
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", HOST, DDURI, [[UIDevice currentDevice] uniqueIdentifier]]];
-    
-    NSDictionary *data = [NSDictionary  dictionaryWithObject:token forKey:@"dtoken"];
-    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request appendPostData:[[data JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"]; 
-    [request setRequestMethod:@"PUT"];
-    [request setDelegate:self];
-    [request startAsynchronous];
-}
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-    // Use when fetching text data
-
-    if ([request responseStatusCode] == 201){
-        
-//         NSLog(@"%@", @"OK");
-    }
-    // Use when fetching binary data
-    //NSData *responseData = [request responseData];
-    
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSError *error = [request error];
-    NSLog(@"%@", [error description]);
-}
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    NSString *devTokenStr = [[[deviceToken description]
-                              stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] 
-                             stringByReplacingOccurrencesOfString:@" " 
-                             withString:@""];
-    [self updateTokenRequest:devTokenStr];
+    if ([ProfileManager sharedInstance].profile != nil) {
+        NSLog(@"fuck here");
+        NSString *devTokenStr = [[[deviceToken description]
+                                  stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] 
+                                 stringByReplacingOccurrencesOfString:@" " 
+                                 withString:@""];
+        [self updateTokenRequest:devTokenStr];
+    }
+
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -243,7 +233,7 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WhoHelp4.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WhoHelp.sqlite"];
     
     NSError *error = nil;
 //    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
@@ -302,24 +292,121 @@
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if (nil == [ProfileManager sharedInstance].profile && 12 != viewController.tabBarItem.tag){
+    if (nil == [ProfileManager sharedInstance].profile && 11 != viewController.tabBarItem.tag){
         PreAuthViewController *preAVC = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
         [self.tabBarController presentModalViewController:preAVC animated:YES];
         [preAVC release];
         
         return NO;
-    } 
-//    else{
-//        if (13 == viewController.tabBarItem.tag){
-//            HelpSendViewController *helpSendVC = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
-//            [self.tabBarController presentModalViewController:helpSendVC animated:YES];
-//            [helpSendVC release];
-//            
-//            return NO;
-//        }
-//    }
-
+    }
+    
     return YES;
 }
 
+#pragma mark - post data
+- (void)fakeUpdatePos
+{
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        [self performSelector:@selector(updatePos) withObject:nil afterDelay:1.5];
+    } else{
+        NSLog(@"grap locaton disalbled.");
+    }       
+}
+
+- (void)updatePos
+{
+    
+    if (NO == [LocationController sharedInstance].allow){
+        NSLog(@"grap locaton disallowed.");
+        return;
+    }
+    
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
+    
+    NSDictionary *preLoud = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [NSArray arrayWithObjects:
+                              [NSNumber numberWithDouble:curloc.longitude], 
+                              [NSNumber numberWithDouble:curloc.latitude], 
+                              nil],
+                             @"location",
+                             nil];
+    
+    NSURL *url = [NSURL URLWithString:[ProfileManager sharedInstance].profile.link];
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[preLoud JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request setRequestMethod:@"PUT"];
+    // sign to header for authorize
+    [request signInHeader];
+    
+    [request setCompletionBlock:^{
+        if ([request responseStatusCode] == 200) {
+            NSLog(@"update position OK");
+        }
+    }];
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"update position error: %@", [error description]);
+    }];
+    
+    [request startAsynchronous];
+}
+
+- (void)updateTokenRequest:(NSString *)token
+{
+    
+    NSURL *url = [NSURL URLWithString:[ProfileManager sharedInstance].profile.link];
+    
+    NSDictionary *data = [NSDictionary  dictionaryWithObject:token forKey:@"dtoken"];
+    
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request appendPostData:[[data JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"]; 
+    [request setRequestMethod:@"PUT"];
+    [request signInHeader];
+    [request setCompletionBlock:^{
+        if ([request responseStatusCode] == 200){
+            NSLog(@"updated dtoken.");
+        }
+    }];
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"%@", [error localizedDescription]);
+    }];
+    
+    [request startAsynchronous];
+}
+
+#pragma mark iVersion
+- (BOOL)iVersionShouldCheckForNewVersion
+{
+    NSLog(@"iVersionShouldCheckForNewVersion");
+    return YES;
+}
+- (void)iVersionDidNotDetectNewVersion
+{
+    NSLog(@"iVersionDidNotDetectNewVersion");
+}
+- (void)iVersionVersionCheckDidFailWithError:(NSError *)error
+{
+    NSLog(@"iVersionVersionCheckDidFailWithError: %@", [error userInfo]);
+}
+- (void)iVersionDidDetectNewVersion:(NSString *)version details:(NSString *)versionDetails
+{
+    NSLog(@"iVersionDidDetectNewVersion: %@, %@", version, versionDetails);
+}
+
+- (BOOL)iVersionShouldDisplayNewVersion:(NSString *)version details:(NSString *)versionDetails
+{
+    NSLog(@"iVersionShouldDisplayNewVersion: %@, %@", version, versionDetails);
+    return YES;
+}
+//- (BOOL)iVersionShouldDisplayCurrentVersionDetails:(NSString *)versionDetails;
+//- (void)iVersionUserDidAttemptToDownloadUpdate:(NSString *)version;
+//- (void)iVersionUserDidRequestReminderForUpdate:(NSString *)version;
+//- (void)iVersionUserDidIgnoreUpdate:(NSString *)version;
 @end

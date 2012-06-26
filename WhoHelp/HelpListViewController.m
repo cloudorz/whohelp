@@ -9,7 +9,6 @@
 #import "HelpListViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
-#import "Config.h"
 #import "Utils.h"
 #import "ProfileManager.h"
 #import "LocationController.h"
@@ -22,28 +21,56 @@
 #import "PreAuthViewController.h"
 
 
+@interface HelpListViewController ()
+
+
+
+@end
+
 @implementation HelpListViewController
 
-@synthesize louds=louds_;
-@synthesize curCollection=curCollection_;
-@synthesize etag=etag_;
-@synthesize moreCell=moreCell_;
-@synthesize timer=timer_;
-@synthesize tableView=tableView_;
+@synthesize louds=_louds;
+@synthesize curCollection=_curCollection;
+@synthesize etag=_etag;
+@synthesize moreCell=_moreCell;
+@synthesize timer=_timer;
+@synthesize tableView=_tableView;
 @synthesize lastUpdated;
 
 #pragma mark - dealloc 
 - (void)dealloc
 {
-    [louds_ release];
-    [etag_ release];
-    [curCollection_ release];
-    [timer_ release];
-    [tableView_ release];
+    [_louds release];
+    [_etag release];
+    [_curCollection release];
+    [_timer release];
+    [_tableView release];
     [lastUpdated release];
+    [_loudCates release];
     [super dealloc];
 }
 
+- (NSDictionary *)loudCates
+{
+    if (nil == _loudCates){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"LoudCate" ofType:@"plist"];
+        _loudCates = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    }
+    
+    return _loudCates;
+}
+
+- (NSDictionary *)statuses
+{
+    if (nil == _statuses){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"status" ofType:@"plist"];
+        _statuses = [[NSDictionary alloc] initWithContentsOfFile:myFile];
+    }
+    
+    return _statuses;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -91,8 +118,6 @@
     
     // custom navigation item
     self.navigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"全部信息"] autorelease];
-
-    
     // timer
 //    self.timer = [NSTimer scheduledTimerWithTimeInterval:60 
 //                                                  target:self 
@@ -100,19 +125,19 @@
 //                                                userInfo:nil 
 //                                                 repeats:YES];
     
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]  
-                                              initWithTitle:@"求助" 
-                                              style:UIBarButtonSystemItemAdd 
-                                              target:self 
-                                              action:@selector(sendLoudAction:)] autorelease];
-    
+//    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]  
+//                                              initWithTitle:@"求助" 
+//                                              style:UIBarButtonSystemItemAdd 
+//                                              target:self 
+//                                              action:@selector(sendLoudAction:)] autorelease];
+
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     _refreshHeaderView=nil;
-    [self.timer invalidate];
+//    [self.timer invalidate];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -145,13 +170,23 @@
     [super viewDidAppear:animated];
 
     // load remote data and init tableview
-//    [self egoRefreshTableHeaderDidTriggerRefresh:_refreshHeaderView];
-//    [_refreshHeaderView animationDidStart:(CAAnimation *)];
-//    [self.tableView setContentOffset:CGPointMake(0, -65) animated:YES];
-//    [self.tableView setContentOffset:CGPointMake(0, 0) animated:YES];
+    if (self.curCollection == nil) {
+         [self loadLoudList];
+    }
+    
+}
 
-
-
+-(void)loadLoudList
+{
+    [UIView animateWithDuration:0.7f animations:^{
+        
+        self.tableView.contentOffset = CGPointMake(0, -65);
+        
+    } completion:^(BOOL finished) {
+        
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:self.tableView];
+        
+    }];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -191,9 +226,7 @@
 	
 	UILabel *labelNumber = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 100, 20)];
 
-	if (nil == self.curCollection){
-        labelNumber.text = @"正在加载...";
-    } else if (nil == [self.curCollection objectForKey:@"next"]){
+    if (nil == [self.curCollection objectForKey:@"next"]){
         labelNumber.text = @"";
     } else {
         labelNumber.text = @"获取更多";
@@ -215,9 +248,16 @@
     NSMutableDictionary *loud = [self.louds objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier;
-    CGFloat contentHeight= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+    NSString *content;
+    if ([[loud objectForKey:@"poi"] isEqualToString:@""]) {
+        content = [loud objectForKey:@"content"];
+    } else {
+        content = [NSString stringWithFormat:@"我在这里:#%@#, %@", [loud objectForKey:@"poi"], [loud objectForKey:@"content"] ];
+    }
+
+    CGFloat contentHeight= [content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
                                                       constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
-                                                          lineBreakMode:UILineBreakModeWordWrap].height;
+                                                          lineBreakMode:UILineBreakModeCharacterWrap].height;
 
     CellIdentifier = [NSString stringWithFormat:@"helpEntry:%.0f", contentHeight];
     
@@ -235,23 +275,19 @@
     NSDictionary *user = [loud objectForKey:@"user"];
     
     // name 
-    cell.nameLabel.text = [user objectForKey:@"name"];
-//    if ([user]){
-//        // administractor
-//        cell.nameLabel.textColor = [UIColor colorWithRed:245/255.0 green:161/255.0 blue:0/255.0 alpha:1.0];
-//    }else {
-//        cell.nameLabel.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
-//    }
-//    
+    cell.nameLabel.text = [user objectForKey:@"name"];   
 
     [cell.avatarImage loadImage:[user objectForKey:@"avatar_link"]];
     
     // content
-    cell.cellText.text = [loud objectForKey:@"content"];
+    cell.cellText.text = content;
     
     // location infomation
-//    cell.locationDescLabel.text =[Utils postionInfoFrom:[LocationController sharedInstance].location toLoud:loud];
-    if (![[loud objectForKey:@"address"] isEqual:@""]) {
+    if ([[loud objectForKey:@"address"] isEqual:@""]) {
+        cell.locationImage.hidden = YES;
+        cell.locationDescLabel.text = nil;
+    } else {
+        cell.locationImage.hidden = NO;
         cell.locationDescLabel.text =  [loud objectForKey:@"address"];
     }
     
@@ -270,9 +306,24 @@
     } else {
         cell.commentLabel.hidden = YES;
     }
-
     
+    NSDictionary *loudcate = [self.loudCates objectForKey:[loud objectForKey:@"category"]];
+    NSDictionary *status = [self.statuses objectForKey:[loud objectForKey:@"status"]];
+    if (nil != loudcate){
+        cell.loudCateLabel.image = [UIImage imageNamed:[loudcate objectForKey:@"stripPic"]];
+        cell.loudCateImage.image = [UIImage imageNamed:[loudcate objectForKey:@"colorPic"]];
+    }
+    
+    if (nil != status) {
+        cell.payCateDescLabel.text = [NSString stringWithFormat:@"%@【%@】", 
+                                      [loudcate objectForKey:@"text"], 
+                                      [status objectForKey:@"desc"]
+                                      ];
+        cell.payCateImage.image = [UIImage imageNamed:[status objectForKey:@"pic"]];
+    }
+
     return cell;
+    
 }
 
 // Customize the appearance of table view cells.
@@ -292,31 +343,25 @@
     //return [indexPath row] * 20;
     if (indexPath.row < [self.louds count]){
         NSDictionary *loud = [self.louds objectAtIndex:indexPath.row];
+        NSString *content;
+        if ([[loud objectForKey:@"poi"] isEqualToString:@""]) {
+            content = [loud objectForKey:@"content"];
+        } else {
+            content = [NSString stringWithFormat:@"我在这里:#%@#, %@", [loud objectForKey:@"poi"], [loud objectForKey:@"content"] ];
+        }
+        
 
-        CGSize theSize= [[loud objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
+        CGSize theSize= [content sizeWithFont:[UIFont systemFontOfSize:TEXTFONTSIZE] 
                                                    constrainedToSize:CGSizeMake(TEXTWIDTH, CGFLOAT_MAX) 
                                                        lineBreakMode:UILineBreakModeWordWrap];
         
-        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 39 - 10;
+        return theSize.height + NAMEFONTSIZE + TEXTFONTSIZE + SMALLFONTSIZE + 79 - 10;
     } else{
         
         return 40.0f;
     }
 }
 
-#pragma mark - actions
--(void)sendLoudAction:(id)sender
-{
-    if (nil == [ProfileManager sharedInstance].profile) {
-        PreAuthViewController *preVc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
-        [self.tabBarController presentModalViewController:preVc animated:YES];
-        [preVc release];
-    } else {
-        HelpSendViewController *helpVc = [[HelpSendViewController alloc] initWithNibName:@"HelpSendViewController" bundle:nil];
-        [self.tabBarController presentModalViewController:helpVc animated:YES];
-        [helpVc release];
-    }
-}
 
 #pragma mark - Table view delegate
 
@@ -383,7 +428,7 @@
         [[[self.tabBarController.tabBar items] objectAtIndex:0] setBadgeValue:nil ];
         self.lastUpdated = [[request responseHeaders] objectForKey:@"Last-Modified"];
         
-        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
+//        [self fadeInMsgWithText:@"已更新" rect:CGRectMake(0, 0, 60, 40)];
         
     } else if (304 == code){
         // do nothing
@@ -452,7 +497,7 @@
 {
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", 
-                                       TESTHOST,
+                                       HOST,
                                        ULOUDURI
                                        ]
                   ];
