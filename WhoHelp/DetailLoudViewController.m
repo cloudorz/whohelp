@@ -16,7 +16,7 @@
 #import "ASIHTTPRequest+HeaderSignAuth.h"
 #import "SBJson.h"
 #import "DDAlertPrompt.h"
-#import "PreAuthViewController.h"
+#import "DoubanAuthViewController.h"
 #import "OHAttributedLabel.h"
 
 @interface DetailLoudViewController ()
@@ -47,6 +47,7 @@
 @synthesize atUrns=_atUrns;
 @synthesize prizeUids=_prizeUids;
 @synthesize justLookButton1, justLookButton2, helpDoneButton, phoneButton, sendButton;
+@synthesize placeholderLabel=_placeholderLabel;
 
 - (void)dealloc
 {
@@ -66,6 +67,7 @@
     [_textView release];
     [_atUrns release];
     [_prizeUids release];
+    [_placeholderLabel release];
     [super dealloc];
 }
 
@@ -328,7 +330,7 @@
     
 	self.textView.minNumberOfLines = 1;
 	self.textView.maxNumberOfLines = 6;
-	self.textView.returnKeyType = UIReturnKeyDone; //just as an example
+	self.textView.returnKeyType = UIReturnKeyDefault; //just as an example
 	self.textView.font = [UIFont systemFontOfSize:15.0f];
     
 	self.textView.delegate = self;
@@ -409,6 +411,12 @@
     
     //  update the last update date
 	[_refreshHeaderView refreshLastUpdatedDate];
+    
+    self.placeholderLabel = [[[UILabel alloc] initWithFrame:CGRectMake(14, 9, 50, 16)] autorelease];
+    self.placeholderLabel.font = [UIFont systemFontOfSize:16.0];
+    self.placeholderLabel.textColor = [UIColor grayColor];
+    self.placeholderLabel.backgroundColor = [UIColor clearColor];
+    self.placeholderLabel.text = @"回复";
 
 }
 
@@ -433,6 +441,13 @@
                                              selector:@selector(keyboardWillHide:) 
                                                  name:UIKeyboardWillHideNotification 
                                                object:nil];	
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self 
+//                                             selector:@selector(selectOtherAction:) 
+//                                                 name:@"cancelLogin" 
+//                                               object:nil];
+    
+
 
 }
 
@@ -441,6 +456,18 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self 
+//                                                    name:@"cancelLogin" 
+//                                                  object:nil];
+}
+
+- (void)selectOtherAction:(id)sender
+{
+    if ([ProfileManager sharedInstance].profile) {
+        self.textView.text = nil;
+        [self.textView becomeFirstResponder];
+        [self growingTextViewDidChange: self.textView];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -535,8 +562,10 @@
     if ([ProfileManager sharedInstance].profile) {
         self.textView.text = nil;
         [self.textView becomeFirstResponder];
+        [self growingTextViewDidChange: self.textView];
     } else {
-        PreAuthViewController *pvc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+        DoubanAuthViewController  *pvc = [[DoubanAuthViewController alloc] initWithNibName:@"DoubanAuthViewController" 
+                                                                                    bundle:nil];
         [self.tabBarController presentModalViewController:pvc animated:YES];
         [pvc release];
     }
@@ -900,6 +929,7 @@
                     self.textView.text = [NSString stringWithFormat:@"@%@ ", [user objectForKey:@"name"]];
                     [self.atUrns addObject:[user objectForKey:@"id"]];
                     [self.textView becomeFirstResponder];
+                    [self growingTextViewDidChange: self.textView];
                 }
                 
                 
@@ -907,7 +937,8 @@
                 [Utils warningNotification:@"求助已关闭"];
             }
         } else {
-            PreAuthViewController *pvc = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+            DoubanAuthViewController *pvc = [[DoubanAuthViewController alloc] initWithNibName:@"DoubanAuthViewController" 
+                                                                                       bundle:nil];
             [self.tabBarController presentModalViewController:pvc animated:YES];
             [pvc release];
         } 
@@ -938,6 +969,7 @@
             self.textView.text = [NSString stringWithFormat:@"@%@ ", [self.tapUser objectForKey:@"name"]];
             [self.atUrns addObject:[self.tapUser objectForKey:@"id"]];
             [self.textView becomeFirstResponder];
+            [self growingTextViewDidChange: self.textView];
             
         }
         
@@ -1135,27 +1167,15 @@
 	self.messageView.frame = r;
 }
 
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    [super touchesBegan:touches withEvent:event];
-//    
-//    [self.textView resignFirstResponder];
-//}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    [self.textView resignFirstResponder];
+}
 
 
 -(BOOL)growingTextView:(HPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    if ([text isEqualToString:@"\n"]){
-        
-        [growingTextView resignFirstResponder];
-        self.atUrns = nil;
-        
-        return NO;
-    }
-    
-    if (growingTextView.text.length + [text length] > 70){
-        
-        return NO;
-    } 
     
     return YES;
 }
@@ -1166,10 +1186,23 @@
     if([growingTextView hasText] && nonSpaceTextLength > 0) {
 
         self.sendButton.enabled = YES;
+        [self.placeholderLabel removeFromSuperview];
         
     } else {
         self.sendButton.enabled = NO;
+        [growingTextView addSubview:self.placeholderLabel];
+
     }
+}
+
+-(void)growingTextViewDidEndEditing:(HPGrowingTextView *)growingTextView
+{
+    if (![growingTextView hasText]) {
+        [growingTextView addSubview:self.placeholderLabel];
+    } else {
+        [self.placeholderLabel removeFromSuperview];
+    }
+    
 }
 
 #pragma mark - set phone number
@@ -1366,7 +1399,8 @@
         
     } else{
         
-        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
+//        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66)];
+        [self fadeOutMsgWithText:@"发送失败" rect:CGRectMake(0, 0, 80, 66) offSetY:90];
         
     }
     
@@ -1375,11 +1409,10 @@
     
 }
 
-
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     
-    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66)];
+    [self fadeOutMsgWithText:@"网络链接错误" rect:CGRectMake(0, 0, 80, 66) offSetY:90];
     self.sendButton.enabled = YES;
     
 }

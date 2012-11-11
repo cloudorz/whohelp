@@ -15,7 +15,7 @@
         <attribute name="userkey" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Profile" positionX="160" positionY="117" width="128" height="180"/>
         <element name="Device" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="Profile" positionX="160" positionY="117" width="128" height="180"/>
     </elements>
 </model>

@@ -9,6 +9,14 @@
 #import "HelpPostViewController.h"
 #import "HelpSendViewController.h"
 #import "CustomItems.h"
+#import "ProfileManager.h"
+#import "DoubanAuthViewController.h"
+
+@interface HelpPostViewController ()
+
+-(BOOL)checkLogin;
+
+@end
 
 @implementation HelpPostViewController
 
@@ -78,6 +86,34 @@
     // e.g. self.myOutlet = nil;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self checkLogin];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(selectOtherTabAction:) 
+                                                 name:@"cancelLogin" 
+                                               object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:@"cancelLogin" 
+                                                  object:nil];
+}
+
+- (void)selectOtherTabAction:(id)sender
+{
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -133,6 +169,21 @@
     [self.navigationController pushViewController:sendHelpVC animated:YES];
     [sendHelpVC release];
     
+}
+
+-(BOOL)checkLogin
+{
+    if (nil == [ProfileManager sharedInstance].profile){
+        
+        DoubanAuthViewController *loginVC = [[DoubanAuthViewController alloc] initWithNibName:@"DoubanAuthViewController" 
+                                                                                       bundle:nil];
+        [self presentModalViewController:loginVC animated:YES];
+        [loginVC release];
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

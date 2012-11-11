@@ -11,7 +11,7 @@
 #import "HPGrowingTextView.h"
 #import "AsyncImageView.h"
 
-@interface DetailLoudViewController : UIViewController <HPGrowingTextViewDelegate, EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
+@interface DetailLoudViewController : UIViewController <HPGrowingTextViewDelegate, EGORefreshTableHeaderDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate>
 {
 @private
     
@@ -45,6 +45,7 @@
 @property (nonatomic, strong) NSMutableArray *atUrns;
 @property (nonatomic, strong) NSMutableArray *prizeUids;
 @property (nonatomic, retain, readonly) NSDictionary *loudCates, *statuses;
+@property (strong, nonatomic) UILabel *placeholderLabel;
 
 
 -(IBAction)avatarButtonAction:(id)sender;

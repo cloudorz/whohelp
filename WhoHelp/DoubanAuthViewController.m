@@ -11,13 +11,15 @@
 #import "SBJson.h"
 #import "ProfileManager.h"
 #import "UIViewController+msg.h"
+#import "CustomItems.h"
 
 @implementation DoubanAuthViewController
 
-@synthesize webview=webview_;
-@synthesize loading=loading_;
-@synthesize baseURL=baseURL_;
-@synthesize body=body_;
+@synthesize webview=_webview;
+@synthesize loading=_loading;
+//@synthesize baseURL=_baseURL;
+//@synthesize body=_body;
+@synthesize cusNavigationItem=_cusNavigationItem;
 
 
 - (void)dealloc
@@ -26,10 +28,11 @@
     // or that's a bug, crash
     self.webview.delegate = nil; 
     
-    [webview_ release];
-    [loading_ release];
-    [baseURL_ release];
-    [body_ release];
+    [_webview release];
+    [_loading release];
+//    [_baseURL release];
+//    [_body release];
+    [_cusNavigationItem release];
     [super dealloc];
 }
 
@@ -58,9 +61,16 @@
     // Do any additional setup after loading the view from its nib.
 //    self.webview.scalesPageToFit =NO;
     self.webview.delegate = self;
-    [self.loading stopAnimating];
     
-    [self.webview loadHTMLString:self.body baseURL:self.baseURL];
+    [self.loading stopAnimating];
+     self.cusNavigationItem.titleView = [[[NavTitleLabel alloc] initWithTitle:@"用微博登录乐帮"] autorelease];
+    self.cusNavigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                              initBackBarButtonItemWithTarget:self 
+                                              action:@selector(cancelAuth:)] autorelease];
+    
+//    [self.webview loadHTMLString:self.body baseURL:self.baseURL];
+     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", HOST, @"/auth/weibo"]];
+     [self.webview loadRequest: [NSURLRequest requestWithURL:url]];
 }
 
 - (void)viewDidUnload
@@ -82,6 +92,7 @@
 {
   
     [self dismissModalViewControllerAnimated:YES];
+    [[NSNotificationCenter  defaultCenter] postNotificationName:@"cancelLogin" object:nil];
 
 }
 
@@ -120,7 +131,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([[NSString stringWithFormat:@"%@://%@", [[request URL] scheme], [[request URL] host]] isEqualToString:HOST]){
+
+    if ([[[request URL] query] hasPrefix:@"code"]){
         NSError *error;
         NSString *content = [NSString stringWithContentsOfURL:[request URL] 
                                                   encoding:NSUTF8StringEncoding
@@ -137,8 +149,8 @@
                 [authInfo objectForKey:@"secret"] != nil){
                 [self clearCookies];
                 [[ProfileManager sharedInstance] saveUserInfo:authInfo];
-                [self dismissModalViewControllerAnimated:NO];// Animated must be 'NO', I don't why...            
-                [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
+                [self dismissModalViewControllerAnimated:YES];// Animated must be 'NO', I don't why...            
+//                [[NSNotificationCenter  defaultCenter] postNotificationName:@"DismissPreAuthVC" object:nil];
                 
             } else{
                 [Utils warningNotification:@"授权失败"];

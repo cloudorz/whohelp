@@ -13,10 +13,13 @@
 #import "Utils.h"
 #import "NSString+URLEncoding.h"
 #import "DetailLoudViewController.h"
+#import "DoubanAuthViewController.h"
+#import "ProfileManager.h"
 
 @interface HelpPrivateListViewController ()
 
 -(void)loadMsgList;
+-(BOOL)checkLogin;
 
 @end
 
@@ -100,17 +103,37 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(selectOtherTabAction:) 
+                                                 name:@"cancelLogin" 
+                                               object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:@"cancelLogin" 
+                                                  object:nil];
+}
+
+- (void)selectOtherTabAction:(id)sender
+{
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     // init the list
-    if (self.curCollection == nil) {
-        [self loadMsgList];
+    
+    if ([self checkLogin]) {
+        if (self.curCollection == nil) {
+            [self loadMsgList];
+        }
     }
 
 }
@@ -446,6 +469,21 @@
     
     return [NSDate date]; // should return date data source was last changed
     
+}
+
+-(BOOL)checkLogin
+{
+    if (nil == [ProfileManager sharedInstance].profile){
+        
+        DoubanAuthViewController *loginVC = [[DoubanAuthViewController alloc] initWithNibName:@"DoubanAuthViewController" 
+                                                                                 bundle:nil];
+        [self presentModalViewController:loginVC animated:YES];
+        [loginVC release];
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

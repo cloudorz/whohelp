@@ -9,18 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface DoubanAuthViewController : UIViewController <UIWebViewDelegate>
-{
-@private
-    UIWebView *webview_;
-    UIActivityIndicatorView *loading_;
-    NSString *body_;
-    NSURL *baseURL_;
-}
 
-@property (nonatomic, retain) IBOutlet UIWebView *webview;
-@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loading;
-@property (nonatomic, retain) NSString *body;
-@property (nonatomic, retain) NSURL *baseURL;
+@property (nonatomic, strong) IBOutlet UIWebView *webview;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *loading;
+@property (strong, nonatomic) IBOutlet UINavigationItem *cusNavigationItem;
+//@property (nonatomic, strong) NSString *body;
+//@property (nonatomic, strong) NSURL *baseURL;
 
 - (IBAction)cancelAuth:(id)sender;
 @end

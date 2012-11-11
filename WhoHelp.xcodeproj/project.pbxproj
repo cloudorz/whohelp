@@ -366,8 +366,6 @@
 		61E387AE14BC94440056D25D /* UserTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E387AD14BC94430056D25D /* UserTableCell.m */; };
 		61E387B114BCAC280056D25D /* bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E387AF14BCAC280056D25D /* bar.png */; };
 		61E387B214BCAC280056D25D /* bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E387B014BCAC280056D25D /* bar@2x.png */; };
-		61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */; };
-		61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */; };
 		61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */; };
 		61FCFE2114A9D78E009F35C2 /* DoubanAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */; };
 		61FCFE2414A9DABF009F35C2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61FCFE2514A9DABF009F35C2 /* MainWindow.xib */; };
@@ -822,9 +820,6 @@
 		61E387AD14BC94430056D25D /* UserTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTableCell.m; sourceTree = "<group>"; };
 		61E387AF14BCAC280056D25D /* bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bar.png; sourceTree = "<group>"; };
 		61E387B014BCAC280056D25D /* bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar@2x.png"; sourceTree = "<group>"; };
-		61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreAuthViewController.xib; sourceTree = "<group>"; };
-		61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreAuthViewController.h; sourceTree = "<group>"; };
-		61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreAuthViewController.m; sourceTree = "<group>"; };
 		61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoubanAuthViewController.h; sourceTree = "<group>"; };
 		61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoubanAuthViewController.m; sourceTree = "<group>"; };
 		61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DoubanAuthViewController.xib; sourceTree = "<group>"; };
@@ -1477,9 +1472,6 @@
 		61FCFE1714A9D722009F35C2 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				61FCFE1914A9D78E009F35C2 /* PreAuthViewController.h */,
-				61FCFE1A14A9D78E009F35C2 /* PreAuthViewController.m */,
-				61FCFE1814A9D78E009F35C2 /* PreAuthViewController.xib */,
 				61FCFE1B14A9D78E009F35C2 /* DoubanAuthViewController.h */,
 				61FCFE1C14A9D78E009F35C2 /* DoubanAuthViewController.m */,
 				61FCFE1D14A9D78E009F35C2 /* DoubanAuthViewController.xib */,
@@ -1561,7 +1553,7 @@
 		617E3A2B141B584E00441135 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Baiqiao Tech.";
 			};
 			buildConfigurationList = 617E3A2E141B584E00441135 /* Build configuration list for PBXProject "WhoHelp" */;
@@ -1602,7 +1594,6 @@
 				615E6A76141F418F00400B60 /* whiteArrow@2x.png in Resources */,
 				615E6A851420785200400B60 /* HelpSendViewController.xib in Resources */,
 				611FD7A0143B4CD300398709 /* LawViewController.xib in Resources */,
-				61FCFE1E14A9D78E009F35C2 /* PreAuthViewController.xib in Resources */,
 				61FCFE2114A9D78E009F35C2 /* DoubanAuthViewController.xib in Resources */,
 				61D506D714AC556900B3C57E /* HelpPrivateListViewController.xib in Resources */,
 				61D506DF14AC921A00B3C57E /* avatar.png in Resources */,
@@ -1933,7 +1924,6 @@
 				6149FE57143894BD0093814A /* ProfileManager.m in Sources */,
 				611FD79A143B20F100398709 /* LoudTableCell.m in Sources */,
 				611FD79F143B4CD300398709 /* LawViewController.m in Sources */,
-				61FCFE1F14A9D78E009F35C2 /* PreAuthViewController.m in Sources */,
 				61FCFE2014A9D78E009F35C2 /* DoubanAuthViewController.m in Sources */,
 				61D506D614AC556900B3C57E /* HelpPrivateListViewController.m in Sources */,
 				615B10B414AF5B690034C527 /* NSDate+IsoFormat.m in Sources */,

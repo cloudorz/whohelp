@@ -8,7 +8,7 @@
 
 #import "WhoHelpAppDelegate.h"
 #import "HelpSendViewController.h"
-#import "PreAuthViewController.h"
+#import "DoubanAuthViewController.h"
 #import "LocationController.h"
 #import "ProfileManager.h"
 #import "SBJson.h"
@@ -119,7 +119,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    [self tabBarController:self.tabBarController shouldSelectViewController:self.tabBarController.selectedViewController];
+//    [self tabBarController:self.tabBarController shouldSelectViewController:self.tabBarController.selectedViewController];
     
     if ([ProfileManager sharedInstance].profile != nil) {
         [self fakeUpdatePos];
@@ -290,18 +290,18 @@
 //    NSLog(@"fuck fuck");
 //}
 
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
-{
-    if (nil == [ProfileManager sharedInstance].profile && 11 != viewController.tabBarItem.tag){
-        PreAuthViewController *preAVC = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
-        [self.tabBarController presentModalViewController:preAVC animated:YES];
-        [preAVC release];
-        
-        return NO;
-    }
-    
-    return YES;
-}
+//- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+//{
+//    if (nil == [ProfileManager sharedInstance].profile && 11 != viewController.tabBarItem.tag){
+//        PreAuthViewController *preAVC = [[PreAuthViewController alloc] initWithNibName:@"PreAuthViewController" bundle:nil];
+//        [self.tabBarController presentModalViewController:preAVC animated:YES];
+//        [preAVC release];
+//        
+//        return NO;
+//    }
+//    
+//    return YES;
+//}
 
 #pragma mark - post data
 - (void)fakeUpdatePos

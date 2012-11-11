@@ -18,7 +18,7 @@
 #import "DetailLoudViewController.h"
 #import "CustomItems.h"
 #import "HelpSendViewController.h"
-#import "PreAuthViewController.h"
+#import "DoubanAuthViewController.h"
 
 
 @interface HelpListViewController ()
